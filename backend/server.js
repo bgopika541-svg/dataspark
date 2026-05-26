@@ -19,9 +19,10 @@ app.set('trust proxy', 1); // Required for secure cookies/sessions on Render/Ver
 
 // ── Middleware order matters: cors → json → session → passport ──────────────
 const allowedOrigins = [
-  process.env.FRONTEND_URL, 
-  'https://dataspark-ggm8.onrender.com', 
-  'http://localhost:3000', 
+  process.env.FRONTEND_URL,
+  'https://dataspark-peach.vercel.app',
+  'https://dataspark-ggm8.onrender.com',
+  'http://localhost:3000',
   'http://localhost:5000'
 ].filter(Boolean);
 
@@ -55,7 +56,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   passport.use(new GoogleStrategy({
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: process.env.GOOGLE_CALLBACK_URL || "/auth/google/callback"
+      callbackURL: process.env.GOOGLE_CALLBACK_URL || "https://dataspark-ggm8.onrender.com/auth/google/callback"
     },
     function(accessToken, refreshToken, profile, done) {
       return done(null, profile);
@@ -69,7 +70,7 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
   passport.use(new GitHubStrategy({
       clientID: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
-      callbackURL: process.env.GITHUB_CALLBACK_URL || "/auth/github/callback"
+      callbackURL: process.env.GITHUB_CALLBACK_URL || "https://dataspark-ggm8.onrender.com/auth/github/callback"
     },
     function(accessToken, refreshToken, profile, done) {
       return done(null, profile);
@@ -489,7 +490,7 @@ db.query(`CREATE TABLE IF NOT EXISTS courses (
     }
   );
 
-app.post('/signup', (req, res) => {
+app.post('/api/signup', (req, res) => {
   const { username, password, role, email } = req.body;
   if (!username || !password || !role)
     return res.json({ success: false, message: 'All fields required' });
@@ -937,13 +938,12 @@ app.get("/auth/google",
 
 app.get("/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "/login"
+    failureRedirect: "https://dataspark-peach.vercel.app/login"
   }),
   (req, res) => {
-    res.redirect("/dashboard");
+    res.redirect("https://dataspark-peach.vercel.app/dashboard");
   }
 );
-
 // GITHUB LOGIN
 app.get("/auth/github",
   passport.authenticate("github", { scope: ["user:email"] })
@@ -951,15 +951,14 @@ app.get("/auth/github",
 
 app.get("/auth/github/callback",
   passport.authenticate("github", {
-    failureRedirect: "/login"
+    failureRedirect: "https://dataspark-peach.vercel.app/login"
   }),
   (req, res) => {
-    res.redirect("/dashboard");
+    res.redirect("https://dataspark-peach.vercel.app/dashboard");
   }
 );
 // =============================================
-// ADMIN APPLICATIONS
-// =============================================
+// ADMIN APPLICAT=================
 app.get('/api/admin/applications', requireAdmin, (req, res) => {
 
   db.query(
