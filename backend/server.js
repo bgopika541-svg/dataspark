@@ -293,11 +293,11 @@ function sendContactMail(toEmail, firstName, lastName, interestedCourse) {
 // Supports both DB_HOST style (set in Render) and MYSQLHOST style (Railway auto-inject)
 
 const dbConfig = {
-  host:     process.env.DB_HOST     || process.env.MYSQLHOST     || 'localhost',
-  port:     parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '3306', 10),
+  host:     process.env.DB_HOST     || process.env.MYSQLHOST     || 'localhoskodama.proxy.rlwy.net',
+  port:     parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '18394', 10),
   user:     process.env.DB_USER     || process.env.MYSQLUSER     || 'root',
-  password: process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || 'root',
-  database: process.env.DB_NAME     || process.env.MYSQLDATABASE || 'DataSpark',
+  password: process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '',
+  database: process.env.DB_NAME     || process.env.MYSQLDATABASE || 'dataspark',
   waitForConnections: true,
   multipleStatements: false
 };
