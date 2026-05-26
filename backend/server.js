@@ -34,8 +34,29 @@ app.use(cors({
 console.log('CORS: Configured for production and local development');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// ── DATABASE CONFIGURATION ──────────────────────────────────────────────────
+const dbConfig = {
+  host:     process.env.DB_HOST     || process.env.MYSQLHOST     || 'zephyr.proxy.rlwy.net',
+  port:     parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '36904', 10),
+  user:     process.env.DB_USER     || process.env.MYSQLUSER     || 'root',
+  password: process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '',
+  database: process.env.DB_NAME     || process.env.MYSQLDATABASE || 'dataspark',
+  waitForConnections: true,
+  multipleStatements: false
+};
+
+// Add SSL for remote hosts (Required for Railway/Render production)
+if (dbConfig.host !== 'localhost' && dbConfig.host !== '127.0.0.1') {
+  dbConfig.ssl = { rejectUnauthorized: false };
+}
+
+const db = mysql.createPool(dbConfig);
+const sessionStore = new MySQLStore({}, db);
+
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: process.env.SESSION_SECRET || 'dataspark-prod-secret',
+  store: sessionStore,
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: 24 * 60 * 60 * 1000 }
