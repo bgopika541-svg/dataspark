@@ -18,7 +18,12 @@ const app = express();
 app.set('trust proxy', 1); // Required for secure cookies/sessions on Render/Vercel
 
 // ── Middleware order matters: cors → json → session → passport ──────────────
-const allowedOrigins = [process.env.FRONTEND_URL, 'http://localhost:3000', 'http://localhost:5000'].filter(Boolean);
+const allowedOrigins = [
+  process.env.FRONTEND_URL, 
+  'https://dataspark-ggm8.onrender.com', 
+  'http://localhost:3000', 
+  'http://localhost:5000'
+].filter(Boolean);
 
 app.use(cors({
   origin: allowedOrigins,
@@ -510,7 +515,7 @@ app.post('/signup', (req, res) => {
   });
 });
 
-app.post('/login', (req, res) => {
+app.post('/api/login', (req, res) => {
   const { username, password, email } = req.body;
   if (!username || !password)
     return res.json({ success: false, message: 'All fields required' });
