@@ -32,6 +32,7 @@ app.use(cors({
   credentials: true
 }));
 console.log('CORS: Configured for production and local development');
+console.log('✅ CORS: Configured for origins:', allowedOrigins);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -59,8 +60,15 @@ app.use(session({
   store: sessionStore,
   resave: false,
   saveUninitialized: false,
-  cookie: { maxAge: 24 * 60 * 60 * 1000 }
+  cookie: { maxAge: 24 * 60 * 60 * 1000 },
+  cookie: { 
+    maxAge: 24 * 60 * 60 * 1000,
+    // Required for cross-site cookies between Vercel and Render
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax'
+  }
 }));
+
 // Passport MUST come after session()
 app.use(passport.initialize());
 app.use(passport.session());
@@ -106,6 +114,7 @@ const localFrontendPath = path.join(__dirname, '..', 'frontend');
 const publicPath = path.join(__dirname, 'public');
 const finalStaticPath = fs.existsSync(publicPath) ? publicPath : (fs.existsSync(localFrontendPath) ? localFrontendPath : __dirname);
 
+console.log('✅ Static assets served from:', finalStaticPath);
 app.use(express.static(finalStaticPath));
 
 // Root route — serve index or pro.html
