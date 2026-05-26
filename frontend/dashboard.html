@@ -749,7 +749,7 @@
     <div id="nav-greeting-container" style="position:relative;">
         <span id="nav-greeting" onclick="toggleDashDropdown()" style="cursor:pointer;font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;color:#00d4c2;background:rgba(0,212,194,0.1);border:1px solid rgba(0,212,194,0.25);padding:6px 16px;border-radius:99px;"></span>
         <div id="nav-dropdown" style="display:none;position:absolute;top:calc(100% + 10px);right:0;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);min-width:170px;overflow:hidden;z-index:999;">
-            <a href="#" onclick="showSection('profile', document.querySelector(''[href="#profile"]'));toggleDashDropdown();return false;" style="display:block;padding:12px 18px;font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;color:#1a56ff;text-decoration:none;border-bottom:1px solid #f1f5f9;">&#128100; My Profile</a>
+            <a href="#" onclick="showSection('profile', document.querySelector('.sidebar-nav a[href=\'#profile\']'));toggleDashDropdown();return false;" style="display:block;padding:12px 18px;font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;color:#1a56ff;text-decoration:none;border-bottom:1px solid #f1f5f9;">&#128100; My Profile</a>
             <a href="#" id="navLogoutBtn" style="display:block;padding:12px 18px;font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;color:#ef4444;text-decoration:none;">&#128682; Logout</a>
         </div>
     </div>
@@ -1119,7 +1119,7 @@
 </div>
 
 <script>
-    const API = 'https://your-backend-url';
+    const API = 'https://dataspark-ggm8.onrender.com';
     const dsUser = localStorage.getItem('ds_user');
     const dsFullName = localStorage.getItem('ds_fullname');
     const dsEmail = localStorage.getItem('ds_email');
@@ -1180,7 +1180,7 @@
                 // Stats
                 document.getElementById('statCourse').textContent = uniqueCourses.length;
                 document.getElementById('profileCourse').textContent = uniqueCourses.map(c => c.course_name).join(', ');
-                // Total weeks completed — count only from DB progress per course (exact match)
+                // Total weeks completed ï¿½ count only from DB progress per course (exact match)
                 let totalCompleted = 0;
                 let totalWeeksUnlocked = 0;
                 uniqueCourses.forEach(c => {
@@ -1618,7 +1618,7 @@
     }
 
     // -- Live Chat with Admin (Socket.IO) --------------------------------------
-    const CHAT_API = 'https://your-backend-url';
+    const CHAT_API = 'https://dataspark-ggm8.onrender.com';
     let chatSocket = io(CHAT_API);
     let convKey = localStorage.getItem('ds_chat_key') || 'conv_' + Math.random().toString(36).substr(2, 9);
     localStorage.setItem('ds_chat_key', convKey);
@@ -1801,5 +1801,3 @@
 </script>
 </body>
 </html>
-
-

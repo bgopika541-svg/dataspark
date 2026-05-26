@@ -1109,7 +1109,7 @@
     })();
 
     // Socket.IO setup
-    const BASE_URL = "https://dataspark-tech.onrender.com";
+    const BASE_URL = "https://dataspark-ggm8.onrender.com";
     const socket = io(BASE_URL);
     const adminUsername = localStorage.getItem('ds_user') || 'Admin';
 
@@ -1454,7 +1454,7 @@
       let added = 0; let skipped = 0;
       for (const c of WEBSITE_COURSES) {
         try {
-          const res = await fetch('https://your-backend-url/api/admin/courses', {
+          const res = await fetch('https://dataspark-ggm8.onrender.com/api/admin/courses', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(c)
@@ -1481,7 +1481,7 @@
       }
 
       try {
-        const res = await fetch('https://your-backend-url/api/admin/courses', {
+        const res = await fetch('https://dataspark-ggm8.onrender.com/api/admin/courses', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, category, duration, level, description })
@@ -1513,7 +1513,7 @@
       tbody.innerHTML = '<tr><td colspan="6" style="padding:22px 16px;color:var(--muted);">Loading courses...</td></tr>';
 
       try {
-        const url = new URL('https://your-backend-url/api/admin/courses');
+        const url = new URL('https://dataspark-ggm8.onrender.com/api/admin/courses');
         if (q) url.searchParams.append('q', q);
 
         const res = await fetch(url.toString());
@@ -1555,7 +1555,7 @@
     async function deleteCourse(id) {
       if (!confirm('Are you sure you want to delete this course?')) return;
       try {
-        const res = await fetch(`https://your-backend-url/api/admin/courses/${id}`, { method: 'DELETE' });
+        const res = await fetch(`https://dataspark-ggm8.onrender.com/api/admin/courses/${id}`, { method: 'DELETE' });
         const data = await res.json();
         if (data.success) {
           showToast('Course deleted successfully!', 'success');

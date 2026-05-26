@@ -1146,7 +1146,7 @@
     }
 
     // Socket.IO setup
-    const socket = io('https://your-backend-url');
+    const socket = io('https://dataspark-ggm8.onrender.com');
     
     socket.on('admin_status', (data) => {
       const statusText = document.querySelector('.chatbot-header h3');
@@ -1219,7 +1219,7 @@
     async function loadPendingReplies() {
       if (!dsUser) return;
       try {
-        const res = await fetch(`https://your-backend-url/api/user/pending-replies?username=${encodeURIComponent(dsUser)}`);
+        const res = await fetch(`https://dataspark-ggm8.onrender.com/api/user/pending-replies?username=${encodeURIComponent(dsUser)}`);
         const data = await res.json();
         if (data.success && data.replies.length > 0) {
           const body = document.getElementById('chatbot-body');

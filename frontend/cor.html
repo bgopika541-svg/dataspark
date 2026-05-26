@@ -522,7 +522,7 @@
       }
 
       // Load enrolled courses
-      fetch('https://your-backend-url/enrollment/' + encodeURIComponent(dsUser))
+      fetch('https://dataspark-ggm8.onrender.com/enrollment/' + encodeURIComponent(dsUser))
         .then(r => r.json())
         .then(data => {
           if (data.success && data.enrollments) {
@@ -609,7 +609,7 @@
 
     async function loadAdminCourses() {
       try {
-        const res = await fetch('https://your-backend-url/api/courses');
+        const res = await fetch('https://dataspark-ggm8.onrender.com/api/courses');
         const data = await res.json();
         if (!data.success || !data.courses.length) return;
 
