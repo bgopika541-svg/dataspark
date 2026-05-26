@@ -198,6 +198,11 @@
 </style>
 </head>
 <body>
+  <!-- Socket.IO -->
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+
+<!-- Chat Widget -->
+<script src="chat-widget.js"></script>
 
   <div class="bg-layer"></div>
   <div class="bg-grid"></div>
@@ -268,7 +273,6 @@
             <span class="icon">✉️</span>
             <input type="email" id="signup-email" placeholder="you@example.com" />
           </div>
-          <button type="button" onclick="sendOTP()" style="margin-top:8px;padding:8px 18px;background:linear-gradient(135deg,#1a56ff,#5d8fff);color:white;border:none;border-radius:8px;font-size:0.82rem;cursor:pointer;font-weight:600;">Send OTP 📧</button>
         </div>
 
         <div class="form-group">
@@ -306,24 +310,6 @@
         </div>
 
         <button class="signup-btn" onclick="handleSignup()">Create Account →</button>
-
-        <!-- OTP Verification Section (Hidden by default) -->
-        <div id="otp-section" style="display:none;margin-top:20px;">
-          <div class="form-group">
-            <label>Enter OTP</label>
-            <div class="input-wrap">
-              <span class="icon">🔢</span>
-              <input type="text" id="otp-input" placeholder="Enter 6-digit OTP" maxlength="6" />
-            </div>
-          </div>
-          <button class="signup-btn" onclick="verifyOTP()">Verify OTP →</button>
-          <div style="text-align:center;margin-top:10px;">
-            <button onclick="resendOTP()" style="background:none;border:none;color:#1a56ff;font-size:0.85rem;cursor:pointer;text-decoration:underline;">Resend OTP</button>
-          </div>
-        </div>
-        <div class="divider">
-  <span>OR</span>
-</div>
 
 <a href="/auth/google" class="social-btn google-btn">
   <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="">
@@ -370,78 +356,18 @@
 
   <script id="signscript">
     const BASE_URL = "https://dataspark-ggm8.onrender.com";
-    let otpSent = false;
-    let phoneVerified = false;
-    let verifiedEmail = '';
-
-    function sendOTP() {
-      const email = document.getElementById('signup-email') ? document.getElementById('signup-email').value.trim() : '';
-      if (!email) return showError('Please enter your email address.');
-      fetch(`${BASE_URL}/api/send-otp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email })
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data.success) {
-          otpSent = true;
-          verifiedEmail = email;
-          sessionStorage.setItem('otp_email', email);
-          document.getElementById('otp-section').style.display = 'block';
-          showError('OTP sent to ' + email + '. Check your inbox!', false);
-          setTimeout(() => document.getElementById('error-popup').classList.remove('show'), 2500);
-        } else {
-          showError(data.message);
-        }
-      })
-      .catch(err => showError('Server error: ' + err.message));
-    }
-
-    function verifyOTP() {
-      const enteredOTP = document.getElementById('otp-input').value.trim();
-      const email = verifiedEmail || sessionStorage.getItem('otp_email') || document.getElementById('signup-email').value.trim();
-      if (!enteredOTP) return showError('Please enter the OTP.');
-      if (!email) return showError('Email not found. Please send OTP again.');
-      fetch(`${BASE_URL}/api/verify-otp`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, otp: enteredOTP })
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data.success) {
-          phoneVerified = true;
-          verifiedEmail = email;
-          document.getElementById('otp-section').style.display = 'none';
-          document.getElementById('signup-email').style.borderColor = '#10b981';
-          showError('Email verified! ✅ Creating account...', false);
-          setTimeout(() => {
-            document.getElementById('error-popup').classList.remove('show');
-            proceedWithSignup();
-          }, 1500);
-        } else {
-          showError(data.message);
-        }
-      })
-      .catch(err => showError('Server error: ' + err.message));
-    }
-
-    function resendOTP() {
-      otpSent = false;
-      sendOTP();
-    }
 
     function proceedWithSignup() {
       const user = document.getElementById('signup-user').value.trim();
       const phone = document.getElementById('signup-phone').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
       const role = document.getElementById('signup-role').value;
       const pass = document.getElementById('signup-pass').value.trim();
 
-      fetch(`${BASE_URL}/api/register`, {
+      fetch(`${BASE_URL}/api/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: user, password: pass, role: role, phone: phone, phoneVerified: true })
+        body: JSON.stringify({ username: user, password: pass, role: role, phone: phone, email: email })
       })
       .then(r => r.json())
       .then(data => {
@@ -521,7 +447,6 @@
 
       if (!user)            return showError('Username cannot be empty.');
       if (!email)           return showError('Email cannot be empty.');
-      if (!phoneVerified)   return showError('Please verify your email with OTP first.');
       if (!role)            return showError('Please select your role.');
       if (!pass)            return showError('Password cannot be empty.');
       if (pass.length < 6)  return showError('Password must be at least 6 characters.');
@@ -535,5 +460,3 @@
 
 </body>
 </html>
-
-
