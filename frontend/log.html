@@ -628,13 +628,77 @@ function generateCaptcha() {
 window.onload = generateCaptcha;
 </script>
 <script>
-document.getElementById("loginForm").addEventListener("submit", function(e) {
+const data = await response.json();
 
-    e.preventDefault();
+console.log("LOGIN RESPONSE:", data);
 
-    alert("Login Successful");
+if (
+    data.success === true ||
+    data.message === "Login successful" ||
+    response.ok
+) {
 
-});
+    // STORE USER DATA
+    localStorage.setItem(
+        "ds_user",
+        data.user || username
+    );
+
+    localStorage.setItem(
+        "ds_role",
+        data.role || "student"
+    );
+
+    // SUCCESS POPUP
+    document.getElementById("popup-icon")
+    .innerHTML = "🎉";
+
+    document.getElementById("popup-title")
+    .innerHTML = "Login Successful";
+
+    document.getElementById("popup-msg")
+    .innerHTML =
+    "Redirecting to Dashboard...";
+
+    document.getElementById("login-popup")
+    .style.display = "flex";
+
+    // REDIRECT
+    setTimeout(() => {
+
+        const role =
+        (data.role || "").toLowerCase();
+
+        console.log("ROLE:", role);
+
+        if (role.includes("admin")) {
+
+            window.location.href =
+            "/admin.html";
+
+        } else {
+
+            window.location.href =
+            "/dashboard.html";
+        }
+
+    }, 2000);
+
+} else {
+
+    document.getElementById("popup-icon")
+    .innerHTML = "❌";
+
+    document.getElementById("popup-title")
+    .innerHTML = "Login Failed";
+
+    document.getElementById("popup-msg")
+    .innerHTML =
+    data.message || "Invalid Credentials";
+
+    document.getElementById("login-popup")
+    .style.display = "flex";
+}
 </script>
   <div id="toast-container"></div>
   <script src="/socket.io/socket.io.js"></script>
