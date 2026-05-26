@@ -668,7 +668,7 @@ app.post('/contact', (req, res) => {
 });
 
 // Admin endpoints
-app.get('/admin/students-count', (req, res) => {
+app.get('/admin/students-count', requireAdmin, (req, res) => {
   // Count distinct enrolled students (applications with a non-empty course)
   db.query(
     "SELECT COUNT(DISTINCT full_name) AS cnt FROM applications WHERE course IS NOT NULL AND course <> ''",
@@ -680,7 +680,7 @@ app.get('/admin/students-count', (req, res) => {
   );
 });
 
-app.get('/admin/contacts', (req, res) => {
+app.get('/admin/contacts', requireAdmin, (req, res) => {
   const q = (req.query.q || '').toString().trim();
   const like = `%${q}%`;
 
@@ -706,7 +706,7 @@ app.get('/admin/contacts', (req, res) => {
 // where `course` is NOT NULL/empty.
 
 // GET: Course applications list
-app.get('/api/admin/course-applications', (req, res) => {
+app.get('/api/admin/course-applications', requireAdmin, (req, res) => {
   const q = (req.query.q || '').toString().trim();
   const status = (req.query.status || '').toString().trim().toLowerCase();
   const page = Math.max(parseInt(req.query.page || '1', 10) || 1, 1);
@@ -769,7 +769,7 @@ app.get('/api/admin/course-applications', (req, res) => {
 });
 
 // GET: Course applications with enrollment details (student status from users table)
-app.get('/api/admin/course-applications-with-enrollment', (req, res) => {
+app.get('/api/admin/course-applications-with-enrollment', requireAdmin, (req, res) => {
   const q = (req.query.q || '').toString().trim();
   const status = (req.query.status || '').toString().trim().toLowerCase();
   const page = Math.max(parseInt(req.query.page || '1', 10) || 1, 1);
@@ -821,7 +821,7 @@ app.get('/api/admin/course-applications-with-enrollment', (req, res) => {
 });
 
 // PATCH: update application status
-app.patch('/api/admin/course-applications/:id/status', (req, res) => {
+app.patch('/api/admin/course-applications/:id/status', requireAdmin, (req, res) => {
   const id = req.params.id;
   const nextStatus = (req.body.status || '').toString().trim();
 
@@ -848,7 +848,7 @@ app.patch('/api/admin/course-applications/:id/status', (req, res) => {
 });
 
 // GET: All registered students from user table with email from applications
-app.get('/api/admin/students', (req, res) => {
+app.get('/api/admin/students', requireAdmin, (req, res) => {
   const q = (req.query.q || '').toString().trim(); // Get search query
   const params = [];
   const conditions = ["(LOWER(IFNULL(role, 'Student')) NOT LIKE '%admin%')"];
@@ -868,7 +868,7 @@ app.get('/api/admin/students', (req, res) => {
 });
 
 // GET: Students who have logged in (with last login timestamp)
-app.get('/api/admin/students-logged-in', (req, res) => {
+app.get('/api/admin/students-logged-in', requireAdmin, (req, res) => {
   const q = (req.query.q || '').toString().trim(); // Get search query
   const params = [];
   const conditions = ["(LOWER(IFNULL(role, 'Student')) NOT LIKE '%admin%')", "last_login IS NOT NULL"];
@@ -888,7 +888,7 @@ app.get('/api/admin/students-logged-in', (req, res) => {
 });
 
 // GET: Contact messages (for admin dashboard cards)
-app.get('/api/admin/messages', (req, res) => {
+app.get('/api/admin/messages', requireAdmin, (req, res) => {
   const q = (req.query.q || '').toString().trim();
   const like = `%${q}%`;
 
@@ -955,7 +955,7 @@ app.get("/auth/github/callback",
 // =============================================
 // ADMIN APPLICATIONS
 // =============================================
-app.get('/api/admin/applications', (req, res) => {
+app.get('/api/admin/applications', requireAdmin, (req, res) => {
 
   db.query(
     `SELECT
@@ -985,7 +985,7 @@ app.get('/api/admin/applications', (req, res) => {
 // =============================================
 // CHAT USERS
 // =============================================
-app.get('/api/admin/chat-users', (req, res) => {
+app.get('/api/admin/chat-users', requireAdmin, (req, res) => {
 
   db.query(
     `SELECT DISTINCT
@@ -1010,7 +1010,7 @@ app.get('/api/admin/chat-users', (req, res) => {
 // =============================================
 // CHAT HISTORY
 // =============================================
-app.get('/api/admin/chat/:userId', (req, res) => {
+app.get('/api/admin/chat/:userId', requireAdmin, (req, res) => {
 
   const userId = req.params.userId;
 
@@ -1038,7 +1038,7 @@ app.get('/api/admin/chat/:userId', (req, res) => {
 
 });
 
-app.get('/api/admin/stats', (req, res) => {
+app.get('/api/admin/stats', requireAdmin, (req, res) => {
   const stats = {
     totalStudents: 0,
     courseApps: 0,
@@ -1086,7 +1086,7 @@ app.get('/api/admin/stats', (req, res) => {
   });
 });
 
-app.get('/api/admin/completion', (req, res) => {
+app.get('/api/admin/completion', requireAdmin, (req, res) => {
   db.query('SELECT username, course_name, status, completed_at FROM completion ORDER BY completed_at DESC LIMIT 200', (err, rows) => {
     if (err) return res.json({ success: false, message: err.message });
     res.json({ success: true, completions: rows || [] });
