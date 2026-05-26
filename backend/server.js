@@ -9,6 +9,7 @@ const http = require('http'); // Import http module
 const mysql = require('mysql2');
 const cors = require('cors');
 const session = require('express-session');
+const MySQLStore = require('express-mysql-session')(session);
 const { Server } = require('socket.io'); // Import Socket.IO Server
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
@@ -292,29 +293,6 @@ function sendContactMail(toEmail, firstName, lastName, interestedCourse) {
   });
 }
 
-// ── DATABASE ─────────────────────────────────────────────────────────────────
-// Uses environment variables for Railway / PlanetScale / any remote MySQL.
-
-// ── DATABASE ─────────────────────────────────────────────────────────────────
-// Supports both DB_HOST style (set in Render) and MYSQLHOST style (Railway auto-inject)
-
-const dbConfig = {
-  host:     process.env.DB_HOST     || process.env.MYSQLHOST     || 'zephyr.proxy.rlwy.net',
-  port:     parseInt(process.env.DB_PORT || process.env.MYSQLPORT || '36904', 10),
-  user:     process.env.DB_USER     || process.env.MYSQLUSER     || 'root',
-  password: process.env.DB_PASSWORD || process.env.MYSQLPASSWORD || '',
-  database: process.env.DB_NAME     || process.env.MYSQLDATABASE || 'dataspark',
-  waitForConnections: true,
-  multipleStatements: false
-};
-
-// Add SSL for any non-localhost host (required by Railway/PlanetScale)
-const dbHost = dbConfig.host;
-if (dbHost && dbHost !== 'localhost' && dbHost !== '127.0.0.1') {
-  dbConfig.ssl = { rejectUnauthorized: false };
-}
-
-const db = mysql.createPool(dbConfig);
 const dbQuery = (sql, params, cb) => {
   db.getConnection((connErr, conn) => {
     if (connErr) { console.error('DB getConnection error:', connErr.message); return cb && cb(connErr); }
