@@ -117,6 +117,11 @@ const finalStaticPath = fs.existsSync(publicPath) ? publicPath : (fs.existsSync(
 console.log('✅ Static assets served from:', finalStaticPath);
 app.use(express.static(finalStaticPath));
 
+// Explicitly serve chat-widget.js from backend folder to avoid 404
+app.get('/chat-widget.js', (req, res) => {
+  res.sendFile(path.join(__dirname, 'chat-widget.js'));
+});
+
 // Root route — serve index or pro.html
 app.get('/', (req, res) => {
   const tryFiles = ['index.html', 'pro.html'];
@@ -946,10 +951,10 @@ app.get("/auth/google",
 
 app.get("/auth/google/callback",
   passport.authenticate("google", {
-    failureRedirect: "https://dataspark-peach.vercel.app/login"
+    failureRedirect: "/log.html"
   }),
   (req, res) => {
-    res.redirect("https://dataspark-peach.vercel.app/dashboard");
+    res.redirect("/dashboard.html");
   }
 );
 // GITHUB LOGIN
@@ -959,10 +964,10 @@ app.get("/auth/github",
 
 app.get("/auth/github/callback",
   passport.authenticate("github", {
-    failureRedirect: "https://dataspark-peach.vercel.app/login"
+    failureRedirect: "/log.html"
   }),
   (req, res) => {
-    res.redirect("https://dataspark-peach.vercel.app/dashboard");
+    res.redirect("/dashboard.html");
   }
 );
 // =============================================
