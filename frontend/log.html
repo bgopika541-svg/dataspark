@@ -627,8 +627,17 @@ function generateCaptcha() {
 
 window.onload = generateCaptcha;
 </script>
+<script>
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    alert("Login Successful");
+
+});
+</script>
   <div id="toast-container"></div>
   <script src="/socket.io/socket.io.js"></script>
-  <script src="/backend/chat-widget.js"></script>
+  <script src="chat-widget.js"></script>
 </body>
 </html>
