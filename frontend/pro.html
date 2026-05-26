@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>DATA SPARK TECHNOLOGIES</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js"></script>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --navy:       #080c18;
+      --deep:       #0c1228;
+      --blue:       #1a56ff;
+      --blue-mid:   #3a72ff;
+      --blue-light: #5d8fff;
+      --teal:       #00d4c2;
+      --teal-dim:   rgba(0, 212, 194, 0.15);
+      --white:      #ffffff;
+      --off-white:  #f4f6fb;
+      --muted:      #8892a4;
+      --card-bg:    #ffffff;
+      --shadow:     0 8px 40px rgba(26, 86, 255, 0.10);
+      --radius:     20px;
+      --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--off-white);
+      color: var(--navy);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAVBAR ─── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 60px;
+      background: rgba(8, 12, 24, 0.78);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      transition: padding var(--transition);
+    }
+
+    .nav-logo {
+      font-family: 'Inter', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--teal);
+      letter-spacing: 0.04em;
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--white); }
+
+    .nav-links {
+      list-style: none;
+      display: flex;
+      gap: 44px;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: rgba(255,255,255,0.65);
+      font-family: 'Syne', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color var(--transition);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -4px;
+      width: 0; height: 2px;
+      background: var(--teal);
+      border-radius: 99px;
+      transition: width var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-links .nav-cta {
+      color: var(--white);
+      background: linear-gradient(135deg, var(--blue), var(--blue-light));
+      padding: 9px 24px;
+      border-radius: 99px;
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      box-shadow: 0 4px 18px rgba(26,86,255,0.35);
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+
+    .nav-links .nav-cta::after { display: none; }
+    .nav-links .nav-cta:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(26,86,255,0.5);
+      color: var(--white);
+    }
+
+    /* HAMBURGER */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; z-index: 200; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 99px; transition: all 0.3s ease; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-links { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(8,12,24,0.97); backdrop-filter: blur(20px); flex-direction: column; align-items: center; justify-content: center; gap: 32px; z-index: 150; }
+      .nav-links.open { display: flex; }
+      .nav-links a { font-size: 1.1rem; }
+      .nav-links .nav-cta { padding: 12px 36px; font-size: 1rem; }
+    }
+
+    .hero-bg-img { position: absolute; inset: 0; background: url('home.jpg') center/cover no-repeat; opacity: 0.35; z-index: 0; filter: brightness(0.6) saturate(0.7); }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+      padding: 130px 24px 160px;
+      background:
+        radial-gradient(ellipse 90% 65% at 50% 10%, rgba(26,86,255,0.38) 0%, transparent 70%),
+        radial-gradient(ellipse 55% 45% at 85% 85%, rgba(0,212,194,0.18) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 35% at 10% 70%, rgba(26,86,255,0.12) 0%, transparent 60%),
+        linear-gradient(165deg, var(--navy) 0%, var(--deep) 100%);
+    }
+
+    /* Animated grid overlay */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(26,86,255,0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,86,255,0.05) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 40%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-rings {
+      position: absolute;
+      width: 800px; height: 800px;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(26,86,255,0.12);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      animation: ringPulse 7s ease-in-out infinite;
+    }
+
+    .hero-ring:nth-child(1) { width: 300px; height: 300px; border-color: rgba(0,212,194,0.2); animation-delay: 0s; }
+    .hero-ring:nth-child(2) { width: 500px; height: 500px; animation-delay: 1s; }
+    .hero-ring:nth-child(3) { width: 700px; height: 700px; animation-delay: 2s; }
+
+    @keyframes ringPulse {
+      0%,100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; }
+      50%      { transform: translate(-50%,-50%) scale(1.04); opacity: 0.3; }
+    }
+
+    /* Floating orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      pointer-events: none;
+      animation: orbFloat 10s ease-in-out infinite;
+    }
+    .orb-1 { width: 320px; height: 320px; background: rgba(26,86,255,0.22); top: 15%; left: 5%; animation-delay: 0s; }
+    .orb-2 { width: 250px; height: 250px; background: rgba(0,212,194,0.15); bottom: 10%; right: 8%; animation-delay: 3s; }
+    .orb-3 { width: 180px; height: 180px; background: rgba(93,143,255,0.18); top: 60%; left: 25%; animation-delay: 6s; }
+
+    @keyframes orbFloat {
+      0%,100% { transform: translateY(0px); }
+      50%      { transform: translateY(-28px); }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 780px;
+      animation: heroFadeUp 1s ease both;
+    }
+
+    @keyframes heroFadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--teal);
+      background: rgba(0,212,194,0.10);
+      border: 1px solid rgba(0,212,194,0.28);
+      padding: 7px 18px;
+      border-radius: 99px;
+      margin-bottom: 32px;
+      animation: heroFadeUp 1s 0.1s ease both;
+    }
+
+    .badge-dot {
+      width: 6px; height: 6px;
+      background: var(--teal);
+      border-radius: 50%;
+      animation: blinkDot 1.8s ease-in-out infinite;
+    }
+
+    @keyframes blinkDot {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.2; }
+    }
+
+    .hero-content h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 26px;
+      letter-spacing: -0.03em;
+      animation: heroFadeUp 1s 0.2s ease both;
+    }
+
+    .hero-content h1 em {
+      font-style: normal;
+      background: linear-gradient(90deg, var(--blue-light) 0%, var(--teal) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: 1.22rem;
+      font-weight: 300;
+      color: rgba(255,255,255,0.55);
+      max-width: 560px;
+      margin: 0 auto 44px;
+      line-height: 1.8;
+      animation: heroFadeUp 1s 0.3s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: heroFadeUp 1s 0.4s ease both;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      text-decoration: none;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--white);
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+      padding: 16px 42px;
+      border-radius: 99px;
+      box-shadow: 0 8px 36px rgba(26,86,255,0.45);
+      transition: transform var(--transition), box-shadow var(--transition);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 50px rgba(26,86,255,0.6);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: rgba(255,255,255,0.75);
+      border: 1px solid rgba(255,255,255,0.2);
+      padding: 16px 38px;
+      border-radius: 99px;
+      transition: background var(--transition), border-color var(--transition), color var(--transition), transform var(--transition);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(255,255,255,0.35);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    /* Stats strip */
+    .hero-stats {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      background: rgba(8,12,24,0.72);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid rgba(255,255,255,0.08);
+      animation: heroFadeUp 1s 0.6s ease both;
+    }
+
+    .stat {
+      text-align: center;
+      padding: 28px 60px;
+      flex: 1;
+      max-width: 260px;
+    }
+
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1;
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 2px;
+    }
+
+    .stat-num .suffix { color: var(--teal); font-size: 2rem; }
+
+    .stat-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      margin-top: 6px;
+    }
+
+    .stat-divider {
+      width: 1px;
+      background: rgba(255,255,255,0.1);
+      align-self: stretch;
+      margin: 18px 0;
+    }
+
+    /* ─── HOW IT WORKS ─── */
+    .hiw-section { padding: 110px 24px; max-width: 1200px; margin: 0 auto; }
+    .section-header { text-align: center; margin-bottom: 70px; }
+    .section-tag { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); background: rgba(26,86,255,0.08); border: 1px solid rgba(26,86,255,0.18); padding: 6px 16px; border-radius: 99px; margin-bottom: 16px; }
+    .section-header h2 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 3rem); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; margin-bottom: 14px; }
+    .section-header p { font-size: 1.12rem; color: var(--muted); font-weight: 300; }
+    .steps-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; position: relative; }
+    .steps-row::before { content: ''; position: absolute; top: 36px; left: 12.5%; right: 12.5%; height: 2px; background: linear-gradient(90deg, var(--blue), var(--teal)); z-index: 0; }
+    .step-item { text-align: center; padding: 0 20px; position: relative; z-index: 1; }
+    .step-circle { width: 72px; height: 72px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--blue-light)); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 1.6rem; box-shadow: 0 8px 28px rgba(26,86,255,0.35); transition: transform var(--transition), box-shadow var(--transition); position: relative; }
+    .step-item:hover .step-circle { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(26,86,255,0.5); }
+    .step-num { position: absolute; top: -6px; right: -6px; width: 22px; height: 22px; background: var(--teal); border-radius: 50%; font-family: 'Syne', sans-serif; font-size: 0.65rem; font-weight: 800; color: var(--navy); display: flex; align-items: center; justify-content: center; }
+    .step-item h4 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .step-item p { font-size: 0.95rem; color: var(--muted); line-height: 1.7; }
+
+    /* ─── CATEGORIES ─── */
+    .cat-section { background: linear-gradient(165deg, var(--navy) 0%, var(--deep) 100%); padding: 80px 24px; position: relative; overflow: hidden; }
+    .cat-section::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(26,86,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(26,86,255,0.06) 1px, transparent 1px); background-size: 55px 55px; pointer-events: none; }
+    .cat-inner { max-width: 1200px; margin: 0 auto; position: relative; }
+    .cat-inner .section-tag { color: var(--teal); background: rgba(0,212,194,0.1); border-color: rgba(0,212,194,0.22); }
+    .cat-inner .section-header h2 { color: var(--white); }
+    .cat-inner .section-header p { color: rgba(255,255,255,0.45); }
+    .cat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+    .cat-card { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.09); border-radius: 18px; padding: 28px 20px; text-align: center; transition: background var(--transition), transform var(--transition), border-color var(--transition); text-decoration: none; display: block; }
+    .cat-card:hover { background: rgba(255,255,255,0.1); border-color: rgba(26,86,255,0.4); transform: translateY(-6px); }
+    .cat-emoji { font-size: 2rem; margin-bottom: 12px; display: block; }
+    .cat-name { font-family: 'Syne', sans-serif; font-size: 0.98rem; font-weight: 700; color: var(--white); margin-bottom: 6px; }
+    .cat-count { font-size: 0.75rem; color: var(--teal); font-weight: 500; }
+
+    /* ─── TESTIMONIALS ─── */
+    .testi-section { padding: 110px 24px; max-width: 1200px; margin: 0 auto; }
+    .testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .testi-card { background: var(--white); border-radius: var(--radius); padding: 36px 30px; box-shadow: 0 4px 24px rgba(26,86,255,0.07); border: 1px solid rgba(26,86,255,0.07); transition: transform var(--transition), box-shadow var(--transition); }
+    .testi-card:hover { transform: translateY(-6px); box-shadow: 0 16px 50px rgba(26,86,255,0.12); }
+    .testi-stars { color: #f59e0b; font-size: 0.9rem; margin-bottom: 16px; letter-spacing: 2px; }
+    .testi-text { font-size: 1.02rem; color: #4a5568; line-height: 1.8; margin-bottom: 22px; font-style: italic; }
+    .testi-author { display: flex; align-items: center; gap: 12px; }
+    .testi-avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--teal)); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .testi-name { font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; color: var(--navy); }
+    .testi-role { font-size: 0.78rem; color: var(--muted); }
+
+    /* ─── FEATURES ─── */
+    .features-section {
+      padding: 110px 24px;
+      background: linear-gradient(165deg, var(--navy) 0%, var(--deep) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .features-section::after { content:''; position:absolute; inset:0; background:url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=1400&auto=format&fit=crop') center/cover no-repeat; opacity:0.08; z-index:0; pointer-events:none; }
+    .features-inner { position:relative; z-index:1; }
+
+    .features-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(26,86,255,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(26,86,255,0.06) 1px, transparent 1px);
+      background-size: 55px 55px;
+    }
+
+    .features-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .features-section .section-tag { color: var(--teal); background: rgba(0,212,194,0.1); border-color: rgba(0,212,194,0.22); }
+    .features-section .section-header h2 { color: var(--white); }
+    .features-section .section-header p { color: rgba(255,255,255,0.45); }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+    }
+
+    .feature-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 38px 30px;
+      transition: background var(--transition), transform var(--transition), border-color var(--transition);
+    }
+
+    .feature-card:hover {
+      background: rgba(255,255,255,0.07);
+      border-color: rgba(26,86,255,0.3);
+      transform: translateY(-6px);
+    }
+
+    .feature-icon {
+      font-size: 2.2rem;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .feature-card h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 12px;
+    }
+
+    .feature-card p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.5);
+      line-height: 1.75;
+    }
+
+    /* ─── CTA BANNER ─── */
+    .cta-banner {
+      padding: 110px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .cta-box {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-mid) 50%, #0033cc 100%);
+      border-radius: 28px;
+      padding: 80px 48px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 80px rgba(26,86,255,0.35);
+    }
+
+    .cta-box::before {
+      content: '';
+      position: absolute;
+      width: 500px; height: 500px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 50%;
+      top: -180px; right: -120px;
+    }
+
+    .cta-box::after {
+      content: '';
+      position: absolute;
+      width: 300px; height: 300px;
+      background: rgba(0,212,194,0.1);
+      border-radius: 50%;
+      bottom: -100px; left: -60px;
+    }
+
+    .cta-box h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.8rem, 4vw, 3rem);
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .cta-box p {
+      font-size: 1.15rem;
+      color: rgba(255,255,255,0.7);
+      margin-bottom: 40px;
+      position: relative;
+    }
+
+    .cta-box .btn-white {
+      display: inline-block;
+      text-decoration: none;
+      font-family: 'Syne', sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      color: var(--blue);
+      background: var(--white);
+      padding: 16px 44px;
+      border-radius: 99px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      transition: transform var(--transition), box-shadow var(--transition);
+      position: relative;
+    }
+
+    .cta-box .btn-white:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 16px 44px rgba(0,0,0,0.28);
+    }
+
+    /* ─── FOOTER ─── */
+    .footer {
+      background: var(--navy);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 70px 60px 0;
+    }
+
+    .footer-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 48px;
+      padding-bottom: 52px;
+    }
+
+    .footer-brand .logo-txt {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--teal);
+      display: block;
+      margin-bottom: 14px;
+    }
+
+    .footer-brand p {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.4);
+      line-height: 1.75;
+      max-width: 260px;
+      margin-bottom: 24px;
+    }
+
+    .social-icons { display: flex; gap: 12px; }
+    .social-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: background var(--transition), border-color var(--transition), transform var(--transition); }
+    .social-icon:hover { background: rgba(26,86,255,0.25); border-color: var(--blue); transform: translateY(-3px); }
+    .social-icon svg { width: 17px; height: 17px; fill: rgba(255,255,255,0.7); transition: fill var(--transition); }
+    .social-icon:hover svg { fill: #fff; }
+
+    .footer-col h4 {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .footer-col a {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.95rem;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      margin-bottom: 11px;
+      transition: color var(--transition), gap var(--transition);
+    }
+
+    .footer-col a::before { content: '›'; color: var(--teal); font-size: 1rem; opacity: 0; transition: opacity var(--transition); }
+    .footer-col a:hover { color: var(--white); gap: 10px; }
+    .footer-col a:hover::before { opacity: 1; }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 0;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-bottom p {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .footer-bottom a {
+      font-size: 0.8rem;
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+
+    .footer-bottom a:hover { color: var(--white); }
+
+    /* SCROLL ANIMATIONS */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.from-left { transform: translateX(-40px); }
+    .reveal.from-right { transform: translateX(40px); }
+    .reveal.visible { opacity: 1; transform: translate(0); }
+
+
+    @media (max-width: 900px) {
+      .navbar { padding: 16px 24px; }
+      .nav-links { gap: 24px; }
+      .steps-row { grid-template-columns: 1fr 1fr; gap: 40px; }
+      .steps-row::before { display: none; }
+      .cat-grid { grid-template-columns: repeat(3, 1fr); }
+      .testi-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .hero-stats { bottom: 0; }
+      .stat { padding: 20px 24px; }
+      .hiw-section { padding: 70px 24px; }
+      .testi-section { padding: 70px 24px; }
+    }
+
+    @media (max-width: 640px) {
+      .navbar { padding: 14px 16px; }
+      .nav-links { gap: 12px; }
+      .nav-links a { font-size: 0.68rem; }
+      .hero-stats { flex-wrap: wrap; }
+      .stat { padding: 14px 16px; flex: 0 0 calc(50% - 1px); }
+      .stat-divider { display: none; }
+      .steps-row { grid-template-columns: 1fr; gap: 36px; }
+      .cat-grid { grid-template-columns: 1fr 1fr; }
+      .testi-grid { grid-template-columns: 1fr; }
+      .features-grid { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer { padding: 48px 16px 32px; }
+      .cta-box { padding: 40px 20px; }
+      .hiw-section { padding: 50px 16px; }
+      .testi-section { padding: 50px 16px; }
+      .cat-section { padding: 50px 16px; }
+      .hero-content { padding: 0 8px; }
+      .hero-badge { font-size: 0.62rem; padding: 6px 14px; }
+      .btn-primary, .btn-secondary { padding: 13px 28px; font-size: 0.82rem; }
+    }
+
+    /* CHATBOT */
+    .chatbot-btn{position:fixed;bottom:24px;right:24px;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--blue-light));border:none;box-shadow:0 8px 28px rgba(26,86,255,0.4);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.6rem;z-index:999;transition:transform 0.3s,box-shadow 0.3s}
+    .chatbot-btn:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(26,86,255,0.6)}
+    .chatbot-window{position:fixed;bottom:100px;right:24px;width:360px;max-width:calc(100vw - 48px);height:500px;background:#fff;border-radius:20px;box-shadow:0 12px 48px rgba(0,0,0,0.2);display:none;flex-direction:column;z-index:998;animation:slideUp 0.3s ease}
+    @keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+    .chatbot-window.open{display:flex}
+    .chatbot-header{background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;padding:18px 20px;border-radius:20px 20px 0 0;display:flex;justify-content:space-between;align-items:center}
+    .chatbot-header h3{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin:0}
+    .chatbot-close{background:none;border:none;color:#fff;font-size:1.4rem;cursor:pointer;padding:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;transition:background 0.2s}
+    .chatbot-close:hover{background:rgba(255,255,255,0.2)}
+    .chatbot-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:#f8fafc}
+    .chat-msg{max-width:75%;padding:10px 14px;border-radius:12px;font-size:0.88rem;line-height:1.5;animation:fadeIn 0.3s ease}
+    @keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    .chat-msg.bot{background:#e0e7ff;color:#1e293b;align-self:flex-start;border-bottom-left-radius:4px}
+    .chat-msg.user{background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+    .chatbot-footer{padding:14px;border-top:1px solid #e2e8f0;display:flex;gap:8px}
+    .chatbot-input{flex:1;border:1px solid #cbd5e1;border-radius:10px;padding:10px 14px;font-size:0.88rem;font-family:'Outfit',sans-serif;outline:none;transition:border-color 0.2s}
+    .chatbot-input:focus{border-color:var(--blue)}
+    .chatbot-send{background:linear-gradient(135deg,var(--blue),var(--blue-light));color:#fff;border:none;border-radius:10px;padding:10px 18px;font-size:0.88rem;font-weight:600;cursor:pointer;transition:transform 0.2s}
+    .chatbot-send:hover{transform:translateY(-2px)}
+    @media(max-width:640px){.chatbot-window{width:calc(100vw - 32px);right:16px;bottom:90px;height:450px}.chatbot-btn{bottom:16px;right:16px;width:56px;height:56px;font-size:1.4rem}}
+
+    /* ─── DARK / LIGHT MODE ─── */
+    [data-theme="dark"] body { background: var(--navy); }
+    [data-theme="dark"] .section-header h2 { color: var(--white); }
+    [data-theme="dark"] .section-header p  { color: rgba(255,255,255,0.45); }
+    [data-theme="dark"] .section-tag { color: var(--teal); background: rgba(0,212,194,0.08); border-color: rgba(0,212,194,0.22); }
+    [data-theme="dark"] .step-item h4 { color: var(--white); }
+    [data-theme="dark"] .step-item p  { color: rgba(255,255,255,0.55); }
+    [data-theme="dark"] .testi-card  { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.08); box-shadow: none; }
+    [data-theme="dark"] .testi-text  { color: rgba(255,255,255,0.65); }
+    [data-theme="dark"] .testi-name  { color: var(--white); }
+    [data-theme="dark"] .testi-role  { color: rgba(255,255,255,0.4); }
+    [data-theme="dark"] .cta-box h2 { color: var(--white); }
+    [data-theme="dark"] .chatbot-window { background: #0f172a; }
+    [data-theme="dark"] .chatbot-body  { background: #0c1228; }
+    [data-theme="dark"] .chatbot-input { background: #1e293b; border-color: rgba(255,255,255,0.1); color: #fff; }
+    [data-theme="dark"] .chat-msg.bot  { background: #1e293b; color: rgba(255,255,255,0.85); }
+
+    /* THEME TOGGLE BUTTON */
+    .theme-toggle {
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 99px;
+      width: 40px; height: 40px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.05rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background var(--transition), transform var(--transition);
+      margin-left: 8px;
+    }
+    .theme-toggle:hover { background: rgba(255,255,255,0.14); transform: scale(1.08); }
+
+    /* BACK TO TOP */
+    .back-top {
+      position: fixed; bottom: 92px; right: 24px; z-index: 997;
+      width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(8,12,24,0.82);
+      border: 1px solid rgba(255,255,255,0.14);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,0.7);
+      font-size: 1.1rem; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.35s, transform 0.35s;
+      transform: translateY(10px);
+    }
+    .back-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .back-top:hover { background: rgba(26,86,255,0.8); color: #fff; }
+    @media(max-width:640px){ .back-top { bottom: 82px; right: 16px; } }
+
+    /* UNREAD BADGE on chatbot button */
+    .chatbot-badge {
+      position: absolute; top: 0; right: 0;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #ef4444; color: #fff; font-size: 0.65rem;
+      font-weight: 800; display: none; align-items: center; justify-content: center;
+      border: 2px solid #fff;
+    }
+  </style>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="chat-widget.js"></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <div style="display:flex;align-items:center;gap:20px;">
+      <a href="pro.html" class="nav-logo">DATA SPARK <span>TECHNOLOGIES</span></a>
+      <div id="user-greeting-wrap" style="display:none;position:relative;">
+        <span id="user-greeting" onclick="toggleDropdown()" style="cursor:pointer;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;color:var(--teal);background:rgba(0,212,194,0.1);border:1px solid rgba(0,212,194,0.25);padding:6px 16px;border-radius:99px;"></span>
+        <div id="user-dropdown" style="display:none;position:absolute;top:calc(100% + 10px);left:0;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);min-width:170px;overflow:hidden;z-index:999;">
+          <a href="dashboard.html" id="my-dashboard-link" style="display:block;padding:12px 18px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;color:#1a56ff;text-decoration:none;border-bottom:1px solid #f1f5f9;">📊 My Dashboard</a>
+          <a href="#" onclick="logout()" style="display:block;padding:12px 18px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;color:#ef4444;text-decoration:none;">🚪 Logout</a>
+        </div>
+      </div>
+    </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="pro.html">Home</a></li>
+      <li><a href="abt.html">About</a></li>
+      <li><a href="cor.html">Courses</a></li>
+      <li><a href="con1.html">Contact</a></li>
+      <li id="nav-login-li"><a href="log.html" class="nav-cta">Login</a></li>
+      <li id="nav-logout-li" style="display:none;"><a href="#" class="nav-cta" onclick="logout()" style="background:linear-gradient(135deg,#dc2626,#ef4444);">Logout</a></li>
+    </ul>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Toggle dark/light mode">🌙</button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="home">
+<div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="hero-rings">
+      <div class="hero-ring"></div>
+      <div class="hero-ring"></div>
+      <div class="hero-ring"></div>
+    </div>
+
+    <div class="hero-content">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Industry-Ready IT Training in Chennai
+      </div>
+      <h1>Launch Your<br><em>Tech Career</em><br>With Confidence</h1>
+      <p class="hero-sub">
+        Hands-on programs in Web Development, Python, Software Testing, and Data Analytics — designed to get you job-ready fast.
+      </p>
+      <div class="hero-actions">
+        <a href="cor.html" class="btn-primary">Explore Courses</a>
+        <a href="abt.html" class="btn-secondary">
+          About Us &nbsp;→
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat">
+        <div class="stat-num"><span class="count-num" data-target="500">0</span><span class="suffix">+</span></div>
+        <div class="stat-label">Students Trained</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-num"><span class="count-num" data-target="4">0</span><span class="suffix">+</span></div>
+        <div class="stat-label">Career Courses</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-num"><span class="count-num" data-target="95">0</span><span class="suffix">%</span></div>
+        <div class="stat-label">Placement Rate</div>
+      </div>
+      <div class="stat-divider"></div>
+      <div class="stat">
+        <div class="stat-num"><span class="count-num" data-target="3">0</span><span class="suffix">+</span></div>
+        <div class="stat-label">Expert Trainers</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="hiw-section">
+    <div class="section-header">
+      <span class="section-tag">Your Journey</span>
+      <h2>How It Works</h2>
+      <p>From signup to placement — four simple steps to launch your IT career</p>
+    </div>
+    <div class="steps-row">
+      <div class="step-item">
+        <div class="step-circle"><span class="step-num">1</span>📝</div>
+        <h4>Sign Up</h4>
+        <p>Create your free account in seconds and explore our full catalog of 16+ industry-aligned courses.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-circle"><span class="step-num">2</span>🎯</div>
+        <h4>Choose a Course</h4>
+        <p>Pick the program that matches your goals — beginner to advanced, across 5 tech domains.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-circle"><span class="step-num">3</span>🚀</div>
+        <h4>Learn & Build</h4>
+        <p>Train with expert instructors, work on real projects, and earn an industry-recognized certificate.</p>
+      </div>
+      <div class="step-item">
+        <div class="step-circle"><span class="step-num">4</span>💼</div>
+        <h4>Get Hired</h4>
+        <p>Leverage our placement support — resume reviews, mock interviews, and direct referrals to hiring partners.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- COURSE CATEGORIES -->
+  <section class="cat-section">
+    <div class="cat-inner">
+      <div class="section-header">
+        <span class="section-tag">Explore by Domain</span>
+        <h2>16+ Courses Across 5 Categories</h2>
+        <p>Find the right path for your career goals</p>
+      </div>
+      <div class="cat-grid">
+        <a href="cor.html" class="cat-card"><span class="cat-emoji">💻</span><div class="cat-name">Programming</div><div class="cat-count">5 Courses</div></a>
+        <a href="cor.html" class="cat-card"><span class="cat-emoji">📊</span><div class="cat-name">Data & AI</div><div class="cat-count">4 Courses</div></a>
+        <a href="cor.html" class="cat-card"><span class="cat-emoji">☁️</span><div class="cat-name">Cloud & DevOps</div><div class="cat-count">3 Courses</div></a>
+        <a href="cor.html" class="cat-card"><span class="cat-emoji">🧪</span><div class="cat-name">Software Testing</div><div class="cat-count">2 Courses</div></a>
+        <a href="cor.html" class="cat-card"><span class="cat-emoji">🎨</span><div class="cat-name">Design</div><div class="cat-count">2 Courses</div></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testi-section">
+    <div class="section-header">
+      <span class="section-tag">Student Stories</span>
+      <h2>What Our Students Say</h2>
+      <p>Real results from real people who trained with DATA SPARK</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"DATA SPARK completely changed my career. I went from zero coding knowledge to landing a front-end developer job in just 4 months. The projects were real and the trainers were always available."</p>
+        <div class="testi-author"><div class="testi-avatar">👨</div><div><div class="testi-name">NAME</div><div class="testi-role">Frontend Developer · Hired at TCS</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The Python course was incredibly well-structured. I built 3 real projects and got certified. Within 6 weeks of completing the course, I had 2 job offers. Highly recommend DATA SPARK!"</p>
+        <div class="testi-author"><div class="testi-avatar">👩</div><div><div class="testi-name">Priya Ramesh</div><div class="testi-role">Python Developer · Hired at Infosys</div></div></div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"The placement support was outstanding. They helped with my resume, did mock interviews, and referred me directly to companies. I got placed as a QA Engineer within 2 months of completing the course."</p>
+        <div class="testi-author"><div class="testi-avatar">👨</div><div><div class="testi-name">Karthik Selvam</div><div class="testi-role">QA Engineer · Hired at Wipro</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES (dark) -->
+  <section class="features-section" id="services">
+    <div class="features-inner">
+      <div class="section-header">
+        <span class="section-tag">Why Choose Us</span>
+        <h2>Built for Your Success</h2>
+        <p>Every aspect of our training is engineered to get you hired</p>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">🎯</span>
+          <h3>Project-Based Learning</h3>
+          <p>Learn by doing. Every course includes real-world projects that build your portfolio and prove your skills to employers.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🧑‍🏫</span>
+          <h3>Expert Trainers</h3>
+          <p>Learn from industry professionals with years of hands-on experience who bring real-world insight into every session.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🏆</span>
+          <h3>Recognized Certificates</h3>
+          <p>Earn industry-recognized certificates upon completion that validate your skills and boost your resume.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📅</span>
+          <h3>Flexible Batches</h3>
+          <p>Morning, evening, and weekend batches available so you can learn at a pace and schedule that fits your life.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">🤝</span>
+          <h3>Placement Support</h3>
+          <p>Get resume guidance, mock interviews, and job referrals to our network of hiring partners across Tamil Nadu.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">📍</span>
+          <h3>Chennai-Based, Locally Loved</h3>
+          <p>Trusted by hundreds of students in Chennai with a track record of successful placements across top companies.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA BANNER -->
+  <section class="cta-banner">
+    <div class="cta-box">
+      <h2>Ready to Spark Your Career?</h2>
+      <p>Join hundreds of students who launched their IT careers with DATA SPARK. Enroll today.</p>
+      <a href="con1.html" class="btn-white">Get in Touch</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-txt">DATA SPARK TECHNOLOGIES</span>
+        <p>A leading IT training institute in Chennai dedicated to building future-ready tech professionals through practical education.</p>
+        <div class="social-icons">
+          <a href="https://www.instagram.com/gopss_007_" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.975.975 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.975.975-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.975-.975-1.246-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608.975-.975 2.242-1.246 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.986 8.741 24 12 24s3.668-.014 4.948-.072c1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038.058-1.28.072-1.689.072-4.948s-.014-3.668-.072-4.948c-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+          <a href="#" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg></a>
+          <a href="#" class="social-icon" title="X (Twitter)"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <a href="pro.html">Home</a>
+        <a href="abt.html">About</a>
+        <a href="cor.html">Courses</a>
+        <a href="con1.html">Contact</a>
+        <a href="log.html">Login</a>
+      </div>
+      <div class="footer-col">
+        <h4>Courses</h4>
+        <a href="cor.html">Web Development</a>
+        <a href="cor.html">Python Programming</a>
+        <a href="cor.html">Software Testing</a>
+        <a href="cor.html">Data Analytics</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="#">📍 Chennai, Tamil Nadu</a>
+        <a href="tel:+919876543210">📞 +91 98765 43210</a>
+        <a href="mailto:dataspark@email.com">📧 dataspark@email.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 DATA SPARK TECHNOLOGIES — All rights reserved.</p>
+      <a href="con1.html">Get in Touch →</a>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('nav-links').classList.toggle('open');
+    }
+    document.querySelectorAll('#nav-links a').forEach(a => a.addEventListener('click', () => {
+      document.getElementById('hamburger').classList.remove('open');
+      document.getElementById('nav-links').classList.remove('open');
+    }));
+
+    const dsUser = localStorage.getItem('ds_user');
+    const dsRole = localStorage.getItem('ds_role');
+    if (dsUser) {
+      document.getElementById('user-greeting-wrap').style.display = 'block';
+      document.getElementById('user-greeting').textContent = 'Hi, ' + dsUser.charAt(0).toUpperCase() + dsUser.slice(1) + ' 👋';
+      document.getElementById('nav-login-li').style.display = 'none';
+      document.getElementById('nav-logout-li').style.display = 'none';
+
+      // Dynamically set the dashboard link based on role
+      const myDashboardLink = document.getElementById('my-dashboard-link');
+      if (myDashboardLink) {
+        if (dsRole && (dsRole.toLowerCase() === 'admin' || dsRole.toLowerCase().includes('admin'))) {
+          myDashboardLink.href = 'admin.html';
+        } else {
+          myDashboardLink.href = 'dashboard.html';
+        }
+      }
+    }
+
+    function toggleDropdown() {
+      const dd = document.getElementById('user-dropdown');
+      dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('user-greeting-wrap').contains(e.target)) {
+        document.getElementById('user-dropdown').style.display = 'none';
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem('ds_user');
+      window.location.href = 'log.html';
+    }
+
+    // Animated counter
+    function animateCount(el) {
+      const target = parseInt(el.dataset.target);
+      const duration = 1800;
+      const start = performance.now();
+      function step(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // ease out cubic
+        const ease = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.floor(ease * target);
+        if (progress < 1) requestAnimationFrame(step);
+        else el.textContent = target;
+      }
+      requestAnimationFrame(step);
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('.count-num').forEach(animateCount);
+          observer.disconnect();
+        }
+      });
+    }, { threshold: 0.3 });
+
+    const statsEl = document.querySelector('.hero-stats');
+    if (statsEl) observer.observe(statsEl);
+
+    // CHATBOT
+    // Chatbot button
+    const chatbotBtn = document.createElement('button');
+    chatbotBtn.className = 'chatbot-btn';
+    chatbotBtn.innerHTML = '💬';
+    chatbotBtn.onclick = () => chatWindow.classList.toggle('open');
+    document.body.appendChild(chatbotBtn);
+
+    const chatWindow = document.createElement('div');
+    // Chatbot window structure
+    chatWindow.className = 'chatbot-window';
+    chatWindow.innerHTML = `
+      <div class="chatbot-header">
+        <div style="display:flex;align-items:center;justify-content:space-between;width:100%;">
+          <h3 style="margin:0;display:flex;align-items:center;gap:8px;">
+            💬 DATA SPARK Assistant
+            <span id="chatbot-mode-indicator" style="display:none;font-size:0.7rem;background:#00d4c2;color:#000;padding:2px 8px;border-radius:999px;font-weight:600;">LIVE CHAT</span>
+          </h3>
+          <button class="chatbot-close" onclick="this.closest('.chatbot-window').classList.remove('open')">×</button>
+        </div>
+      </div>
+      <div class="chatbot-body" id="chatbot-body">
+        <div class="chat-msg bot">Hi! 👋 I'm your DATA SPARK assistant. Ask me about courses, fees, or placements! Type "admin" to speak with support.</div>
+      </div>
+      <div class="chatbot-footer">
+        <input type="text" class="chatbot-input" id="chatbot-input" placeholder="Type your message..." />
+        <button class="chatbot-send" onclick="sendChatMsg()">Send</button>
+      </div>
+    `;
+    document.body.appendChild(chatWindow);
+
+    function addMessageToChat({ type, message, sender, time }) {
+      const body = document.getElementById('chatbot-body');
+      if (!body) return;
+      const bubble = document.createElement('div');
+      bubble.className = `chat-msg ${type === 'student' ? 'user' : 'bot'}`;
+      bubble.innerHTML = `${type === 'student' ? '' : `<strong>${sender || 'Admin'}:</strong> `}${message}`;
+      body.appendChild(bubble);
+      body.scrollTop = body.scrollHeight;
+    }
+
+    // Socket.IO setup
+    const socket = io('https://your-backend-url');
+    
+    socket.on('admin_status', (data) => {
+      const statusText = document.querySelector('.chatbot-header h3');
+      if (statusText) statusText.innerHTML = `💬 DATA SPARK Assistant ${data.online ? '<span style="font-size:0.7rem;color:#00ff00;margin-left:5px;">● Online</span>' : ''}`;
+    });
+
+    socket.on('chat_history', (history) => {
+      const body = document.getElementById('chatbot-body');
+      if (!body) return;
+      if (!history || !history.length) return;
+      body.innerHTML = '';
+      history.forEach(msg => {
+        addMessageToChat({
+          type: msg.sender_role === 'admin' ? 'admin' : 'student',
+          message: msg.message || '',
+          sender: msg.sender_name || (msg.sender_role === 'admin' ? 'Admin' : 'You'),
+          time: msg.created_at ? new Date(msg.created_at).toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : ''
+        });
+      });
+      if (!history.some(msg => msg.sender_role !== 'bot')) {
+        body.innerHTML = '<div class="chat-msg bot">Hi! 👋 I\'m your DATA SPARK assistant. Ask me about courses, fees, or placements!</div>' + body.innerHTML;
+      }
+    });
+
+    socket.on('receive_msg', (data) => {
+      if (!data) return;
+      addMessageToChat({
+        type: 'admin',
+        message: data.msg || '',
+        sender: data.name || 'Admin',
+        time: data.time || new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true })
+      });
+    });
+
+    socket.on('adminTyping', (data) => {
+      if (!data || data.conversationKey !== conversationKey) return;
+      const body = document.getElementById('chatbot-body');
+      if (!body) return;
+      let typingBubble = document.getElementById('chatbot-typing');
+      if (!typingBubble) {
+        typingBubble = document.createElement('div');
+        typingBubble.id = 'chatbot-typing';
+        typingBubble.className = 'chat-msg bot';
+        typingBubble.textContent = 'Admin is typing...';
+        body.appendChild(typingBubble);
+        body.scrollTop = body.scrollHeight;
+      }
+      clearTimeout(window.__chatbotTypingTimeout);
+      window.__chatbotTypingTimeout = setTimeout(() => {
+        typingBubble?.remove();
+      }, 2500);
+    });
+
+    let activeChatbotMessageId = null; // To track the message sent to admin  
+    // Generate or retrieve a unique conversation key for this browser session
+    let conversationKey = localStorage.getItem('chatbot_conv_key');
+    if (!conversationKey) {
+      conversationKey = 'conv_' + Math.random().toString(36).substr(2, 9);
+      localStorage.setItem('chatbot_conv_key', conversationKey);
+    }
+
+    // Register user with socket.io if logged in
+    if (dsUser) {
+      socket.emit('student_join', { conversationKey, userId: dsUser, userName: dsUser });
+    } else {
+      socket.emit('student_join', { conversationKey, userName: 'Guest' });
+    }
+
+    // Load pending admin replies on chatbot open
+    async function loadPendingReplies() {
+      if (!dsUser) return;
+      try {
+        const res = await fetch(`https://your-backend-url/api/user/pending-replies?username=${encodeURIComponent(dsUser)}`);
+        const data = await res.json();
+        if (data.success && data.replies.length > 0) {
+          const body = document.getElementById('chatbot-body');
+          data.replies.forEach(reply => {
+            body.innerHTML += `<div class="chat-msg bot" style="background:#d1fae5;color:#059669;">Admin: ${reply.admin_reply}</div>`;
+          });
+          body.scrollTop = body.scrollHeight;
+        }
+      } catch (e) {
+        console.error('Failed to load pending replies:', e);
+      }
+    }
+
+    // Listen for admin replies
+    socket.on('adminReplyReceived', (data) => {
+      if (!data) return;
+
+      // Always show admin reply in chatbot.
+      // This avoids relying on fragile messageId tracking in the client.
+      const body = document.getElementById('chatbot-body');
+      body.innerHTML += `<div class="chat-msg bot" style="background:#d1fae5;color:#059669;">Admin: ${data.reply}</div>`;
+      body.scrollTop = body.scrollHeight;
+
+      chatbotState = 0;
+      activeChatbotMessageId = null;
+      sessionStorage.removeItem('last_unanswered_query');
+    });
+
+    const chatbotInput = document.getElementById('chatbot-input');
+    if (chatbotInput) {
+      chatbotInput.addEventListener('keypress', e => {
+        if (e.key === 'Enter') sendChatMsg();
+      });
+      chatbotInput.addEventListener('input', () => {
+        if (botState === 'live' && chatbotInput.value.trim().length > 0) {
+          socket.emit('student_typing', { conversationKey, userName: dsUser || 'Guest' });
+        }
+      });
+    }
+
+    function sendChatMsg() { // Called when user types and sends a message
+      const input = document.getElementById('chatbot-input');
+      const msg = input.value.trim();
+      if (!msg) return;
+      const body = document.getElementById('chatbot-body');
+
+      body.innerHTML += `<div class="chat-msg user">${msg}</div>`;
+      input.value = '';
+      body.scrollTop = body.scrollHeight;
+
+      // If in live chat mode, send to admin via Socket.IO
+      if (botState === 'live') {
+        const userName = localStorage.getItem('ds_user') || 'Guest';
+        const userEmail = localStorage.getItem('ds_email') || 'guest@example.com';
+        const userId = localStorage.getItem('ds_user');
+
+        socket.emit('student_msg', {
+          msg: msg,
+          userName: userName,
+          userEmail: userEmail,
+          userId: userId,
+          conversationKey: conversationKey
+        });
+
+        setTimeout(() => {
+          body.innerHTML += `<div class="chat-msg bot">Message sent to admin. They will respond shortly.</div>`;
+          body.scrollTop = body.scrollHeight;
+        }, 400);
+        return;
+      }
+
+      // If in bot mode, send to chatbot API
+      if (botState === 'bot') {
+        fetch('/chatbot-message', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            user_query: msg,
+            user_name: localStorage.getItem('ds_user') || 'Guest',
+            user_email: localStorage.getItem('ds_email') || '',
+            conversation_key: conversationKey
+          })
+        }).catch(() => {});
+      }
+
+      // Get bot reply and display
+      setTimeout(() => {
+        const botReply = getBotReply(msg.toLowerCase());
+        body.innerHTML += `<div class="chat-msg bot">${botReply}</div>`;
+        body.scrollTop = body.scrollHeight;
+      }, 300);
+    }
+
+    let chatbotState = 0; // 0: normal conversation, 1: asked about contacting admin, 2: waiting for admin reply
+    let botState = 'bot'; // 'bot' for AI bot mode, 'live' for live chat mode
+
+    function updateChatbotModeIndicator() {
+      const indicator = document.getElementById('chatbot-mode-indicator');
+      if (botState === 'live') {
+        if (indicator) indicator.style.display = 'inline-block';
+      } else {
+        if (indicator) indicator.style.display = 'none';
+      }
+    }
+
+    function getBotReply(msg) { // This function determines the bot's response
+      // Handle "yes" or "no" if admin contact was asked
+      if (chatbotState === 1) {
+        if (msg.includes('yes') || msg.includes('yeah') || msg.includes('sure') || msg.includes('ok')) {
+          // User agreed to contact admin, send message via Socket.IO
+          const userQuery = sessionStorage.getItem('last_unanswered_query') || 'User requested admin contact.';
+          const userName = localStorage.getItem('ds_user') || 'Guest';
+          const userEmail = localStorage.getItem('ds_email') || 'guest@example.com';
+          const userId = localStorage.getItem('ds_user'); // Use ds_user as unique ID
+
+          socket.emit('student_msg', {
+            msg: userQuery,
+            userName: userName,
+            userEmail: userEmail,
+            userId: userId,
+            conversationKey: conversationKey
+          });
+
+          chatbotState = 2; // waiting for admin reply
+          botState = 'live'; // Switch to live chat mode
+          updateChatbotModeIndicator();
+          return '🔗 <strong>Live Chat Activated!</strong><br>You are now connected with our admin support team. Messages will appear in real-time. ✨<br><br><em style="color:#94a3b8;font-size:0.9rem;">Your support team may take a moment to respond depending on availability.</em>';
+        } else if (msg.includes('no') || msg.includes('nope') || msg.includes('nah')) {
+          chatbotState = 0; // Reset
+          return 'Thank you! Is there anything else I can help you with?';
+        } else {
+          // User replied something else after being asked to contact admin, prompt again
+          return 'Please reply "Yes" or "No" if you\'d like to contact an admin.';
+        }
+      }
+
+      // Check for direct admin/support keywords
+      const supportKeywords = ['admin', 'support', 'speak', 'human', 'talk', 'contact admin', 'need help', 'customer service', 'live', 'agent', 'representative'];
+      const hasSupport = supportKeywords.some(kw => msg.includes(kw.toLowerCase()));
+      if (hasSupport) {
+        const userQuery = msg;
+        const userName = localStorage.getItem('ds_user') || 'Guest';
+        const userEmail = localStorage.getItem('ds_email') || 'guest@example.com';
+        const userId = localStorage.getItem('ds_user');
+
+        socket.emit('student_msg', {
+          msg: userQuery,
+          userName: userName,
+          userEmail: userEmail,
+          userId: userId,
+          conversationKey: conversationKey
+        });
+
+        chatbotState = 2; // waiting for admin reply
+        botState = 'live'; // Switch to live chat mode
+        updateChatbotModeIndicator();
+        return '🔗 <strong>Live Chat Activated!</strong><br>You are now connected with our admin support team. Messages will appear in real-time. ✨<br><br><em style="color:#94a3b8;font-size:0.9rem;">Our support team is here to help. Please stand by...</em>';
+      }
+
+      // Normal predefined responses
+      if (msg.includes('course') || msg.includes('program')) return '📚 We offer 16+ courses in Programming, Data & AI, Cloud, Testing, and Design. <a href="cor.html" style="color:#1a56ff;font-weight:600">View all courses</a>';
+      if (msg.includes('fee') || msg.includes('price') || msg.includes('cost')) return '💰 Course fees range from ₹8,000 to ₹25,000. Contact us for detailed pricing: <a href="con1.html" style="color:#1a56ff;font-weight:600">Get in touch</a>';
+      if (msg.includes('placement') || msg.includes('job')) return '💼 We have 95% placement rate with top companies like TCS, Infosys, Wipro. We provide resume support, mock interviews & referrals!';
+      if (msg.includes('duration') || msg.includes('time')) return '⏱️ Most courses are 2-4 months long with flexible morning, evening, and weekend batches.';
+      if (msg.includes('location') || msg.includes('address') || msg.includes('where')) return '📍 We are located in Chennai, Tamil Nadu. Visit our <a href="con1.html" style="color:#1a56ff;font-weight:600">Contact page</a> for details.';
+      if (msg.includes('contact') || msg.includes('phone') || msg.includes('reach') || msg.includes('call')) return '📞 <strong>Contact Us:</strong><br>📞 +91 1236547890<br>📧 dataspark@email.com<br>📍 Chennai, Tamil Nadu<br>🕐 Mon–Sat, 9AM–7PM<br><a href="con1.html" style="color:#1a56ff;font-weight:600">→ Visit Contact Page</a>';
+      if (msg.includes('mail') || msg.includes('email')) return '📧 You can reach us at <strong>dataspark@email.com</strong><br>We reply within 24 hours! <a href="con1.html" style="color:#1a56ff;font-weight:600">→ Contact Page</a>';
+      if (msg.includes('internship')) return '🎓 <strong>Internship Programs at DATA SPARK:</strong><br><br>• Web Development<br>• Python Programming<br>• Software Testing<br>• Data Analytics<br>• React JS<br>• Cloud & DevOps<br><br>📧 dataspark@email.com<br>📞 +91 1236547890<br><a href="con1.html" style="color:#1a56ff;font-weight:600">→ Apply via Contact Page</a>';
+      if (msg.includes('hi') || msg.includes('hello') || msg.includes('hey')) return '👋 Hello! How can I help you today? Ask me about courses, fees, placements, or type "admin" to speak with our support team!';
+      
+      // If no predefined answer, ask about contacting admin
+      sessionStorage.setItem('last_unanswered_query', msg); // Store the unanswered query
+      chatbotState = 1; // Set state to indicate admin contact question has been asked
+      return '🤔 I\'m not sure I understand. Would you like to contact an admin for further assistance? (Yes/No)';
+    }
+
+    // Modify chatbot open/close
+    chatbotBtn.onclick = () => {
+      chatWindow.classList.toggle('open');
+      if (chatWindow.classList.contains('open')) {
+        loadPendingReplies(); // Load any pending admin replies
+      }
+    };
+    function closeChatbotWindow() { chatWindow.classList.remove('open'); }
+  </script>
+  <script>
+    // Landing skeleton + reveal
+    (function initLandingUX(){
+      const targets = [
+        document.querySelector('.hiw-section'),
+        document.querySelector('.cat-section'),
+        document.querySelector('.testi-section'),
+        document.querySelector('.features-section'),
+        document.querySelector('.cta-banner'),
+      ].filter(Boolean);
+
+      targets.forEach(t => t.classList.add('reveal'));
+
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach(en => {
+          if (en.isIntersecting) {
+            en.target.classList.add('visible');
+            obs.unobserve(en.target);
+          }
+        });
+      }, { threshold: 0.12 });
+
+      targets.forEach(t => obs.observe(t));
+    })();
+  </script>
+</body>
+</html>
+
+

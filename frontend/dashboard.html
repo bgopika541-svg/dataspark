@@ -1,0 +1,1805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - DATA SPARK TECHNOLOGIES</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="theme.css">
+    <script src="theme.js"></script>
+
+    <style>
+        body { background: #f1f5f9; font-family: 'Inter', sans-serif; }
+
+        /* Dark Mode Overrides for Student Dashboard */
+        [data-theme="dark"] body { background: #0f172a; color: #f8fafc; }
+        [data-theme="dark"] .stat-card, [data-theme="dark"] .progress-section, [data-theme="dark"] .week-card { background: #1e293b; color: #f8fafc; }
+        [data-theme="dark"] .dash-greeting h1, [data-theme="dark"] .stat-card h3 { color: #f8fafc; }
+
+        .dashboard-wrapper {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            min-height: calc(100vh - 70px);
+        }
+
+        /* ---- SIDEBAR ---- */
+        .sidebar {
+            background: #0f172a;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-profile {
+            text-align: center;
+            padding: 20px 0 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 15px;
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto 15px;
+        }
+
+        .sidebar-profile h3 { color: white; font-size: 1rem; margin-bottom: 4px; }
+        .sidebar-profile span { color: #94a3b8; font-size: 0.82rem; }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background: rgba(102,126,234,0.15);
+            color: #667eea;
+        }
+
+        .sidebar-nav a i { width: 18px; }
+
+        .sidebar-logout {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .sidebar-logout a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            color: #ef4444;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 0.92rem;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .sidebar-logout a:hover { background: rgba(239,68,68,0.1); }
+
+        /* ---- MAIN CONTENT ---- */
+        .dashboard-main { padding: 35px; overflow-y: auto; }
+
+        .dash-greeting { margin-bottom: 30px; }
+        .dash-greeting h1 { font-size: 1.8rem; color: #1e293b; margin-bottom: 5px; }
+        .dash-greeting p { color: #64748b; }
+
+        /* Stats Cards */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .stat-card-icon {
+            width: 55px;
+            height: 55px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .stat-card-icon.blue  { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .stat-card-icon.green { background: linear-gradient(135deg, #10b981, #059669); }
+        .stat-card-icon.orange{ background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+        .stat-card h3 { font-size: 1.6rem; color: #1e293b; margin-bottom: 3px; }
+        .stat-card p  { color: #64748b; font-size: 0.85rem; }
+
+        /* Enrolled Course Card */
+        .section-title-dash {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .enrolled-card {
+            background: linear-gradient(135deg, #1e3a5f, #2c5282);
+            border-radius: 20px;
+            padding: 30px;
+            color: white;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .enrolled-card h2 { font-size: 1.4rem; margin-bottom: 8px; }
+        .enrolled-card p  { opacity: 0.85; font-size: 0.9rem; margin-bottom: 15px; }
+
+        .course-status-badge {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-pending  { background: rgba(251,191,36,0.2); color: #fbbf24; border: 1px solid #fbbf24; }
+        .badge-approved { background: rgba(16,185,129,0.2); color: #10b981; border: 1px solid #10b981; }
+        .badge-rejected { background: rgba(239,68,68,0.2);  color: #ef4444; border: 1px solid #ef4444; }
+
+        .no-course-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+        }
+
+        .no-course-card i  { font-size: 3rem; color: #cbd5e1; margin-bottom: 15px; }
+        .no-course-card h3 { color: #1e293b; margin-bottom: 8px; }
+        .no-course-card p  { color: #64748b; margin-bottom: 20px; }
+        .primary-btn { display: inline-block; padding: 12px 28px; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 10px; text-decoration: none; font-weight: 600; font-size: 0.9rem; transition: transform 0.2s, box-shadow 0.2s; }
+        .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(102,126,234,0.4); }
+
+        /* Syllabus / Progress */
+        .syllabus-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .week-card {
+            background: white;
+            border-radius: 16px;
+            padding: 22px 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .week-card.locked {
+            opacity: 0.55;
+            filter: grayscale(0.3);
+        }
+
+        .week-card.completed { border-left: 4px solid #10b981; }
+        .week-card.unlocked  { border-left: 4px solid #667eea; }
+        .week-card.locked    { border-left: 4px solid #cbd5e1; }
+
+        .week-num {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .week-num.completed { background: #d1fae5; color: #059669; }
+        .week-num.unlocked  { background: #ede9fe; color: #667eea; }
+        .week-num.locked    { background: #f1f5f9; color: #94a3b8; }
+
+        .week-info { flex: 1; }
+        .week-info h4 { color: #1e293b; font-size: 1rem; margin-bottom: 4px; }
+        .week-info p  { color: #64748b; font-size: 0.85rem; }
+
+        .week-badge {
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .week-badge.completed { background: #d1fae5; color: #059669; }
+        .week-badge.unlocked  { background: #ede9fe; color: #667eea; }
+        .week-badge.locked    { background: #f1f5f9; color: #94a3b8; }
+
+        .complete-btn {
+            padding: 9px 20px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .complete-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(102,126,234,0.4);
+        }
+
+        /* Task/Test Modal */
+        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:999; align-items:center; justify-content:center; }
+        .modal-overlay.show { display:flex; }
+        .modal-box { background:white; border-radius:20px; padding:36px; max-width:480px; width:90%; box-shadow:0 20px 60px rgba(0,0,0,0.2); animation:popIn 0.3s ease both; }
+        @keyframes popIn { from { opacity:0; transform:scale(0.9); } to { opacity:1; transform:scale(1); } }
+        .modal-box h3 { color:#1e293b; font-size:1.2rem; font-weight:700; margin-bottom:6px; }
+        .modal-box p  { color:#64748b; font-size:0.9rem; margin-bottom:20px; }
+        .modal-task-list { display:flex; flex-direction:column; gap:10px; margin-bottom:20px; }
+        .modal-task-item { display:flex; align-items:center; gap:10px; padding:12px 15px; background:#f8fafc; border-radius:10px; font-size:0.88rem; color:#1e293b; }
+        .modal-task-item i { color:#667eea; width:16px; }
+        .modal-close-btn { width:100%; padding:12px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:10px; font-weight:600; cursor:pointer; font-size:0.9rem; }
+        .task-btn { padding:7px 14px; background:rgba(102,126,234,0.1); color:#667eea; border:1px solid rgba(102,126,234,0.3); border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+        .task-btn:hover { background:#667eea; color:white; }
+        .test-btn { padding:7px 14px; background:rgba(16,185,129,0.1); color:#10b981; border:1px solid rgba(16,185,129,0.3); border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+        .test-btn:hover { background:#10b981; color:white; }
+        .week-actions { display:flex; gap:8px; flex-shrink:0; }
+        .assess-btn { padding:7px 14px; background:rgba(245,158,11,0.1); color:#f59e0b; border:1px solid rgba(245,158,11,0.3); border-radius:8px; font-size:0.8rem; font-weight:600; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+        .assess-btn:hover { background:#f59e0b; color:white; }
+
+        /* Lesson Modal - PDF Style */
+        .lesson-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center; padding:20px; }
+        .lesson-modal-overlay.show { display:flex; }
+        .lesson-modal-box { background:#f5f5f0; border-radius:4px; width:100%; max-width:720px; max-height:92vh; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 30px 100px rgba(0,0,0,0.4); animation:popIn 0.3s ease both; }
+        .pdf-slides-wrap { overflow:hidden; flex:1; position:relative; }
+        .pdf-slides-track { display:flex; height:100%; transition:transform 0.4s cubic-bezier(0.4,0,0.2,1); }
+        .pdf-slide { min-width:100%; overflow-y:auto; max-height:calc(92vh - 120px); }
+        .pdf-slide-dots { display:flex; justify-content:center; align-items:center; gap:8px; padding:8px 0 4px; background:#f5f5f0; }
+        .pdf-dot { width:8px; height:8px; border-radius:50%; background:#cbd5e1; cursor:pointer; transition:all 0.3s; border:none; padding:0; }
+        .pdf-dot.active { background:#667eea; width:22px; border-radius:4px; }
+
+        /* PDF Top Bar */
+        .pdf-topbar { background:#e53935; padding:10px 20px; display:flex; align-items:center; justify-content:space-between; border-radius:4px 4px 0 0; }
+        .pdf-topbar-left { display:flex; align-items:center; gap:10px; }
+        .pdf-topbar-left i { color:white; font-size:1.2rem; }
+        .pdf-topbar-left span { color:white; font-size:0.82rem; font-weight:600; letter-spacing:0.04em; }
+        .pdf-topbar-right { color:rgba(255,255,255,0.8); font-size:0.78rem; }
+
+        /* PDF Page */
+        .pdf-page { background:white; margin:16px; border-radius:2px; box-shadow:0 2px 12px rgba(0,0,0,0.15); }
+
+        /* PDF Header */
+        .pdf-header { background:linear-gradient(135deg,#1e3a5f,#2c5282); padding:36px 40px 28px; color:white; position:relative; overflow:hidden; }
+        .pdf-header::before { content:''; position:absolute; top:-30px; right:-30px; width:150px; height:150px; background:rgba(255,255,255,0.05); border-radius:50%; }
+        .pdf-header::after { content:''; position:absolute; bottom:-20px; left:60px; width:100px; height:100px; background:rgba(255,255,255,0.04); border-radius:50%; }
+        .pdf-org { font-size:0.72rem; font-weight:700; letter-spacing:0.12em; color:rgba(255,255,255,0.6); text-transform:uppercase; margin-bottom:10px; }
+        .pdf-title { font-size:1.6rem; font-weight:800; margin-bottom:6px; line-height:1.3; }
+        .pdf-subtitle { font-size:0.88rem; color:rgba(255,255,255,0.75); margin-bottom:20px; }
+        .pdf-meta { display:flex; gap:20px; flex-wrap:wrap; }
+        .pdf-meta-item { background:rgba(255,255,255,0.12); padding:6px 14px; border-radius:20px; font-size:0.75rem; color:rgba(255,255,255,0.9); display:flex; align-items:center; gap:6px; }
+
+        /* PDF Body */
+        .pdf-body { padding:32px 40px; }
+        .pdf-section-title { font-size:0.7rem; font-weight:800; letter-spacing:0.14em; text-transform:uppercase; color:#e53935; margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+        .pdf-section-title::after { content:''; flex:1; height:1px; background:#e53935; opacity:0.3; }
+        .pdf-intro { font-size:0.88rem; color:#475569; line-height:1.8; margin-bottom:24px; padding:16px 20px; background:#f8fafc; border-left:3px solid #667eea; border-radius:0 8px 8px 0; }
+        .pdf-point { display:flex; gap:14px; margin-bottom:14px; align-items:flex-start; }
+        .pdf-point-num { width:26px; height:26px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:0.72rem; font-weight:800; flex-shrink:0; margin-top:1px; }
+        .pdf-point-text { font-size:0.88rem; color:#334155; line-height:1.7; padding-top:3px; }
+        .pdf-divider { border:none; border-top:1px dashed #cbd5e1; margin:24px 0; }
+        .pdf-note { background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:14px 18px; font-size:0.82rem; color:#92400e; display:flex; gap:10px; align-items:flex-start; margin-top:8px; }
+        .pdf-note i { color:#f59e0b; margin-top:2px; flex-shrink:0; }
+        .pdf-checklist { list-style:none; padding:0; margin:0 0 8px; display:flex; flex-direction:column; gap:8px; }
+        .pdf-checklist li { display:flex; align-items:flex-start; gap:10px; font-size:0.87rem; color:#334155; line-height:1.6; }
+        .pdf-checklist li::before { content:'\2610'; font-size:1rem; color:#667eea; flex-shrink:0; margin-top:1px; }
+        .pdf-factbox { background:linear-gradient(135deg,#f0f9ff,#e0f2fe); border:1px solid #bae6fd; border-radius:10px; padding:16px 20px; margin-top:8px; display:flex; gap:12px; align-items:flex-start; }
+        .pdf-factbox i { color:#0284c7; font-size:1.1rem; flex-shrink:0; margin-top:2px; }
+        .pdf-factbox-text { font-size:0.85rem; color:#0c4a6e; line-height:1.7; }
+
+        /* PDF Footer */
+        .pdf-footer-bar { background:#f8fafc; border-top:1px solid #e2e8f0; padding:14px 40px; display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:#94a3b8; }
+
+        .lesson-footer { padding:12px 16px; background:#f5f5f0; display:flex; gap:12px; justify-content:flex-end; border-radius:0 0 4px 4px; }
+        .btn-mark-read { padding:12px 22px; background:linear-gradient(135deg,#10b981,#059669); color:white; border:none; border-radius:10px; font-size:0.9rem; font-weight:700; cursor:pointer; transition:all 0.3s; }
+        .btn-mark-read:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 6px 20px rgba(16,185,129,0.4); }
+        .btn-mark-read.done { background:#d1fae5; color:#059669; cursor:default; transform:none; box-shadow:none; }
+        .btn-start-assess { padding:12px 28px; background:linear-gradient(135deg,#f59e0b,#d97706); color:white; border:none; border-radius:10px; font-size:0.9rem; font-weight:700; cursor:pointer; transition:all 0.3s; }
+        .btn-start-assess:hover:not(:disabled) { transform:translateY(-2px); box-shadow:0 6px 20px rgba(245,158,11,0.4); }
+        .btn-start-assess:disabled { opacity:0.4; cursor:not-allowed; }
+        .btn-close-lesson { padding:12px 22px; background:#e2e8f0; color:#64748b; border:none; border-radius:10px; font-size:0.9rem; font-weight:600; cursor:pointer; }
+
+        /* Assessment Modal */
+        .assess-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1001; align-items:center; justify-content:center; padding:20px; }
+        .assess-modal-overlay.show { display:flex; }
+        .assess-modal-box { background:white; border-radius:20px; width:100%; max-width:620px; max-height:88vh; overflow-y:auto; box-shadow:0 24px 80px rgba(0,0,0,0.25); animation:popIn 0.3s ease both; }
+        .assess-header { background:linear-gradient(135deg,#f59e0b,#d97706); padding:24px 30px; border-radius:20px 20px 0 0; color:white; display:flex; justify-content:space-between; align-items:center; }
+        .assess-header h2 { font-size:1.15rem; }
+        .assess-timer { background:rgba(255,255,255,0.2); padding:6px 14px; border-radius:20px; font-size:0.9rem; font-weight:700; }
+        .assess-body { padding:28px 30px; }
+        .question-block { margin-bottom:24px; padding:20px; background:#f8fafc; border-radius:14px; border-left:4px solid #667eea; }
+        .question-block p { color:#1e293b; font-size:0.95rem; font-weight:600; margin-bottom:14px; }
+        .option-label { display:flex; align-items:center; gap:10px; padding:10px 14px; border-radius:10px; cursor:pointer; font-size:0.88rem; color:#334155; transition:background 0.2s; margin-bottom:6px; }
+        .option-label:hover { background:#ede9fe; }
+        .option-label input { accent-color:#667eea; width:16px; height:16px; }
+        .option-label.correct { background:#d1fae5; color:#059669; font-weight:600; }
+        .option-label.wrong { background:#fee2e2; color:#dc2626; }
+        .assess-footer { padding:0 30px 28px; display:flex; justify-content:flex-end; }
+        .btn-submit-assess { padding:13px 32px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:10px; font-size:0.95rem; font-weight:700; cursor:pointer; transition:all 0.3s; }
+        .btn-submit-assess:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(102,126,234,0.4); }
+
+        /* Score Modal */
+        .score-modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:1002; align-items:center; justify-content:center; }
+        .score-modal-overlay.show { display:flex; }
+        .score-box { background:white; border-radius:24px; padding:44px 40px; text-align:center; max-width:400px; width:90%; box-shadow:0 24px 80px rgba(0,0,0,0.25); animation:popIn 0.3s ease both; }
+        .score-circle { width:110px; height:110px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:2rem; font-weight:800; margin:0 auto 20px; }
+        .score-circle.pass { background:#d1fae5; color:#059669; border:4px solid #10b981; }
+        .score-circle.fail { background:#fee2e2; color:#dc2626; border:4px solid #ef4444; }
+        .score-box h3 { font-size:1.4rem; color:#1e293b; margin-bottom:8px; }
+        .score-box p { color:#64748b; font-size:0.9rem; margin-bottom:24px; }
+        .btn-score-close { padding:12px 32px; background:linear-gradient(135deg,#667eea,#764ba2); color:white; border:none; border-radius:10px; font-size:0.9rem; font-weight:700; cursor:pointer; }
+
+        /* Dashboard Search Bar */
+        .dash-search-wrap {
+            display: flex; align-items: center; gap: 12px;
+            background: white; border-radius: 14px;
+            padding: 10px 18px; margin-bottom: 24px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            border: 1.5px solid transparent;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .dash-search-wrap:focus-within { border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.12); }
+        .dash-search-wrap i { color: #94a3b8; font-size: 1rem; }
+        .dash-search-wrap input { border: none; outline: none; flex: 1; font-size: 0.9rem; font-family: 'Inter', sans-serif; background: transparent; color: #1e293b; }
+        .dash-search-wrap input::placeholder { color: #94a3b8; }
+        [data-theme="dark"] .dash-search-wrap { background: #1e293b; }
+        [data-theme="dark"] .dash-search-wrap input { color: #f1f5f9; }
+
+        /* Toast */
+        #dash-toast-container { position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+        .dash-toast { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; font-size: 0.88rem; font-weight: 500; color: #fff; min-width: 240px; max-width: 320px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); animation: dToastIn 0.35s ease both; pointer-events: auto; }
+        .dash-toast.success { background: linear-gradient(135deg, #10b981, #059669); }
+        .dash-toast.error   { background: linear-gradient(135deg, #ef4444, #dc2626); }
+        .dash-toast.info    { background: linear-gradient(135deg, #667eea, #764ba2); }
+        .dash-toast.exit    { animation: dToastOut 0.3s ease both; }
+        @keyframes dToastIn  { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform: translateX(0); } }
+        @keyframes dToastOut { from { opacity:1; } to { opacity:0; transform: translateX(40px); } }
+
+        /* Skeleton */
+        .skel-card { background: white; border-radius: 16px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); overflow: hidden; position: relative; }
+        .skel-bar { height: 14px; border-radius: 99px; background: #e2e8f0; margin-bottom: 10px; position: relative; overflow: hidden; }
+        .skel-bar.short { width: 40%; } .skel-bar.med { width: 65%; } .skel-bar.long { width: 100%; }
+        .skel-bar::after { content:''; position:absolute; inset:0; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent); transform: translateX(-100%); animation: skelShimmer 1.2s ease-in-out infinite; }
+        @keyframes skelShimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        [data-theme="dark"] .skel-card { background: #1e293b; }
+        [data-theme="dark"] .skel-bar { background: #334155; }
+        [data-theme="dark"] .skel-bar::after { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); }
+            .card {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+        .progress-bar-wrap {
+            background: #f1f5f9;
+            border-radius: 10px;
+            height: 12px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 0.8s ease;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 8px;
+            font-size: 0.82rem;
+            color: #64748b;
+        }
+
+        /* ---- LIVE CHAT SECTION ---- */
+        .chat-section-wrap {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 380px;
+            height: calc(100vh - 100px);
+            max-height: 600px;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            z-index: 500;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .chat-contacts-panel {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-contacts-header {
+            padding: 16px 18px;
+            border-bottom: 1px solid #f1f5f9;
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+        .chat-messages-panel {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .chat-messages-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .chat-messages-header .avatar {
+            width: 38px; height: 38px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-weight: 700; font-size: 1rem;
+            flex-shrink: 0;
+        }
+        .chat-messages-header .info h4 { font-size: 0.95rem; color: #1e293b; margin-bottom: 2px; }
+        .chat-messages-header .info span { font-size: 0.78rem; color: #22c55e; }
+        .chat-history {
+            flex: 1;
+            overflow-y: auto;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: #f8fafc;
+        }
+        .chat-bubble-student {
+            align-self: flex-end;
+            max-width: 72%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 14px;
+            border-radius: 16px 16px 4px 16px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+        .chat-bubble-admin {
+            align-self: flex-start;
+            max-width: 72%;
+            background: white;
+            color: #1e293b;
+            padding: 10px 14px;
+            border-radius: 16px 16px 16px 4px;
+            font-size: 0.88rem;
+            line-height: 1.5;
+            border: 1px solid #e2e8f0;
+        }
+        .chat-bubble-meta {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.6);
+            margin-top: 4px;
+        }
+        .chat-bubble-admin .chat-bubble-meta { color: #94a3b8; }
+        .chat-composer {
+            padding: 14px 16px;
+            border-top: 1px solid #f1f5f9;
+            display: flex;
+            gap: 10px;
+        }
+        .chat-composer textarea {
+            flex: 1;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 10px 14px;
+            font-size: 0.88rem;
+            font-family: 'Inter', sans-serif; 
+            outline: none;
+            resize: none;
+            height: 44px;
+            line-height: 1.4;
+            transition: border-color 0.2s; 
+        }
+        .chat-history img {
+            max-width: 100%; border-radius: 8px; cursor: zoom-in;
+        }
+        .chat-composer textarea:focus { border-color: #667eea; }
+        .chat-send-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.2s;
+        }
+        .chat-send-btn:hover { transform: translateY(-2px); }
+        .chat-empty-state {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            gap: 12px;
+            padding: 40px;
+            text-align: center;
+        }
+        .chat-empty-state i { font-size: 3rem; color: #cbd5e1; }
+        .chat-status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(34,197,94,0.1);
+            color: #16a34a;
+            border: 1px solid rgba(34,197,94,0.25);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+        .chat-status-badge::before {
+            content: '';
+            width: 6px; height: 6px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse-green 1.5s infinite;
+        }
+        @keyframes pulse-green { 0%,100% { opacity:1; } 50% { opacity:0.3; } }
+        .chat-unread-dot {
+            width: 8px; height: 8px;
+            background: #ef4444;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+        @media (max-width: 900px) {
+            .chat-section-wrap { width: 320px; max-height: 500px; right: 10px; bottom: 10px; }
+            .chat-contacts-panel { max-height: 200px; }
+            .chat-messages-panel { min-height: 400px; }
+        }
+
+        /* Mobile Bottom Nav */
+        .mobile-bottom-nav {
+            display: none;
+        }
+        @media (max-width: 900px) {
+            .mobile-bottom-nav {
+                display: flex;
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: #0f172a;
+                border-top: 1px solid rgba(255,255,255,0.08);
+                z-index: 200;
+                justify-content: space-around;
+                padding: 8px 0 10px;
+            }
+            .mob-nav-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 4px;
+                color: #94a3b8;
+                text-decoration: none;
+                font-size: 0.7rem;
+                font-weight: 500;
+                padding: 4px 20px;
+                border-radius: 10px;
+                transition: color 0.2s;
+            }
+            .mob-nav-item i { font-size: 1.2rem; }
+            .mob-nav-item.active, .mob-nav-item:hover { color: #667eea; }
+            .dashboard-main { padding-bottom: 75px; }
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .dashboard-wrapper { grid-template-columns: 240px 1fr; }
+            .sidebar { padding: 20px 15px; }
+            .sidebar-profile h3 { font-size: 0.9rem; }
+            .sidebar-nav a { font-size: 0.85rem; padding: 10px 12px; }
+        }
+
+        @media (max-width: 900px) {
+            .dashboard-wrapper { grid-template-columns: 1fr; }
+            .sidebar { display: none; }
+            .stats-row { grid-template-columns: 1fr; }
+            .dashboard-main { padding: 20px; }
+            .dash-greeting h1 { font-size: 1.5rem; }
+            .enrolled-card { padding: 20px; }
+            .enrolled-card h2 { font-size: 1.2rem; }
+            .week-card { flex-wrap: wrap; padding: 18px 20px; gap: 12px; }
+            .week-info { min-width: 0; flex: 1 1 60%; }
+            .week-badge { flex-shrink: 0; }
+            .week-actions { width: 100%; justify-content: flex-end; margin-top: 4px; }
+        }
+
+        @media (max-width: 768px) {
+            .navbar { padding: 15px 20px !important; flex-wrap: wrap; }
+            .nav-links { gap: 15px !important; flex-wrap: wrap; }
+            .nav-links li a { font-size: 0.8rem !important; }
+            .dashboard-main { padding: 15px; }
+            .dash-greeting h1 { font-size: 1.3rem; }
+            .stat-card { padding: 18px; }
+            .stat-card h3 { font-size: 1.3rem; }
+            .stat-card-icon { width: 45px; height: 45px; font-size: 1.2rem; }
+            .week-card { gap: 12px; }
+            .week-num { width: 40px; height: 40px; font-size: 0.95rem; }
+            .week-info h4 { font-size: 0.9rem; }
+            .week-badge { font-size: 0.72rem; padding: 4px 10px; }
+            .assess-btn { font-size: 0.75rem; padding: 6px 12px; }
+            .lesson-modal-box { max-width: 95%; }
+            .pdf-body { padding: 20px 25px; }
+            .assess-modal-box { max-width: 95%; }
+            .assess-body { padding: 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .navbar { padding: 12px 15px !important; }
+            .navbar a { font-size: 1rem !important; }
+            .nav-links { gap: 10px !important; font-size: 0.75rem !important; }
+            .dashboard-main { padding: 12px; }
+            .dash-greeting h1 { font-size: 1.1rem; }
+            .dash-greeting p { font-size: 0.85rem; }
+            .stat-card { padding: 15px; gap: 12px; }
+            .stat-card h3 { font-size: 1.1rem; }
+            .stat-card p { font-size: 0.8rem; }
+            .enrolled-card { padding: 18px; }
+            .enrolled-card h2 { font-size: 1.1rem; }
+            .week-card { padding: 15px; }
+            .week-num { width: 35px; height: 35px; font-size: 0.85rem; }
+            .week-info h4 { font-size: 0.85rem; }
+            .week-info p { font-size: 0.8rem; }
+            .week-badge { display: none; }
+            .assess-btn { font-size: 0.7rem; padding: 5px 10px; }
+            .pdf-topbar { padding: 8px 15px; }
+            .pdf-header { padding: 25px 20px 20px; }
+            .pdf-body { padding: 20px; }
+            .pdf-title { font-size: 1.3rem; }
+            .assess-header { padding: 18px 20px; flex-direction: column; gap: 10px; align-items: flex-start; }
+            .assess-body { padding: 15px; }
+            .question-block { padding: 15px; }
+            .option-label { font-size: 0.82rem; padding: 8px 10px; }
+            .btn-submit-assess { padding: 10px 24px; font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+<nav class="navbar" style="background:rgba(8,12,24,0.95);display:flex;justify-content:space-between;align-items:center;padding:18px 40px;position:sticky;top:0;z-index:100;">
+    <a href="pro.html" style="font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:800;color:#00d4c2;text-decoration:none;letter-spacing:0.04em;">DATA SPARK <span style="color:#fff;">TECHNOLOGIES</span></a>
+    <ul class="nav-links" style="list-style:none;display:flex;gap:30px;align-items:center;margin:0;">
+        <li><a href="pro.html" style="color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.85rem;">Home</a></li>
+        <li><a href="abt.html" style="color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.85rem;">About</a></li>
+        <li><a href="cor.html" style="color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.85rem;">Courses</a></li>
+        <li><a href="con1.html" style="color:rgba(255,255,255,0.65);text-decoration:none;font-size:0.85rem;">Contact</a></li>
+    </ul>
+    <button id="navThemeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Toggle dark/light mode" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:99px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;margin-left:12px;flex-shrink:0;">
+      ??
+    </button>
+    <div id="nav-greeting-container" style="position:relative;">
+        <span id="nav-greeting" onclick="toggleDashDropdown()" style="cursor:pointer;font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;color:#00d4c2;background:rgba(0,212,194,0.1);border:1px solid rgba(0,212,194,0.25);padding:6px 16px;border-radius:99px;"></span>
+        <div id="nav-dropdown" style="display:none;position:absolute;top:calc(100% + 10px);right:0;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);min-width:170px;overflow:hidden;z-index:999;">
+            <a href="#" onclick="showSection('profile', document.querySelector(''[href="#profile"]'));toggleDashDropdown();return false;" style="display:block;padding:12px 18px;font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;color:#1a56ff;text-decoration:none;border-bottom:1px solid #f1f5f9;">&#128100; My Profile</a>
+            <a href="#" id="navLogoutBtn" style="display:block;padding:12px 18px;font-family:'Outfit',sans-serif;font-size:0.85rem;font-weight:600;color:#ef4444;text-decoration:none;">&#128682; Logout</a>
+        </div>
+    </div>
+</nav>
+
+<div class="dashboard-wrapper">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-profile">
+            <div class="profile-avatar" id="sidebarAvatar">?</div>
+            <h3 id="sidebarName">Loading...</h3>
+            <span id="sidebarEmail">...</span>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#overview" class="active" onclick=" return showSection('overview', this)">
+                <i class="fas fa-th-large"></i> Overview
+            </a>
+            <a href="#syllabus" onclick="showSection('syllabus',this); if(dashData && dashData.enrolled_courses && dashData.enrolled_courses.length>0) renderAllCourses(); return false;">
+                <i class="fas fa-book-open"></i> My Course
+            </a>
+            <a href="#profile" onclick="return showSection('profile', this)">
+                <i class="fas fa-user"></i> Profile
+            </a>
+            <a href="#chat" onclick="return showSection('chat', this)" id="chatNavLink">
+                <i class="fas fa-comments"></i> Chat with Admin
+                <span id="chatUnreadBadge" style="display:none;background:#ef4444;color:white;border-radius:99px;font-size:0.65rem;font-weight:700;padding:2px 7px;margin-left:auto;">!</span>
+            </a>
+        </nav>
+        <div class="sidebar-logout">
+            <a href="#" id="logoutLink"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+
+        <!-- OVERVIEW SECTION -->
+        <div id="section-overview">
+            <div class="dash-greeting">
+                <h1>Welcome back, <span id="greetName">Student</span>! 👋</h1>
+                <p>Here's your learning progress overview.</p>
+            </div>
+
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-card-icon blue"><i class="fas fa-book"></i></div>
+                    <div>
+                        <h3 id="statCourse">0</h3>
+                        <p>Course Enrolled</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon green"><i class="fas fa-check-circle"></i></div>
+                    <div>
+                        <h3 id="statCompleted">0</h3>
+                        <p>Weeks Completed</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card-icon orange"><i class="fas fa-lock-open"></i></div>
+                    <div>
+                        <h3 id="statUnlocked">0</h3>
+                        <p>Weeks Unlocked</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Enrolled Course -->
+            <div class="section-title-dash"><i class="fas fa-graduation-cap"></i> Enrolled Course</div>
+            <div id="enrolledCourseSection"></div>
+
+            <!-- Progress Bar -->
+            <div id="progressSection" style="display:none">
+                <div class="section-title-dash"><i class="fas fa-chart-line"></i> Overall Progress</div>
+                <div class="progress-section">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong id="progressCourseName">Course</strong>
+                        <span id="progressPercent" style="color:#667eea; font-weight:700;">0%</span>
+                    </div>
+                    <div class="progress-bar-wrap">
+                        <div class="progress-bar-fill" id="progressBarFill" style="width:0%"></div>
+                    </div>
+                    <div class="progress-label">
+                        <span id="progressDetail">0 of 0 weeks completed</span>
+                        <span id="progressStatus">In Progress</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SYLLABUS SECTION -->
+        <div id="section-syllabus" style="display:none">
+            <div class="dash-greeting">
+                <h1>My Course <i class="fas fa-book-open" style="color:#667eea"></i></h1>
+                <p>Complete each week to unlock the next one.</p>
+            </div>
+            <div id="myCourseStatusSection"></div>
+            <div id="syllabusContent"></div>
+        </div>
+
+        <!-- LIVE CHAT SECTION -->
+        <div id="section-chat" style="display:none">
+            <div class="dash-greeting">
+                <h1>Chat with Admin <i class="fas fa-comments" style="color:#667eea"></i></h1>
+                <p>Send a message to our admin team and get a real-time reply.</p>
+            </div>
+
+            <div class="chat-section-wrap">
+                <!-- Left: Info Panel -->
+                <div class="chat-contacts-panel">
+                    <div class="chat-contacts-header">
+                        <i class="fas fa-headset" style="color:#667eea;margin-right:8px;"></i> Support Chat
+                    </div>
+                    <div style="padding:18px;">
+                        <div style="display:flex;align-items:center;gap:12px;padding:14px;background:#f8fafc;border-radius:12px;margin-bottom:14px;">
+                            <div style="width:44px;height:44px;border-radius:14px;background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;color:white;font-weight:800;font-size:1.1rem;flex-shrink:0;">A</div>
+                            <div>
+                                <div style="font-weight:700;color:#1e293b;font-size:0.92rem;">DATA SPARK Admin</div>
+                                <div class="chat-status-badge">Online</div>
+                            </div>
+                        </div>
+                        <div style="font-size:0.82rem;color:#64748b;line-height:1.7;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:12px 14px;">
+                            <i class="fas fa-info-circle" style="color:#f59e0b;margin-right:6px;"></i>
+                            Type your message below and our admin will reply in real-time. Your conversation is saved and you can continue it anytime.
+                        </div>
+                        <div style="margin-top:16px;">
+                            <div style="font-size:0.75rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Your Info</div>
+                            <div style="display:flex;flex-direction:column;gap:8px;">
+                                <div style="font-size:0.83rem;color:#475569;"><i class="fas fa-user" style="color:#667eea;width:16px;"></i> <span id="chatUserName">Loading...</span></div>
+                                <div style="font-size:0.83rem;color:#475569;"><i class="fas fa-envelope" style="color:#667eea;width:16px;"></i> <span id="chatUserEmail">-</span></div>
+                            </div>
+                        </div>
+                        <div id="chatConnectionStatus" style="margin-top:16px;font-size:0.78rem;color:#94a3b8;display:flex;align-items:center;gap:6px;">
+                            <span style="width:8px;height:8px;background:#94a3b8;border-radius:50%;display:inline-block;"></span>
+                            Connecting...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right: Messages -->
+                <div class="chat-messages-panel">
+                    <div class="chat-messages-header">
+                        <div class="avatar">DS</div>
+                        <div class="info">
+                            <h4>DATA SPARK Support</h4>
+                            <span><i class="fas fa-circle" style="font-size:0.55rem;color:#22c55e;"></i> Admin is online</span>
+                        </div>
+                        <button onclick="loadStudentChatHistory()" style="margin-left:auto;background:rgba(102,126,234,0.1);color:#667eea;border:1px solid rgba(102,126,234,0.25);border-radius:8px;padding:7px 14px;font-size:0.78rem;font-weight:600;cursor:pointer;">
+                            <i class="fas fa-sync-alt"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="chat-history" id="studentChatHistory">
+                        <div class="chat-empty-state" id="chatEmptyState">
+                            <i class="fas fa-comments"></i>
+                            <div>
+                                <div style="font-weight:600;color:#475569;margin-bottom:4px;">Start a Conversation</div>
+                                <div style="font-size:0.83rem;">Type a message below to connect with our admin team.</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-composer">
+                        <textarea id="studentChatInput" placeholder="Type your message here... (Enter to send)" rows="2"></textarea>
+                        <input type="file" id="studentChatFile" style="display:none;" onchange="handleStudentFileSelect(event)" accept="image/*" />
+                        <button class="chat-send-btn" style="background:none; color:#667eea; border:1px solid #e2e8f0;" onclick="document.getElementById('studentChatFile').click()"><i class="fas fa-paperclip"></i></button>
+                        <button class="chat-send-btn" onclick="sendStudentChatMsg()"> 
+                            <i class="fas fa-paper-plane" style="margin-right:6px;"></i> Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROFILE SECTION -->
+        <div id="section-profile" style="display:none">
+            <div class="dash-greeting">
+                <h1>My Profile <i class="fas fa-user" style="color:#667eea"></i></h1>
+                <p>Your account information.</p>
+            </div>
+            <div style="background:white; border-radius:20px; padding:35px; box-shadow:0 2px 10px rgba(0,0,0,0.06); max-width:520px;">
+                <div style="display:flex; align-items:center; gap:20px; margin-bottom:30px; padding-bottom:25px; border-bottom:1px solid #f1f5f9;">
+                    <div class="profile-avatar" id="profileAvatar" style="width:70px;height:70px;font-size:1.8rem;flex-shrink:0;">?</div>
+                    <div>
+                        <h3 id="profileName" style="color:#1e293b; font-size:1.3rem; margin-bottom:4px;"></h3>
+                        <span id="profileRole" style="color:#667eea; font-size:0.85rem; font-weight:600; text-transform:capitalize;"></span>
+                    </div>
+                </div>
+                <div style="display:flex; flex-direction:column; gap:14px;">
+                    <div style="display:grid; grid-template-columns:24px 1fr; gap:14px; align-items:center; padding:15px; background:#f8fafc; border-radius:12px;">
+                        <i class="fas fa-envelope" style="color:#667eea;"></i>
+                        <div>
+                            <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:2px;">Email</div>
+                            <div id="profileEmail" style="color:#1e293b; font-weight:500; font-size:0.92rem;"></div>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:24px 1fr; gap:14px; align-items:center; padding:15px; background:#f8fafc; border-radius:12px;">
+                        <i class="fas fa-calendar" style="color:#667eea;"></i>
+                        <div>
+                            <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:2px;">Member Since</div>
+                            <div id="profileJoined" style="color:#1e293b; font-weight:500; font-size:0.92rem;"></div>
+                        </div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:24px 1fr; gap:14px; align-items:center; padding:15px; background:#f8fafc; border-radius:12px;">
+                        <i class="fas fa-book" style="color:#667eea;"></i>
+                        <div>
+                            <div style="font-size:0.75rem; color:#94a3b8; margin-bottom:2px;">Enrolled Course</div>
+                            <div id="profileCourse" style="color:#1e293b; font-weight:500; font-size:0.92rem;">None</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<!-- MOBILE BOTTOM NAV -->
+<div class="mobile-bottom-nav">
+    <a href="#" onclick="return showSection('overview', this)" class="mob-nav-item active" id="mob-overview">
+        <i class="fas fa-th-large"></i>
+        <span>Overview</span>
+    </a>
+    <a href="#" onclick="showSection('syllabus', this); if(dashData && dashData.enrolled_courses && dashData.enrolled_courses.length>0) renderAllCourses(); return false;" class="mob-nav-item" id="mob-syllabus">
+        <i class="fas fa-book-open"></i>
+        <span>My Course</span>
+    </a>
+    <a href="#" onclick="return showSection('profile', this)" class="mob-nav-item" id="mob-profile">
+        <i class="fas fa-user"></i>
+        <span>Profile</span>
+    </a>
+    <a href="#" onclick="return showSection('chat', this)" class="mob-nav-item" id="mob-chat">
+        <i class="fas fa-comments"></i>
+        <span>Chat</span>
+    </a>
+</div>
+
+<!-- LESSON MODAL - PDF Style -->
+<div class="lesson-modal-overlay" id="lesson-modal">
+    <div class="lesson-modal-box">
+        <!-- PDF Top Bar -->
+        <div class="pdf-topbar">
+            <div class="pdf-topbar-left">
+                <i class="fas fa-file-pdf"></i>
+                <span id="pdf-topbar-name">Study Material.pdf</span>
+            </div>
+            <div class="pdf-topbar-right" style="display:flex;align-items:center;gap:12px;">
+                <button onclick="slidePage(-1)" id="pdf-prev-btn" style="background:rgba(255,255,255,0.2);border:none;color:white;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center;opacity:0.4;pointer-events:none;"><i class="fas fa-chevron-left"></i></button>
+                <span>DATA SPARK TECHNOLOGIES</span>
+                <button onclick="slidePage(1)" id="pdf-next-btn" style="background:rgba(255,255,255,0.2);border:none;color:white;width:26px;height:26px;border-radius:50%;cursor:pointer;font-size:0.8rem;display:flex;align-items:center;justify-content:center;"><i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        <!-- Slide dots -->
+        <div class="pdf-slide-dots">
+            <button class="pdf-dot active" id="pdf-dot-0" onclick="goToSlide(0)"></button>
+            <button class="pdf-dot" id="pdf-dot-1" onclick="goToSlide(1)"></button>
+        </div>
+        <!-- Slides wrapper -->
+        <div class="pdf-slides-wrap">
+        <div class="pdf-slides-track" id="pdf-slides-track">
+        <!-- Slide 1 -->
+        <div class="pdf-slide">
+        <!-- PDF Page -->
+        <div class="pdf-page">
+            <!-- PDF Header -->
+            <div class="pdf-header">
+                <div class="pdf-org">Data Spark Technologies &nbsp;|&nbsp; Student Study Material</div>
+                <div class="pdf-title" id="pdf-main-title">Week 1: Introduction & Setup</div>
+                <div class="pdf-subtitle" id="pdf-main-subtitle">Read this material carefully before attempting the assessment</div>
+                <div class="pdf-meta">
+                    <div class="pdf-meta-item"><i class="fas fa-calendar-alt"></i> <span id="pdf-date"></span></div>
+                    <div class="pdf-meta-item"><i class="fas fa-clock"></i> 5 min read</div>
+                    <div class="pdf-meta-item"><i class="fas fa-layer-group"></i> <span id="pdf-week-label">Week 1</span></div>
+                </div>
+            </div>
+            <!-- PDF Body -->
+            <div class="pdf-body">
+                <div class="pdf-section-title"><i class="fas fa-book-open"></i> Overview</div>
+                <div class="pdf-intro" id="pdf-intro-text"></div>
+                <div class="pdf-section-title"><i class="fas fa-list-ol"></i> Key Concepts</div>
+                <div id="pdf-points"></div>
+                <hr class="pdf-divider">
+                <div class="pdf-section-title"><i class="fas fa-check-square"></i> What You'll Learn</div>
+                <ul class="pdf-checklist" id="pdf-checklist"></ul>
+                <hr class="pdf-divider">
+                <div class="pdf-section-title"><i class="fas fa-star"></i> Did You Know?</div>
+                <div class="pdf-factbox">
+                    <i class="fas fa-lightbulb"></i>
+                    <div class="pdf-factbox-text" id="pdf-factbox-text"></div>
+                </div>
+                <hr class="pdf-divider">
+                <div class="pdf-note">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>After reading all the key concepts above, click <strong>Mark as Read</strong> then <strong>Start Assessment</strong> to test your understanding. You need 3/5 to pass.</span>
+                </div>
+            </div>
+            <!-- PDF Footer -->
+            <div class="pdf-footer-bar">
+                <span>© Data Spark Technologies — Confidential Study Material</span>
+                <span id="pdf-page-num">Page 1 of 2</span>
+            </div>
+        </div>
+
+        </div><!-- /pdf-slide 1 -->
+        <!-- Slide 2 -->
+        <div class="pdf-slide">
+        <!-- PDF Page 2 - Videos -->
+        <div class="pdf-page" id="pdf-page2">
+            <div class="pdf-body">
+                <div class="pdf-section-title"><i class="fab fa-youtube" style="color:#e53935;"></i> Related Video Lessons</div>
+                <div class="pdf-intro">Watch these curated videos to reinforce your understanding of this week's concepts.</div>
+                <div id="pdf-videos" style="display:flex;flex-direction:column;gap:20px;margin-top:8px;"></div>
+            </div>
+            <div class="pdf-footer-bar">
+                <span>&#169; Data Spark Technologies &#8211; Confidential Study Material</span>
+                <span>Page 2 of 2</span>
+            </div>
+        </div>
+        </div><!-- /pdf-slide 2 -->
+        </div><!-- /pdf-slides-track -->
+        </div><!-- /pdf-slides-wrap -->
+        <!-- Action Buttons -->
+        <div class="lesson-footer">
+            <button class="btn-close-lesson" onclick="closeLessonModal()"><i class="fas fa-times"></i> Close</button>
+            <button class="btn-mark-read" id="btn-mark-read" onclick="markAsRead()"><i class="fas fa-book-reader"></i> Mark as Read</button>
+            <button class="btn-start-assess" id="btn-start-assess" onclick="startAssessment()" disabled><i class="fas fa-pen"></i> Start Assessment</button>
+        </div>
+    </div>
+</div>
+
+<!-- ASSESSMENT MODAL -->
+<div class="assess-modal-overlay" id="assess-modal">
+    <div class="assess-modal-box">
+        <div class="assess-header">
+            <h2 id="assess-title"></h2>
+            <span class="assess-timer" id="assess-timer">⏱ 5:00</span>
+        </div>
+        <div class="assess-body" id="assess-body"></div>
+        <div class="assess-footer">
+            <button class="btn-submit-assess" onclick="submitAssessment()"><i class="fas fa-paper-plane"></i> Submit</button>
+        </div>
+    </div>
+</div>
+
+<!-- SCORE MODAL -->
+<div class="score-modal-overlay" id="score-modal">
+    <div class="score-box">
+        <div class="score-circle" id="score-circle"></div>
+        <h3 id="score-title"></h3>
+        <p id="score-msg"></p>
+        <button class="btn-score-close" onclick="closeScoreModal()">Done</button>
+    </div>
+</div>
+
+<!-- TOAST CONTAINER -->
+<div id=dash-toast-container></div>
+
+<!-- TASK/TEST MODAL -->
+<div class="modal-overlay" id="task-modal">
+    <div class="modal-box">
+        <h3 id="modal-title"></h3>
+        <p id="modal-subtitle"></p>
+        <div class="modal-task-list" id="modal-list"></div>
+        <button class="modal-close-btn" onclick="closeModal()">Close</button>
+    </div>
+</div>
+
+<script>
+    const API = 'https://your-backend-url';
+    const dsUser = localStorage.getItem('ds_user');
+    const dsFullName = localStorage.getItem('ds_fullname');
+    const dsEmail = localStorage.getItem('ds_email');
+
+    // Login guard
+    if (!dsUser) {
+        alert('Please log in first.');
+        location.href = 'log.html';
+    } 
+
+    let dashData = null;
+    let syllabusData = null;
+
+    // Load dashboard data
+    async function loadDashboard() {
+        try {
+            const username = localStorage.getItem('ds_user');
+            const enrollRes = await fetch(API + '/enrollment/' + encodeURIComponent(username));
+            const enrollData = await enrollRes.json();
+
+            const progressRes = await fetch(API + '/progress/' + encodeURIComponent(username));
+            const progressData = await progressRes.json();
+
+            const data = {
+                user: { 
+                    full_name: enrollData.success ? (enrollData.enrollment.full_name || localStorage.getItem('ds_fullname') || username) : (localStorage.getItem('ds_fullname') || username), 
+                    email: enrollData.success ? (enrollData.enrollment.email || '') : '', 
+                    role: enrollData.success ? (enrollData.enrollment.role || 'student') : 'student', 
+                    created_at: new Date() 
+                },
+                enrolled_courses: enrollData.success ? enrollData.enrollments.map(e => ({
+                    course_name: e.course,
+                    applied_at: e.created_at || new Date(),
+                    status: e.status || 'pending'
+                })) : [],
+                enrolled_course: enrollData.success ? {
+                    course_name: enrollData.enrollment.course,
+                    applied_at: enrollData.enrollment.created_at || new Date(),
+                    status: enrollData.enrollment.status || 'pending'
+                } : null,
+                total: enrollData.success ? enrollData.total : 0,
+                progress: progressData.success ? progressData.progress : []
+            };
+
+            dashData = data;
+            renderProfile(data);
+
+            if (data.enrolled_courses && data.enrolled_courses.length > 0) {
+                // Remove duplicate courses
+                const seen = {};
+                const uniqueCourses = data.enrolled_courses.filter(c => {
+                    if (seen[c.course_name]) return false;
+                    seen[c.course_name] = true;
+                    return true;
+                });
+                data.enrolled_courses = uniqueCourses;
+                renderEnrolledCourses(uniqueCourses);
+                // Stats
+                document.getElementById('statCourse').textContent = uniqueCourses.length;
+                document.getElementById('profileCourse').textContent = uniqueCourses.map(c => c.course_name).join(', ');
+                // Total weeks completed � count only from DB progress per course (exact match)
+                let totalCompleted = 0;
+                let totalWeeksUnlocked = 0;
+                uniqueCourses.forEach(c => {
+                    const count = (data.progress || []).filter(p => p.course_name === c.course_name).length;
+                    totalCompleted += count;
+                    // For each course, weeks unlocked is completed weeks + 1, capped at 6
+                    totalWeeksUnlocked += Math.min(count + 1, 6);
+                });
+                document.getElementById('statCompleted').textContent = totalCompleted; // Removed Math.min(..., 6)
+                // Weeks Unlocked: Sum of (completed weeks + 1) for each course, capped at 6 per course
+                document.getElementById('statUnlocked').textContent = totalWeeksUnlocked;
+                const firstCourse = uniqueCourses[0].course_name;
+                const firstCourseCompleted = (data.progress || []).filter(p => p.course_name === firstCourse).length;
+                updateProgressBar(firstCourseCompleted);
+            } else {
+                renderNoCourse();
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function renderProfile(data) {
+        const name  = data.user.full_name || localStorage.getItem('ds_fullname') || localStorage.getItem('ds_user');
+        const email = data.user.email || '';
+        const role  = data.user.role || 'student';
+        const initial = name.charAt(0).toUpperCase();
+        const joined = new Date(data.user.created_at).toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' });
+
+        // Sidebar
+        document.getElementById('sidebarAvatar').textContent = initial;
+        document.getElementById('sidebarName').textContent   = name;
+        document.getElementById('sidebarEmail').textContent  = email;
+        document.getElementById('greetName').textContent     = name.split(' ')[0];
+
+        // Profile section
+        document.getElementById('profileAvatar').textContent = initial;
+        document.getElementById('profileName').textContent   = name;
+        document.getElementById('profileEmail').textContent  = email;
+        document.getElementById('profileRole').textContent   = role;
+        document.getElementById('profileJoined').textContent = joined;
+
+        if (data.enrolled_course)
+            document.getElementById('profileCourse').textContent = data.enrolled_courses.map(c => c.course_name).join(', ');
+    }
+
+    function renderEnrolledCourses(courses) {
+        const statusClass = { pending: 'badge-pending', approved: 'badge-approved', rejected: 'badge-rejected' };
+
+        // Overview section - show all courses
+        document.getElementById('enrolledCourseSection').innerHTML = courses.map(course => {
+            const appliedDate = new Date(course.applied_at).toLocaleDateString('en-IN', { year:'numeric', month:'short', day:'numeric' });
+            return '<div class="enrolled-card">' +
+                '<div>' +
+                    '<h2><i class="fas fa-graduation-cap"></i> ' + course.course_name + '</h2>' +
+                    '<p>Applied on ' + appliedDate + '</p>' +
+                '</div>' +
+            '</div>';
+        }).join('');
+
+        // My Course section - show all courses
+        document.getElementById('myCourseStatusSection').innerHTML = '';
+    }
+
+    function renderNoCourse() {
+        document.getElementById('enrolledCourseSection').innerHTML =
+            '<div class="no-course-card">' +
+                '<i class="fas fa-book"></i>' +
+                '<h3>No Course Enrolled Yet</h3>' +
+                '<p>Browse our courses and enroll to start your learning journey.</p>' +
+                '<a href="cor.html" class="primary-btn"><i class="fas fa-search"></i> Browse Courses</a>' +
+            '</div>';
+    }
+
+    const syllabusMap = {
+        default: [
+            { week: 1, topic: 'Introduction & Setup', tasks: [], tests: [] },
+            { week: 2, topic: 'Core Fundamentals', tasks: [], tests: [] },
+            { week: 3, topic: 'Intermediate Concepts', tasks: [], tests: [] },
+            { week: 4, topic: 'Advanced Topics', tasks: [], tests: [] },
+            { week: 5, topic: 'Real World Projects', tasks: [], tests: [] },
+            { week: 6, topic: 'Final Project & Review', tasks: [], tests: [] }
+        ],
+        'Python Programming': [
+            { week: 1, topic: 'Python Basics & Setup', tasks: [], tests: [] },
+            { week: 2, topic: 'Data Types & Control Flow', tasks: [], tests: [] },
+            { week: 3, topic: 'Functions & Modules', tasks: [], tests: [] },
+            { week: 4, topic: 'OOP in Python', tasks: [], tests: [] },
+            { week: 5, topic: 'File Handling & Libraries', tasks: [], tests: [] },
+            { week: 6, topic: 'Final Python Project', tasks: [], tests: [] }
+        ],
+        'React JS': [
+            { week: 1, topic: 'React Introduction & JSX', tasks: [], tests: [] },
+            { week: 2, topic: 'Components & Props', tasks: [], tests: [] },
+            { week: 3, topic: 'State & Event Handling', tasks: [], tests: [] },
+            { week: 4, topic: 'Hooks & Lifecycle', tasks: [], tests: [] },
+            { week: 5, topic: 'React Router & API Calls', tasks: [], tests: [] },
+            { week: 6, topic: 'Final React Project', tasks: [], tests: [] }
+        ]
+    };
+
+    function getSyllabus(courseName) {
+        if (syllabusMap[courseName]) return syllabusMap[courseName];
+        // Any course not in map gets default syllabus with course name
+        return syllabusMap.default.map(w => ({ ...w }));
+    }
+
+    const lessonData = {
+        // Default / General
+        1: { title: 'Introduction & Setup', videos: [{title:'VS Code Setup Guide',url:'https://www.youtube.com/embed/B-s71n0dHUk?rel=0&disablekb=1&modestbranding=1'},{title:'Git & GitHub Crash Course',url:'https://www.youtube.com/embed/RGOj5yH7evk?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Set up your development environment','Install VS Code and required extensions','Initialize a Git repository','Understand project folder structure','Run your first program'], funFact: 'The first version of Git was written by Linus Torvalds in just 10 days in 2005 to manage the Linux kernel source code!', points: ['A development environment is the set of tools and software needed to write and run code.','Installing the right tools ensures smooth workflow throughout the course.','Version control (Git) helps track changes and collaborate with others.','IDEs like VS Code provide syntax highlighting, debugging, and extensions.','Understanding file structure and project organization is key to clean development.'], questions: [{ q: 'What does IDE stand for?', options: ['Integrated Development Environment','Internet Data Exchange','Internal Design Engine','Integrated Data Editor'], ans: 0 },{ q: 'Which tool is used for version control?', options: ['Node.js','Git','MySQL','VS Code'], ans: 1 },{ q: 'What is the purpose of setting up an environment?', options: ['To design UI','To write and run code smoothly','To manage databases','To deploy apps'], ans: 1 },{ q: 'Which of the following is a popular code editor?', options: ['Photoshop','Excel','VS Code','PowerPoint'], ans: 2 },{ q: 'What does version control help with?', options: ['Styling pages','Tracking code changes','Running servers','Creating databases'], ans: 1 }] },
+        2: { title: 'Core Fundamentals', videos: [{title:'Variables Data Types & Functions',url:'https://www.youtube.com/embed/W6NZfCO5SIk?rel=0&disablekb=1&modestbranding=1'},{title:'Loops & Conditionals',url:'https://www.youtube.com/embed/IsG4Xd6LlsM?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Declare and use variables','Work with different data types','Write reusable functions','Use loops to repeat logic','Apply conditional statements'], funFact: 'The concept of a "variable" in programming dates back to the 1950s — early programmers called them "storage locations" on punch cards!', points: ['Variables store data values that can be used and modified throughout a program.','Data types define the kind of value a variable holds — string, number, boolean, etc.','Functions are reusable blocks of code that perform a specific task.','Loops allow you to repeat a block of code multiple times efficiently.','Conditional statements (if/else) control the flow of a program based on conditions.'], questions: [{ q: 'What is a variable?', options: ['A fixed value','A storage location for data','A type of loop','A function'], ans: 1 },{ q: 'Which data type stores true/false values?', options: ['String','Number','Boolean','Array'], ans: 2 },{ q: 'What is the purpose of a function?', options: ['To store data','To style elements','To perform a reusable task','To connect to database'], ans: 2 },{ q: 'Which statement is used for decision making?', options: ['for loop','if/else','while','function'], ans: 1 },{ q: 'What does a loop do?', options: ['Stores values','Repeats code multiple times','Declares variables','Connects to server'], ans: 1 }] },
+        3: { title: 'Intermediate Concepts', videos: [{title:'JavaScript Arrays & Objects',url:'https://www.youtube.com/embed/oigfaZ5ApsM?rel=0&disablekb=1&modestbranding=1'},{title:'DOM Manipulation & Events',url:'https://www.youtube.com/embed/y17RuWkWdn8?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Create and access arrays','Build objects with key-value pairs','Manipulate the DOM dynamically','Handle user events','Use try/catch for error handling'], funFact: 'The DOM (Document Object Model) was standardized by the W3C in 1998, enabling JavaScript to interact with HTML pages for the first time!', points: ['Arrays store multiple values in a single variable, accessible by index.','Objects group related data and functions together using key-value pairs.','DOM manipulation allows JavaScript to dynamically update HTML content.','Events like click, input, and submit make web pages interactive.','Error handling using try/catch prevents programs from crashing unexpectedly.'], questions: [{ q: 'How do you access the first element of an array?', options: ['array[1]','array[0]','array.first()','array.get(0)'], ans: 1 },{ q: 'What is a key-value pair used in?', options: ['Array','Loop','Object','Function'], ans: 2 },{ q: 'What does DOM stand for?', options: ['Data Object Model','Document Object Model','Dynamic Output Method','Design Object Map'], ans: 1 },{ q: 'Which method is used to handle errors in JavaScript?', options: ['if/else','try/catch','for loop','switch'], ans: 1 },{ q: 'Which event fires when a button is clicked?', options: ['hover','submit','click','change'], ans: 2 }] },
+        4: { title: 'Advanced Topics', videos: [{title:'Async JavaScript Promises & Await',url:'https://www.youtube.com/embed/PoRJizFvM7s?rel=0&disablekb=1&modestbranding=1'},{title:'Fetch API & REST APIs',url:'https://www.youtube.com/embed/cuEtnrL9-H0?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Understand asynchronous programming','Work with Promises','Use async/await syntax','Call external APIs','Handle API responses'], funFact: 'The fetch() API was introduced in 2015 as a modern replacement for XMLHttpRequest, which had been the standard since 1999!', points: ['Asynchronous programming allows tasks to run without blocking the main thread.','Promises represent a value that may be available now, later, or never.','async/await syntax makes asynchronous code easier to read and write.','APIs allow different systems to communicate with each other.','fetch() is used to make HTTP requests to APIs and retrieve data.'], questions: [{ q: 'What does async/await help with?', options: ['Styling','Asynchronous code readability','Database queries','File uploads'], ans: 1 },{ q: 'What is a Promise in JavaScript?', options: ['A guarantee of no errors','A future value result','A type of loop','A CSS property'], ans: 1 },{ q: 'Which function is used to call an API in JavaScript?', options: ['get()','request()','fetch()','call()'], ans: 2 },{ q: 'What does API stand for?', options: ['Application Programming Interface','Automated Process Integration','App Protocol Index','Advanced Program Input'], ans: 0 },{ q: 'What does asynchronous mean?', options: ['Runs in order','Runs without blocking','Runs only once','Runs on server'], ans: 1 }] },
+        5: { title: 'Real World Projects', videos: [{title:'How to Plan & Build a Web Project',url:'https://www.youtube.com/embed/0pThnRneDjw?rel=0&disablekb=1&modestbranding=1'},{title:'Frontend vs Backend Explained',url:'https://www.youtube.com/embed/WG5ikvJ2TKA?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Plan your project with milestones','Build a frontend interface','Create backend API routes','Use Git for version control','Write and run basic tests'], funFact: 'NASA uses agile project planning techniques — the same milestone-based approach you will use in real-world software projects!', points: ['Planning a project involves breaking it into smaller tasks and milestones.','Frontend development focuses on what users see — HTML, CSS, JavaScript.','Backend development handles server logic, databases, and APIs.','Version control with Git helps manage project code across team members.','Testing ensures your application works correctly before deployment.'], questions: [{ q: 'What does frontend development focus on?', options: ['Server logic','Database design','User interface','API creation'], ans: 2 },{ q: 'Which language is used for backend logic?', options: ['HTML','CSS','Node.js','Figma'], ans: 2 },{ q: 'What is the purpose of testing?', options: ['To design UI','To ensure app works correctly','To write documentation','To deploy faster'], ans: 1 },{ q: 'What tool helps manage code in teams?', options: ['Figma','Git','Canva','Slack'], ans: 1 },{ q: 'What is a milestone in project planning?', options: ['A bug fix','A key checkpoint in progress','A CSS class','A database table'], ans: 1 }] },
+        6: { title: 'Final Project & Review', videos: [{title:'How to Deploy Your Website',url:'https://www.youtube.com/embed/ysEN5RaKOlA?rel=0&disablekb=1&modestbranding=1'},{title:'Code Review Best Practices',url:'https://www.youtube.com/embed/a9_0UUUNt-Y?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Build and complete your final project','Conduct a code review','Write project documentation','Deploy your application','Reflect on your learning journey'], funFact: 'GitHub hosts over 420 million repositories — every deployed project you create becomes part of this massive global developer ecosystem!', points: ['A final project demonstrates all the skills learned throughout the course.','Code review involves checking your code for quality, readability, and bugs.','Documentation explains how your project works for future reference.','Deployment makes your application available to users on the internet.','Continuous learning is key — technology evolves and so should your skills.'], questions: [{ q: 'What is the purpose of a final project?', options: ['To learn new tools','To demonstrate all learned skills','To fix bugs','To write tests'], ans: 1 },{ q: 'What does deployment mean?', options: ['Writing code','Making app available online','Testing locally','Reviewing code'], ans: 1 },{ q: 'What is code documentation?', options: ['Styling the code','Explaining how code works','Deleting unused code','Running the server'], ans: 1 },{ q: 'What does code review check for?', options: ['UI design','Quality and readability','Server speed','Database size'], ans: 1 },{ q: 'Why is continuous learning important?', options: ['To get more certificates','Because technology keeps evolving','To avoid bugs','To write faster code'], ans: 1 }] },
+
+        // Python Programming
+        'Python Programming_1': { title: 'Python Basics & Setup', videos: [{title:'Python Installation & VS Code Setup',url:'https://www.youtube.com/embed/YYXdXT2l-Gg?rel=0&disablekb=1&modestbranding=1'},{title:'Python Basics for Beginners',url:'https://www.youtube.com/embed/_uQrJ0TkZlc?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Install Python and VS Code','Write your first Python script','Use the print() function','Declare variables without types','Understand Python indentation rules'], funFact: 'Python was named after the British comedy group Monty Python, not the snake — Guido van Rossum wanted a fun, short name!', points: ['Python is a high-level, interpreted programming language known for its simplicity.','Installing Python and setting up VS Code is the first step to start coding.','Python uses indentation instead of curly braces to define code blocks.','The print() function is used to display output in Python.','Variables in Python do not need explicit type declaration.'], questions: [{ q: 'What type of language is Python?', options: ['Compiled','Interpreted','Assembly','Machine'], ans: 1 },{ q: 'Which function prints output in Python?', options: ['echo()','console.log()','print()','write()'], ans: 2 },{ q: 'How does Python define code blocks?', options: ['Curly braces','Parentheses','Indentation','Semicolons'], ans: 2 },{ q: 'Do Python variables need type declaration?', options: ['Yes always','No, Python is dynamic','Only for numbers','Only for strings'], ans: 1 },{ q: 'What is the file extension for Python files?', options: ['.js','.py','.java','.cpp'], ans: 1 }] },
+        'Python Programming_2': { title: 'Data Types & Control Flow', videos: [{title:'Python Data Types Explained',url:'https://www.youtube.com/embed/khKv-8q7YmY?rel=0&disablekb=1&modestbranding=1'},{title:'Python If Else & Loops',url:'https://www.youtube.com/embed/DZwmZ8Usvnk?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Use int, float, str, and bool types','Work with lists, tuples, and dicts','Write if/elif/else conditions','Use for and while loops','Generate sequences with range()'], funFact: 'Python dictionaries are one of the most optimized hash map implementations in any language — lookups are O(1) on average!', points: ['Python has built-in data types: int, float, str, bool, list, tuple, dict, set.','if, elif, else statements control the flow based on conditions.','for loops iterate over sequences like lists, strings, or ranges.','while loops run as long as a condition is True.','range() function generates a sequence of numbers for looping.'], questions: [{ q: 'Which data type stores key-value pairs in Python?', options: ['List','Tuple','Set','Dictionary'], ans: 3 },{ q: 'What keyword is used for else-if in Python?', options: ['elseif','else if','elif','otherwise'], ans: 2 },{ q: 'What does range(5) generate?', options: ['1 to 5','0 to 5','0 to 4','1 to 4'], ans: 2 },{ q: 'Which loop runs while a condition is True?', options: ['for','do-while','while','repeat'], ans: 2 },{ q: 'Which of these is immutable in Python?', options: ['List','Dictionary','Tuple','Set'], ans: 2 }] },
+        'Python Programming_3': { title: 'Functions & Modules', videos: [{title:'Python Functions Tutorial',url:'https://www.youtube.com/embed/9Os0o3wzS_I?rel=0&disablekb=1&modestbranding=1'},{title:'Python Modules & Packages',url:'https://www.youtube.com/embed/CqvZ3vGoGs0?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Define functions with def','Pass parameters and return values','Import built-in modules','Create your own module','Use the math and random modules'], funFact: 'Python standard library has over 200 built-in modules — it is often called "batteries included" because so much is ready to use out of the box!', points: ['Functions are defined using the def keyword in Python.','Parameters allow functions to accept input values.','return statement sends a value back from a function.','Modules are Python files that contain reusable code.','import statement is used to include modules in your program.'], questions: [{ q: 'Which keyword defines a function in Python?', options: ['function','fun','def','func'], ans: 2 },{ q: 'What does the return statement do?', options: ['Prints a value','Stops the program','Sends value back from function','Imports a module'], ans: 2 },{ q: 'How do you import a module in Python?', options: ['include module','import module','require module','use module'], ans: 1 },{ q: 'What are parameters in a function?', options: ['Return values','Input values','Module names','Loop variables'], ans: 1 },{ q: 'Which module is used for math operations?', options: ['os','sys','math','random'], ans: 2 }] },
+        'Python Programming_4': { title: 'OOP in Python', videos: [{title:'OOP in Python Full Tutorial',url:'https://www.youtube.com/embed/JeznW_7DlB0?rel=0&disablekb=1&modestbranding=1'},{title:'Python Classes & Inheritance',url:'https://www.youtube.com/embed/RSl87lqOXDE?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Define a class and create objects','Use the __init__ constructor','Apply inheritance between classes','Understand encapsulation','Override methods in subclasses'], funFact: 'Python supports multiple inheritance — a class can inherit from more than one parent class, a feature not available in Java or C#!', points: ['OOP stands for Object-Oriented Programming — organizing code using objects.','A class is a blueprint for creating objects.','__init__() is the constructor method called when an object is created.','Inheritance allows a class to reuse code from another class.','Encapsulation hides internal details and exposes only necessary parts.'], questions: [{ q: 'What is a class in Python?', options: ['A function','A blueprint for objects','A module','A variable'], ans: 1 },{ q: 'What is the constructor method in Python?', options: ['__start__()','__new__()','__init__()','__create__()'], ans: 2 },{ q: 'What does inheritance allow?', options: ['Hiding data','Reusing code from another class','Creating loops','Importing modules'], ans: 1 },{ q: 'What does OOP stand for?', options: ['Object Oriented Programming','Open Output Process','Optional Object Parsing','Ordered Output Program'], ans: 0 },{ q: 'What is encapsulation?', options: ['Creating objects','Hiding internal details','Inheriting classes','Defining functions'], ans: 1 }] },
+        'Python Programming_5': { title: 'File Handling & Libraries', videos: [{title:'Python File Handling Tutorial',url:'https://www.youtube.com/embed/Uh2ebFW8OYM?rel=0&disablekb=1&modestbranding=1'},{title:'NumPy & Pandas Crash Course',url:'https://www.youtube.com/embed/vmEHCJofslg?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Open and read files with open()','Write and append to files','Use the with statement safely','Install libraries using pip','Use NumPy or Pandas for data'], funFact: 'Pandas was originally developed at a hedge fund (AQR Capital Management) in 2008 to handle financial data before becoming open source!', points: ['Python can read and write files using the open() function.','Modes: r (read), w (write), a (append), rb (read binary).','with statement ensures files are properly closed after use.','NumPy and Pandas are popular Python libraries for data handling.','pip is the package manager used to install Python libraries.'], questions: [{ q: 'Which function opens a file in Python?', options: ['read()','file()','open()','load()'], ans: 2 },{ q: 'Which mode opens a file for writing?', options: ['r','a','w','rb'], ans: 2 },{ q: 'What does the with statement ensure?', options: ['File is created','File is closed properly','File is read fast','File is encrypted'], ans: 1 },{ q: 'Which tool installs Python libraries?', options: ['npm','pip','brew','apt'], ans: 1 },{ q: 'Which library is used for data analysis in Python?', options: ['NumPy','React','Django','Flask'], ans: 0 }] },
+        'Python Programming_6': { title: 'Final Python Project', videos: [{title:'Build a Python Project from Scratch',url:'https://www.youtube.com/embed/8ext9G7xspg?rel=0&disablekb=1&modestbranding=1'},{title:'Python Project Ideas & Tips',url:'https://www.youtube.com/embed/NpmFbWO6HPU?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Plan and structure your Python project','Use functions and modules throughout','Apply file handling for data storage','Implement OOP where appropriate','Test and submit your final project'], funFact: 'Instagram backend was originally built entirely in Python — it handled over 1 billion users before they started adding other languages!', points: ['A final project combines all Python concepts learned throughout the course.','Plan your project by breaking it into functions and modules.','Use file handling to store and retrieve data persistently.','Apply OOP principles to structure your project cleanly.','Test your code thoroughly before final submission.'], questions: [{ q: 'What is the best way to structure a Python project?', options: ['One big file','Using functions and modules','No structure needed','Only using loops'], ans: 1 },{ q: 'How do you store data persistently in Python?', options: ['Variables','File handling','Print statements','Comments'], ans: 1 },{ q: 'What should you do before submitting your project?', options: ['Delete comments','Test thoroughly','Remove functions','Add more variables'], ans: 1 },{ q: 'Which principle helps structure code using objects?', options: ['Looping','File handling','OOP','Importing'], ans: 2 },{ q: 'What does pip do?', options: ['Runs Python files','Installs libraries','Creates classes','Opens files'], ans: 1 }] },
+
+        // React JS
+        'React JS_1': { title: 'React Introduction & JSX', videos: [{title:'React JS Crash Course',url:'https://www.youtube.com/embed/w7ejDZ8SWv8?rel=0&disablekb=1&modestbranding=1'},{title:'JSX Explained in React',url:'https://www.youtube.com/embed/7fPXI_MnBOY?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Set up a React project with CRA','Understand what JSX is','Write your first component','Render a component to the DOM','Explore the project file structure'], funFact: 'React was first deployed on Facebook News Feed in 2011 and on Instagram in 2012 — two years before it was open-sourced to the public!', points: ['React is a JavaScript library for building user interfaces developed by Facebook.','JSX stands for JavaScript XML — it allows writing HTML inside JavaScript.','React apps are built using components — reusable pieces of UI.','The ReactDOM.render() method renders components to the browser DOM.','Create React App is the easiest way to set up a React project.'], questions: [{ q: 'What is React?', options: ['A database','A JavaScript library for UI','A CSS framework','A backend language'], ans: 1 },{ q: 'What does JSX stand for?', options: ['JavaScript Extra','JavaScript XML','Java Syntax Extension','JSON XML'], ans: 1 },{ q: 'Who developed React?', options: ['Google','Microsoft','Facebook','Amazon'], ans: 2 },{ q: 'What are React components?', options: ['Database tables','Reusable pieces of UI','CSS classes','Server functions'], ans: 1 },{ q: 'Which command creates a new React app?', options: ['npm init react','react new app','npx create-react-app','npm react start'], ans: 2 }] },
+        'React JS_2': { title: 'Components & Props', videos: [{title:'React Components & Props Tutorial',url:'https://www.youtube.com/embed/Y2hgEGPzTZY?rel=0&disablekb=1&modestbranding=1'},{title:'Functional Components in React',url:'https://www.youtube.com/embed/Ke90Tje7VS0?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Create functional components','Pass data using props','Render dynamic content from props','Compose components together','Follow React naming conventions'], funFact: 'React component model was inspired by "web components" — but React made it practical years before the browser standard was finalized!', points: ['Components are the building blocks of a React application.','Functional components are JavaScript functions that return JSX.','Props (properties) are used to pass data from parent to child components.','Props are read-only — child components cannot modify received props.','Component names must start with a capital letter in React.'], questions: [{ q: 'What are props in React?', options: ['State variables','Data passed from parent to child','CSS styles','Event handlers'], ans: 1 },{ q: 'Can a child component modify its props?', options: ['Yes always','No, props are read-only','Only numbers','Only strings'], ans: 1 },{ q: 'What is a functional component?', options: ['A class with render()','A JS function returning JSX','A CSS module','A database query'], ans: 1 },{ q: 'How must component names start in React?', options: ['Lowercase','Number','Capital letter','Underscore'], ans: 2 },{ q: 'What are components in React?', options: ['Database tables','Building blocks of UI','Server routes','CSS files'], ans: 1 }] },
+        'React JS_3': { title: 'State & Event Handling', videos: [{title:'React useState Hook Tutorial',url:'https://www.youtube.com/embed/O6P86uwfdR0?rel=0&disablekb=1&modestbranding=1'},{title:'React Event Handling',url:'https://www.youtube.com/embed/0XSDAup85SA?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Use useState to manage state','Update state on user interaction','Handle onClick and onChange events','Build a controlled form input','Trigger re-renders with state changes'], funFact: 'React virtual DOM diffing algorithm (reconciliation) can process thousands of UI updates per second — faster than direct DOM manipulation!', points: ['State is data that changes over time and affects the UI.','useState() hook is used to add state to functional components.','setState triggers a re-render of the component with new data.','Event handlers like onClick, onChange handle user interactions.','Controlled components have their form data managed by React state.'], questions: [{ q: 'What hook is used to add state in React?', options: ['useEffect','useContext','useState','useRef'], ans: 2 },{ q: 'What happens when state changes in React?', options: ['Page reloads','Component re-renders','Nothing happens','App crashes'], ans: 1 },{ q: 'Which event handles button clicks in React?', options: ['onHover','onChange','onSubmit','onClick'], ans: 3 },{ q: 'What is state in React?', options: ['Static data','Data that changes over time','CSS styles','A prop'], ans: 1 },{ q: 'What is a controlled component?', options: ['A component with no props','Form data managed by React state','A locked component','A class component'], ans: 1 }] },
+        'React JS_4': { title: 'Hooks & Lifecycle', videos: [{title:'React useEffect Hook Explained',url:'https://www.youtube.com/embed/0ZJgIjIuY7U?rel=0&disablekb=1&modestbranding=1'},{title:'React useContext & useRef Hooks',url:'https://www.youtube.com/embed/5LrDIWkK_Bc?rel=0&disablekb=1&modestbranding=1'}], checklist: ['Use useEffect for side effects','Fetch data on component mount','Share state with useContext','Access DOM refs with useRef','Follow the Rules of Hooks'], funFact: 'React Hooks were introduced in React 16.8 (February 2019) and completely changed how developers write React — class components became largely obsolete overnight!', points: ['Hooks are functions that let you use React features in functional components.','useEffect() runs side effects like API calls after render.','useContext() provides global state without prop drilling.','useRef() accesses DOM elements directly without re-rendering.','Rules of Hooks: only call at top level, only in React functions.'], questions: [{ q: 'What does useEffect() do?', options: ['Adds state','Runs side effects after render','Creates components','Handles routing'], ans: 1 },{ q: 'Which hook avoids prop drilling?', options: ['useState','useEffect','useContext','useRef'], ans: 2 },{ q: 'What is useRef() used for?', options: ['Managing state','Accessing DOM elements','Fetching data','Routing'], ans: 1 },{ q: 'Where should hooks be called?', options: ['Inside loops','Inside conditions','At top level of component','Inside nested functions'], ans: 2 },{ q: 'What are hooks in React?', options: ['CSS utilities','Functions to use React features','Database connectors','Event listeners'], ans: 1 }] },
+        'React JS_5': { title: 'React Router & API Calls', videos: [{title:'React Router v6 Tutorial',url:'https://www.youtube.com/embed/Ul3y1LXxzdU?rel=0&disablekb=1&modestbranding=1'},{title:'Fetching Data with useEffect',url:'https://www.youtube.com/embed/T3Px88x_PsA?rel=0&disablekb=1&modestbranding=1'}], points: ['React Router enables navigation between pages in a React app.','<BrowserRouter>, <Route>, <Link> are core React Router components.','fetch() or axios is used to call APIs from React components.','useEffect() is the best place to make API calls on component load.','Loading and error states should be handled when fetching data.'], questions: [{ q: 'What does React Router do?', options: ['Manages state','Enables navigation between pages','Handles forms','Styles components'], ans: 1 },{ q: 'Which library is used for API calls in React?', options: ['React Router','Redux','axios','styled-components'], ans: 2 },{ q: 'Where should API calls be made in React?', options: ['Inside JSX','Inside useState','Inside useEffect','Inside return'], ans: 2 },{ q: 'Which component creates a navigation link in React Router?', options: ['<a>','<Nav>','<Link>','<Route>'], ans: 2 },{ q: 'What should you handle when fetching data?', options: ['Only success','Loading and error states','Only errors','Nothing extra'], ans: 1 }] },
+        'React JS_6': { title: 'Final React Project', videos: [{title:'Build & Deploy a React App',url:'https://www.youtube.com/embed/b9eMGE7QtTk?rel=0&disablekb=1&modestbranding=1'},{title:'React Project Best Practices',url:'https://www.youtube.com/embed/UjhhDM-wLqg?rel=0&disablekb=1&modestbranding=1'}], points: ['A final React project combines components, state, props, hooks, and routing.','Plan your app structure — list all components and their responsibilities.','Use React Router for multi-page navigation in your final project.','Connect to a real API to fetch and display dynamic data.','Deploy your React app using platforms like Vercel or Netlify.'], questions: [{ q: 'What should you plan before building a React project?', options: ['Only CSS','Component structure','Database only','Server setup'], ans: 1 },{ q: 'Which platform can deploy a React app?', options: ['MySQL','MongoDB','Vercel','Redis'], ans: 2 },{ q: 'What makes a React app multi-page?', options: ['Multiple CSS files','React Router','Multiple index.html','useState'], ans: 1 },{ q: 'How do you display dynamic data in React?', options: ['Hardcode it','Connect to an API','Use only props','Use CSS variables'], ans: 1 },{ q: 'What combines all React concepts in the final project?', options: ['Only hooks','Only routing','Components, state, props, hooks, routing','Only components'], ans: 2 }] }
+    };
+
+    let currentWeekNo = null;
+    let currentCourseName = 'default';
+    let assessTimer = null;
+    let timeLeft = 300;
+
+    function openLesson(weekNo, topic, courseName) {
+        currentWeekNo = weekNo;
+        if (courseName) currentCourseName = courseName;
+        const key = currentCourseName !== 'default' ? currentCourseName + '_' + weekNo : weekNo;
+        const data = lessonData[key] || lessonData[weekNo] || lessonData[1];
+        const today = new Date().toLocaleDateString('en-IN', { year:'numeric', month:'long', day:'numeric' });
+        document.getElementById('pdf-topbar-name').textContent = 'Week' + weekNo + '_' + topic.replace(/\s+/g,'_') + '.pdf';
+        document.getElementById('pdf-main-title').textContent = 'Week ' + weekNo + ': ' + topic;
+        document.getElementById('pdf-main-subtitle').textContent = 'Read this material carefully before attempting the assessment';
+        document.getElementById('pdf-date').textContent = today;
+        document.getElementById('pdf-week-label').textContent = 'Week ' + weekNo + ' of 6';
+        document.getElementById('pdf-intro-text').textContent = 'This study material covers the essential concepts for Week ' + weekNo + ': ' + topic + '. Go through each point thoroughly to build a strong understanding before taking the assessment.';
+        document.getElementById('pdf-points').innerHTML = data.points.map((p, i) =>
+            '<div class="pdf-point"><div class="pdf-point-num">' + (i+1) + '</div><div class="pdf-point-text">' + p + '</div></div>'
+        ).join('');
+        document.getElementById('pdf-checklist').innerHTML = (data.checklist || []).map(item => '<li>' + item + '</li>').join('');
+        document.getElementById('pdf-factbox-text').textContent = data.funFact || '';
+        const videos = data.videos || [];
+        document.getElementById('pdf-videos').innerHTML = videos.map(function(v) {
+            return '<div style="border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,0.1);">' +
+            '<div style="background:#1e293b;padding:10px 14px;font-size:0.82rem;font-weight:600;color:white;display:flex;align-items:center;gap:8px;"><i class=\"fab fa-youtube\" style=\"color:#e53935;\"></i>' + v.title + '</div>' +
+            '<iframe width="100%" height="220" src="' + v.url + '" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="display:block;"></iframe>' +
+            '</div>';
+        }).join('');
+        const markBtn = document.getElementById('btn-mark-read');
+        const assessBtn = document.getElementById('btn-start-assess');
+        markBtn.classList.remove('done');
+        markBtn.innerHTML = '<i class="fas fa-book-reader"></i> Mark as Read (10s)';
+        markBtn.disabled = true;
+        markBtn.style.opacity = '0.5';
+        markBtn.style.cursor = 'not-allowed';
+        assessBtn.disabled = true;
+        goToSlide(0);
+        document.getElementById('lesson-modal').classList.add('show');
+        let secs = 10;
+        const countdown = setInterval(() => {
+            secs--;
+            if (secs > 0) {
+                markBtn.innerHTML = '<i class="fas fa-book-reader"></i> Mark as Read (' + secs + 's)';
+            } else {
+                clearInterval(countdown);
+                markBtn.disabled = false;
+                markBtn.style.opacity = '';
+                markBtn.style.cursor = '';
+                markBtn.innerHTML = '<i class="fas fa-book-reader"></i> Mark as Read';
+            }
+        }, 1000);
+    }
+
+    function markAsRead() {
+        const markBtn = document.getElementById('btn-mark-read');
+        markBtn.classList.add('done');
+        markBtn.innerHTML = '<i class="fas fa-check"></i> Read';
+        markBtn.disabled = true;
+        document.getElementById('btn-start-assess').disabled = false;
+    }
+
+    function closeLessonModal() {
+        document.getElementById('lesson-modal').classList.remove('show');
+    }
+
+    function startAssessment() {
+        closeLessonModal();
+        const key = currentCourseName !== 'default' ? currentCourseName + '_' + currentWeekNo : currentWeekNo;
+        const data = lessonData[key] || lessonData[currentWeekNo] || lessonData[1];
+        document.getElementById('assess-title').textContent = 'Week ' + currentWeekNo + ' Assessment';
+        let html = '';
+        data.questions.forEach((q, i) => {
+            html += '<div class="question-block" id="qblock-' + i + '">' +
+                '<p>' + (i + 1) + '. ' + q.q + '</p>' +
+                q.options.map((opt, j) =>
+                    '<label class="option-label" id="opt-' + i + '-' + j + '">' +
+                    '<input type="radio" name="q' + i + '" value="' + j + '"> ' + opt +
+                    '</label>'
+                ).join('') +
+            '</div>';
+        });
+        document.getElementById('assess-body').innerHTML = html;
+        timeLeft = 300;
+        document.getElementById('assess-timer').textContent = '⏱ 5:00';
+        clearInterval(assessTimer);
+        assessTimer = setInterval(() => {
+            timeLeft--;
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            document.getElementById('assess-timer').textContent = '⏱ ' + m + ':' + (s < 10 ? '0' : '') + s;
+            if (timeLeft <= 0) { clearInterval(assessTimer); submitAssessment(); }
+        }, 1000);
+        document.getElementById('assess-modal').classList.add('show');
+    }
+
+    function submitAssessment() {
+        clearInterval(assessTimer);
+        const key = currentCourseName !== 'default' ? currentCourseName + '_' + currentWeekNo : currentWeekNo;
+        const data = lessonData[key] || lessonData[currentWeekNo] || lessonData[1];
+        let score = 0;
+        data.questions.forEach((q, i) => {
+            const selected = document.querySelector('input[name="q' + i + '"]:checked');
+            const val = selected ? parseInt(selected.value) : -1;
+            q.options.forEach((_, j) => {
+                const lbl = document.getElementById('opt-' + i + '-' + j);
+                if (lbl) lbl.querySelector('input').disabled = true;
+                if (j === q.ans && lbl) lbl.classList.add('correct');
+                else if (j === val && val !== q.ans && lbl) lbl.classList.add('wrong');
+            });
+            if (val === q.ans) score++;
+        });
+        setTimeout(() => {
+            document.getElementById('assess-modal').classList.remove('show');
+            const pass = score >= 3;
+            if (pass) lastPassedWeek = currentWeekNo;
+            const circle = document.getElementById('score-circle');
+            circle.textContent = score + '/5';
+            circle.className = 'score-circle ' + (pass ? 'pass' : 'fail');
+            document.getElementById('score-title').textContent = pass ? '🎉 Well Done!' : '😔 Keep Practicing!';
+            document.getElementById('score-msg').textContent = 'You scored ' + score + ' out of 5. ' + (pass ? 'Great job! You passed the assessment.' : 'You need 3/5 to pass. Review the lesson and try again.');
+            document.getElementById('score-modal').classList.add('show');
+        }, 1200);
+    }
+
+    function closeScoreModal() {
+        document.getElementById('score-modal').classList.remove('show');
+        if (lastPassedWeek) {
+            updateProgressAfterPass(lastPassedWeek);
+            lastPassedWeek = null;
+        }
+    }
+
+    let lastPassedWeek = null;
+
+    function updateProgressBar(completedCount) {
+        const totalWeeks = 6;
+        const cappedCount = Math.min(completedCount, totalWeeks);
+        const percent = Math.min(Math.round((cappedCount / totalWeeks) * 100), 100);
+        // document.getElementById('statCompleted').textContent = cappedCount; // Removed to prevent overwriting global stat
+        const progressSection = document.getElementById('progressSection');
+        if (progressSection) {
+            progressSection.style.display = cappedCount > 0 ? 'block' : 'none';
+            if (dashData && dashData.enrolled_courses && dashData.enrolled_courses.length > 0)
+                document.getElementById('progressCourseName').textContent = currentCourseName !== 'default' ? currentCourseName : dashData.enrolled_courses[0].course_name;
+            document.getElementById('progressPercent').textContent = percent + '%';
+            document.getElementById('progressBarFill').style.width = percent + '%';
+            document.getElementById('progressDetail').textContent = cappedCount + ' of ' + totalWeeks + ' weeks completed';
+            document.getElementById('progressStatus').textContent = cappedCount >= totalWeeks ? '🎉 Completed!' : 'In Progress';
+        }
+    }
+
+    function showCourseCompletedBanner(courseName) { /* removed */ }
+
+    function updateProgressAfterPass(weekNo) {
+        const progressKey = 'progress_' + currentCourseName;
+        const savedProgress = JSON.parse(localStorage.getItem(progressKey) || '{}');
+        savedProgress[weekNo] = 'completed';
+        localStorage.setItem(progressKey, JSON.stringify(savedProgress));
+        const username = localStorage.getItem('ds_user');
+        const actualCourse = (currentCourseName && currentCourseName !== 'default') ? currentCourseName : (dashData && dashData.enrolled_courses && dashData.enrolled_courses.length > 0 ? dashData.enrolled_courses[0].course_name : 'default');
+        fetch(API + '/progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username: username, course_name: actualCourse, week_number: weekNo })
+        });
+        // Re-load all dashboard data to refresh all stats and syllabus consistently
+        loadDashboard();
+        // After loadDashboard, ensure the correct syllabus tab is active if it was already on syllabus section
+        if (document.getElementById('section-syllabus').style.display === 'block') {
+            const courses = dashData.enrolled_courses;
+            const currentCourseIndex = courses.findIndex(c => c.course_name === currentCourseName);
+            if (currentCourseIndex !== -1) {
+                selectCourseTab(currentCourseIndex);
+            } else {
+                selectCourseTab(0); // Fallback to first course
+            }
+        }
+    }
+
+    function renderAllCourses() {
+        const courses = dashData.enrolled_courses;
+        let tabsHtml = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;">';
+        courses.forEach((c, i) => {
+            const completed = (dashData.progress || []).filter(p => p.course_name === c.course_name).length;
+            const isDone = completed === 6;
+            tabsHtml += '<button id="course-tab-' + i + '" onclick="selectCourseTab(' + i + ')" style="padding:9px 20px;border-radius:10px;border:2px solid ' + (i===0?'#667eea':'#e2e8f0') + ';background:' + (i===0?'#667eea':'white') + ';color:' + (i===0?'white':'#64748b') + ';font-weight:600;font-size:0.85rem;cursor:pointer;">' +
+                (isDone ? '✅ ' : '') + c.course_name +
+            '</button>';
+        });
+        tabsHtml += '</div>';
+        document.getElementById('myCourseStatusSection').innerHTML = tabsHtml;
+        selectCourseTab(0);
+    }
+
+    function selectCourseTab(index) {
+        const courses = dashData.enrolled_courses;
+        // Update tab styles
+        courses.forEach((_, i) => {
+            const tab = document.getElementById('course-tab-' + i);
+            if (!tab) return;
+            tab.style.background = i === index ? '#667eea' : 'white';
+            tab.style.color = i === index ? 'white' : '#64748b';
+            tab.style.borderColor = i === index ? '#667eea' : '#e2e8f0';
+        });
+        renderSyllabusStatic(courses[index].course_name);
+    }
+
+    function renderSyllabusStatic(courseName) {
+        currentCourseName = courseName || (dashData && dashData.enrolled_courses && dashData.enrolled_courses.length > 0 ? dashData.enrolled_courses[0].course_name : 'default');
+        const weeks = getSyllabus(currentCourseName);
+        const progressKey = 'progress_' + currentCourseName;
+        // Start fresh — only load progress that belongs to this exact course
+        const savedProgress = {};
+        // Load from DB progress (exact course match only)
+        if (dashData && dashData.progress) {
+            dashData.progress.forEach(p => {
+                if (p.course_name === currentCourseName) {
+                    savedProgress[p.week_number] = 'completed';
+                }
+            });
+        }
+        // Always merge localStorage so progress persists on refresh
+        const localProgress = JSON.parse(localStorage.getItem(progressKey) || '{}');
+        Object.keys(localProgress).forEach(k => {
+            if (localProgress[k] === 'completed') savedProgress[k] = 'completed';
+        });
+        // Compute maxUnlocked strictly: only week 1 open by default, each pass unlocks next
+        let maxUnlocked = 1;
+        for (let i = 1; i <= weeks.length; i++) {
+            if (savedProgress[i] === 'completed') maxUnlocked = i + 1;
+        }
+        let html = '<div class="syllabus-grid">';
+        weeks.forEach((w, i) => {
+            const status = savedProgress[w.week];
+            const isCompleted = status === 'completed';
+            const isUnlocked = !isCompleted && w.week <= maxUnlocked;
+            const stateClass = isCompleted ? 'completed' : isUnlocked ? 'unlocked' : 'locked';
+            const badgeText = isCompleted ? 'Completed' : isUnlocked ? 'In Progress' : 'Locked';
+            const clickable = isUnlocked;
+            html += '<div class="week-card ' + stateClass + '" ' + (clickable ? 'onclick="openLesson(' + w.week + ', \'' + w.topic + '\', \'' + courseName + '\')" style="cursor:pointer;"' : 'style="cursor:' + (isCompleted ? 'default' : 'not-allowed') + ';"') + '>' +
+                '<div class="week-num ' + stateClass + '">' + (isCompleted ? '<i class="fas fa-check"></i>' : isUnlocked ? w.week : '<i class="fas fa-lock"></i>') + '</div>' +
+                '<div class="week-info"><h4>Week ' + w.week + ': ' + w.topic + '</h4></div>' +
+                '<span class="week-badge ' + stateClass + '">' + badgeText + '</span>' +
+                '<div class="week-actions">' +
+                    '<button class="assess-btn" onclick="event.stopPropagation();' + (clickable ? 'openLesson(' + w.week + ', \'' + w.topic + '\', \'' + courseName + '\')' : '') + '"' + (clickable ? '' : ' disabled style="opacity:0.4;cursor:not-allowed;"') + '><i class="fas fa-pen-alt"></i> Take Assessment</button>' +
+                '</div>' +
+            '</div>';
+        });
+        html += '</div>';
+        document.getElementById('syllabusContent').innerHTML = '<div class="section-title-dash"><i class="fas fa-book-open"></i> ' + courseName + '</div>' + html;
+        // Restore progress bar
+        const completedCount = Object.values(savedProgress).filter(v => v === 'completed').length;
+        updateProgressBar(completedCount);
+    }
+
+    function showSection(name, el) {
+        document.querySelectorAll('[id^="section-"]').forEach(s => s.style.display = 'none');
+        const sec = document.getElementById('section-' + name);
+        if (sec) sec.style.display = 'block';
+        document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+        const link = el || document.querySelector('.sidebar-nav a[href="#' + name + '"]');
+        if (link) link.classList.add('active');
+        // sync mobile bottom nav
+        document.querySelectorAll('.mob-nav-item').forEach(a => a.classList.remove('active'));
+        const mobMap = { overview: 'mob-overview', syllabus: 'mob-syllabus', profile: 'mob-profile', chat: 'mob-chat' };
+        const mobEl = document.getElementById(mobMap[name]);
+        if (mobEl) mobEl.classList.add('active');
+        // Init chat on first open
+        if (name === 'chat') {
+            const badge = document.getElementById('chatUnreadBadge');
+            if (badge) badge.style.display = 'none';
+            initStudentChat();
+        }
+        return false;
+    }
+
+    // Logout
+    document.getElementById('logoutLink').addEventListener('click', function(e) {
+        e.preventDefault();
+        localStorage.removeItem('ds_user');
+        localStorage.removeItem('ds_fullname');
+        location.href = 'log.html';
+    });
+
+    // Hamburger
+    const hamburgerEl = document.getElementById('hamburger');
+    if (hamburgerEl) {
+        hamburgerEl.addEventListener('click', function () {
+            document.querySelector('.nav-links').classList.toggle('active');
+            this.classList.toggle('active');
+        });
+    }
+
+    // Init
+    loadDashboard();
+
+    // Nav greeting dropdown
+    const navUser = localStorage.getItem('ds_fullname') || localStorage.getItem('ds_user');
+    if (navUser) {
+        var _g=document.getElementById('nav-greeting'); if(_g) _g.textContent = 'Hi, ' + navUser.charAt(0).toUpperCase() + navUser.slice(1) + ' 👋';
+    }
+
+    // -- Live Chat with Admin (Socket.IO) --------------------------------------
+    const CHAT_API = 'https://your-backend-url';
+    let chatSocket = io(CHAT_API);
+    let convKey = localStorage.getItem('ds_chat_key') || 'conv_' + Math.random().toString(36).substr(2, 9);
+    localStorage.setItem('ds_chat_key', convKey);
+
+    (function socketInit() {
+        chatSocket.on('connect', () => {
+            chatSocket.emit('student_join', { conversationKey: convKey, userId: dsUser, userName: dsFullName || dsUser, userEmail: dsEmail });
+        });
+        chatSocket.on('receive_msg', (data) => {
+            // If chat section is visible, append bubble; otherwise show badge
+            if (document.getElementById('section-chat') && document.getElementById('section-chat').style.display !== 'none') {
+                appendStudentChatBubble('admin', data.msg, new Date().toISOString(), data.type, data.fileData);
+            } else {
+                const badge = document.getElementById('chatUnreadBadge');
+                if (badge) badge.style.display = 'inline';
+            }
+        });
+    })();
+
+    function handleStudentFileSelect(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+            const base64 = evt.target.result;
+            chatSocket.emit('student_msg', {
+                conversationKey: convKey,
+                fileData: base64,
+                type: 'file',
+                userName: dsFullName || dsUser,
+                userEmail: dsEmail
+            });
+            appendStudentChatBubble('student', '', new Date().toISOString(), 'file', base64);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function initStudentChat() {
+        const dsUserName = localStorage.getItem('ds_fullname') || localStorage.getItem('ds_user') || 'Student';
+        document.getElementById('chatUserName').textContent = dsUserName;
+        document.getElementById('chatUserEmail').textContent = dsEmail || 'Guest';
+
+        const input = document.getElementById('studentChatInput');
+        input.onkeydown = (e) => { if(e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendStudentChatMsg(); } };
+
+        loadStudentChatHistory();
+    }
+
+    async function loadStudentChatHistory() {
+        const historyEl = document.getElementById('studentChatHistory');
+        const emptyEl = document.getElementById('chatEmptyState');
+        if (!historyEl) return;
+
+        try {
+            const res = await fetch(`${CHAT_API}/api/admin/chat/history?conversationKey=${encodeURIComponent(convKey)}`);
+            const data = await res.json();
+            if (!data || !data.success) return;
+
+            if (data.messages.length === 0) {
+                if (emptyEl) emptyEl.style.display = 'flex';
+                return;
+            }
+
+            if (emptyEl) emptyEl.style.display = 'none';
+            historyEl.innerHTML = '';
+
+            data.messages.forEach(m => {
+                appendStudentChatBubble(m.sender_role, m.message, m.created_at, false, m.message_type, m.file_data);
+            });
+            scrollChatToBottom();
+        } catch (e) {
+            console.error('Failed to load chat history:', e);
+        }
+    }
+
+    function appendStudentChatBubble(who, text, timestamp, scroll = true, type = 'text', fileData = null) {
+        const historyEl = document.getElementById('studentChatHistory');
+        const emptyEl = document.getElementById('chatEmptyState');
+        if (!historyEl) return;
+        if (emptyEl) emptyEl.style.display = 'none';
+
+        const timeStr = timestamp ? new Date(timestamp).toLocaleString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }) : '';
+        const isStudent = who === 'student';
+        
+        let content = text ? text.replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+        if (type === 'file' && fileData) {
+            content = `<img src="${fileData}" onclick="window.open(this.src)" />`;
+        }
+
+        const bubble = document.createElement('div');
+        bubble.className = isStudent ? 'chat-bubble-student' : 'chat-bubble-admin';
+        bubble.innerHTML = `${content}<div class="chat-bubble-meta">${timeStr}</div>`;
+        historyEl.appendChild(bubble);
+        if (scroll) scrollChatToBottom();
+    }
+
+    function scrollChatToBottom() {
+        const h = document.getElementById('studentChatHistory');
+        if (h) h.scrollTop = h.scrollHeight;
+    }
+
+    function sendStudentChatMsg() {
+        const input = document.getElementById('studentChatInput');
+        if (!input) return;
+        const msg = (input.value || '').trim();
+        if (!msg) return;
+
+        appendStudentChatBubble('student', msg, new Date().toISOString());
+        input.value = '';
+
+        chatSocket.emit('student_msg', {
+            conversationKey: convKey,
+            msg: msg,
+            userName: dsFullName || dsUser,
+            userEmail: dsEmail
+        });
+    }
+
+    function toggleDashDropdown() {
+        const dd = document.getElementById('nav-dropdown');
+        dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    }
+
+    document.addEventListener('click', function(e) {
+        const dd = document.getElementById('nav-dropdown');
+        const greeting = document.getElementById('nav-greeting');
+        if (dd && !dd.contains(e.target) && e.target !== greeting) {
+            dd.style.display = 'none';
+        }
+    });
+
+
+    let currentSlide = 0;
+    function goToSlide(n) {
+        currentSlide = n;
+        document.getElementById('pdf-slides-track').style.transform = 'translateX(-' + (n * 100) + '%)';
+        document.querySelectorAll('.pdf-dot').forEach(function(d, i) { d.classList.toggle('active', i === n); });
+        var prev = document.getElementById('pdf-prev-btn');
+        var next = document.getElementById('pdf-next-btn');
+        prev.style.opacity = n === 0 ? '0.4' : '1';
+        prev.style.pointerEvents = n === 0 ? 'none' : 'auto';
+        next.style.opacity = n === 1 ? '0.4' : '1';
+        next.style.pointerEvents = n === 1 ? 'none' : 'auto';
+    }
+    function slidePage(dir) { goToSlide(Math.max(0, Math.min(1, currentSlide + dir))); }
+
+    // Toast notifications
+    function showDashToast(msg, type, duration) {
+        if (!duration) duration = 3500;
+        var c = document.getElementById('dash-toast-container');
+        if (!c) return;
+        var t = document.createElement('div');
+        t.className = 'dash-toast ' + (type || 'info');
+        var icons = {success:'&#10003;', error:'&#10007;', info:'&#8505;'};
+        t.innerHTML = '<span>' + (icons[type] || icons.info) + '</span><span>' + msg + '</span>';
+        c.appendChild(t);
+        setTimeout(function() { t.classList.add('exit'); setTimeout(function(){ t.remove(); }, 320); }, duration);
+    }
+
+    // Dashboard search
+    function dashSearch(query) {
+        var q = query.toLowerCase().trim();
+        var cards = document.querySelectorAll('.week-card');
+        cards.forEach(function(card) {
+            var text = card.textContent.toLowerCase();
+            card.style.display = (!q || text.indexOf(q) !== -1) ? '' : 'none';
+        });
+        var enrolled = document.querySelectorAll('.enrolled-card');
+        enrolled.forEach(function(card) {
+            var text = card.textContent.toLowerCase();
+            card.style.display = (!q || text.indexOf(q) !== -1) ? '' : 'none';
+        });
+    }
+    (document.getElementById('navLogoutBtn') || document.createElement('x')).addEventListener('click', function(e) {
+        e.preventDefault();
+        localStorage.removeItem('ds_user');
+        localStorage.removeItem('ds_fullname');
+        location.href = 'log.html';
+    });
+</script>
+</body>
+</html>
+
+

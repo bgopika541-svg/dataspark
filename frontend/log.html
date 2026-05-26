@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login - DATA SPARK TECHNOLOGIES</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #080c18; --deep: #0c1228; --blue: #1a56ff; --blue-mid: #3a72ff;
+      --blue-light: #5d8fff; --teal: #00d4c2; --white: #ffffff;
+      --off-white: #f4f6fb; --muted: #8892a4; --radius: 20px;
+      --transition: 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--navy); color: var(--white); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    /* BACKGROUND */
+    .bg-layer {
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse 70% 55% at 20% 20%, rgba(26,86,255,0.28) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 45% at 80% 80%, rgba(0,212,194,0.15) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 35% at 70% 15%, rgba(93,143,255,0.12) 0%, transparent 55%),
+        linear-gradient(165deg, var(--navy) 0%, var(--deep) 100%);
+    }
+    .bg-grid {
+      position: fixed; inset: 0; z-index: 0;
+      background-image: linear-gradient(rgba(26,86,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(26,86,255,0.05) 1px, transparent 1px);
+      background-size: 55px 55px;
+      mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 40%, transparent 100%);
+    }
+    .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: orbFloat 12s ease-in-out infinite; }
+    .orb-1 { width: 400px; height: 400px; background: rgba(26,86,255,0.18); top: -100px; left: -100px; animation-delay: 0s; }
+    .orb-2 { width: 300px; height: 300px; background: rgba(0,212,194,0.12); bottom: -80px; right: -80px; animation-delay: 5s; }
+    @keyframes orbFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+
+    /* NAVBAR */
+    .navbar { position: relative; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 22px 60px; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(8,12,24,0.4); backdrop-filter: blur(12px); }
+    .nav-logo { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--teal); letter-spacing: 0.04em; text-decoration: none; }
+    .nav-logo span { color: var(--white); }
+    .nav-links { list-style: none; display: flex; gap: 40px; align-items: center; }
+    .nav-links a { text-decoration: none; color: rgba(255,255,255,0.55); font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: color var(--transition); }
+    .nav-links a:hover { color: var(--white); }
+
+    /* MAIN LAYOUT */
+    .login-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 24px; position: relative; z-index: 5; }
+    .login-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0; max-width: 960px; width: 100%; border-radius: 28px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.5); animation: fadeUp 0.9s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* LEFT PANEL */
+    .login-left {
+      background: linear-gradient(145deg, var(--blue) 0%, #0033cc 100%);
+      padding: 60px 48px;
+      display: flex; flex-direction: column; justify-content: space-between;
+      position: relative; overflow: hidden;
+    }
+    .login-left::before { content: ''; position: absolute; width: 340px; height: 340px; background: rgba(255,255,255,0.06); border-radius: 50%; top: -120px; right: -120px; }
+    .login-left::after { content: ''; position: absolute; width: 220px; height: 220px; background: rgba(0,212,194,0.1); border-radius: 50%; bottom: -80px; left: -60px; }
+    .left-logo { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: rgba(255,255,255,0.9); letter-spacing: 0.04em; position: relative; }
+    .left-logo span { display: block; font-size: 0.65rem; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-top: 3px; }
+    .left-content { position: relative; }
+    .left-content h2 { font-family: 'Syne', sans-serif; font-size: 2.2rem; font-weight: 800; color: var(--white); line-height: 1.12; margin-bottom: 16px; letter-spacing: -0.02em; }
+    .left-content p { font-size: 0.95rem; color: rgba(255,255,255,0.6); line-height: 1.78; margin-bottom: 36px; }
+    .left-features { display: flex; flex-direction: column; gap: 14px; }
+    .left-feature { display: flex; align-items: center; gap: 12px; font-size: 0.88rem; color: rgba(255,255,255,0.75); }
+    .feat-dot { width: 8px; height: 8px; background: var(--teal); border-radius: 50%; flex-shrink: 0; }
+    .left-footer { font-size: 0.75rem; color: rgba(255,255,255,0.3); letter-spacing: 0.06em; position: relative; }
+
+    /* RIGHT PANEL */
+    .login-right { background: var(--white); padding: 60px 48px; display: flex; flex-direction: column; justify-content: center; }
+    .form-eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
+    .login-right h3 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; letter-spacing: -0.02em; }
+    .login-right .sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 36px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #444; margin-bottom: 8px; }
+    .input-wrap { position: relative; }
+    .input-wrap span { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1rem; pointer-events: none; }
+    .eye-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1rem; color: var(--muted); padding: 4px; line-height: 1; }
+    .eye-btn:hover { color: var(--blue); }
+    input { width: 100%; padding: 13px 16px 13px 42px; font-family: 'Inter', sans-serif; font-size: 0.92rem; color: var(--navy); background: var(--off-white); border: 1.5px solid rgba(26,86,255,0.12); border-radius: 12px; outline: none; transition: border-color var(--transition), box-shadow var(--transition); }
+    input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,86,255,0.1); background: var(--white); }
+    .forgot { display: block; text-align: right; font-size: 0.78rem; color: var(--blue); text-decoration: none; margin-top: 6px; margin-bottom: 24px; font-weight: 500; }
+    .login-btn { width: 100%; padding: 15px; font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.06em; color: var(--white); background: linear-gradient(135deg, var(--blue), var(--blue-light)); border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 6px 24px rgba(26,86,255,0.35); transition: transform var(--transition), box-shadow var(--transition); }
+    .login-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(26,86,255,0.5); }
+    .sign-btn { width: 100%; padding: 15px; font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.06em; color: var(--white); background: linear-gradient(135deg, var(--blue), var(--blue-light)); border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 6px 24px rgba(26,86,255,0.35); transition: transform var(--transition), box-shadow var(--transition); }
+    .sign-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(26,86,255,0.5); }
+    .signup-link { text-align: center; margin-top: 22px; font-size: 0.86rem; color: var(--muted); }
+    .signup-link a { color: var(--blue); text-decoration: none; font-weight: 600; }
+    /* ===== CAPTCHA CARD (Nexlify Theme) ===== */
+.captcha-card {
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 12px;
+
+    background: #ffffff;
+    border: 1px solid rgba(15, 23, 42, 0.15);
+
+    box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+}
+
+.captcha-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #0f172a; /* navy theme */
+    margin-bottom: 10px;
+}
+
+/* row layout like your image */
+.captcha-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* CAPTCHA BOX */
+.captcha-display {
+    flex: 1;
+    padding: 12px;
+
+    background: #f8fafc;
+    border: 2px solid #0f172a;
+
+    border-radius: 8px;
+    text-align: center;
+
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    font-family: "Courier New", monospace;
+
+    color: #0f172a;
+    user-select: none;
+}
+
+/* REFRESH BUTTON (green like image) */
+.captcha-refresh {
+    padding: 10px 14px;
+    background: #22c55e; /* green */
+    color: white;
+
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.captcha-refresh:hover {
+    background: #16a34a;
+    transform: scale(1.05);
+}
+
+/* INPUT */
+.captcha-input {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px;
+
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+
+    outline: none;
+    font-size: 14px;
+}
+
+.captcha-input:focus {
+    border-color: #0f172a;
+    box-shadow: 0 0 6px rgba(15, 23, 42, 0.2);
+}
+
+    /* Google Button */
+    .google-btn {
+      width: 100%; padding: 13px 16px;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+      background: #fff; border: 1.5px solid #dadce0;
+      border-radius: 12px; cursor: pointer;
+      font-family: 'Inter', sans-serif; font-size: 0.92rem; font-weight: 600;
+      color: #3c4043; transition: box-shadow var(--transition), transform var(--transition);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    }
+    .google-btn:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.14); transform: translateY(-1px); }
+    .google-btn svg { flex-shrink: 0; }
+    [data-theme="dark"] .google-btn { background: #2d3748; border-color: rgba(255,255,255,0.15); color: #f1f5f9; }
+
+    /* Field error */
+    .field-error { font-size: 0.75rem; color: #dc2626; margin-top: 5px; display: none; }
+    .input-wrap.has-error input { border-color: #dc2626 !important; box-shadow: 0 0 0 3px rgba(220,38,38,0.1) !important; }
+    .input-wrap.has-success input { border-color: #16a34a !important; }
+
+    /* Toast */
+    #toast-container { position: fixed; top: 24px; right: 24px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; }
+    .toast { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; font-size: 0.88rem; font-weight: 500; color: #fff; min-width: 260px; max-width: 340px; box-shadow: 0 8px 32px rgba(0,0,0,0.2); animation: toastIn 0.35s ease both; pointer-events: auto; }
+    .toast.success { background: linear-gradient(135deg, #16a34a, #22c55e); }
+    .toast.error   { background: linear-gradient(135deg, #dc2626, #ef4444); }
+    .toast.info    { background: linear-gradient(135deg, #1a56ff, #5d8fff); }
+    .toast.exit    { animation: toastOut 0.3s ease both; }
+    @keyframes toastIn  { from { opacity:0; transform: translateX(40px); } to { opacity:1; transform: translateX(0); } }
+    @keyframes toastOut { from { opacity:1; transform: translateX(0); } to { opacity:0; transform: translateX(40px); } }
+
+    /* POPUP */
+    #login-popup { display: none; position: fixed; inset: 0; background: rgba(8,12,24,0.75); backdrop-filter: blur(8px); z-index: 999; align-items: center; justify-content: center; }
+    #login-popup.show { display: flex; }
+    .popup-box { background: var(--white); border-radius: 24px; padding: 52px 44px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 30px 80px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+    .popup-icon { font-size: 3rem; margin-bottom: 14px; }
+    .popup-box h3 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; }
+    .popup-box.success h3 { color: #16a34a; }
+    .popup-box.error h3 { color: #dc2626; }
+    .popup-box p { font-size: 0.92rem; color: var(--muted); line-height: 1.7; margin-bottom: 26px; }
+    .popup-ok { font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 700; letter-spacing: 0.06em; color: var(--white); padding: 12px 34px; border-radius: 99px; border: none; cursor: pointer; transition: transform var(--transition); }
+    .popup-box.success .popup-ok { background: linear-gradient(135deg, #16a34a, #22c55e); box-shadow: 0 6px 20px rgba(22,163,74,0.35); }
+    .popup-box.error .popup-ok { background: linear-gradient(135deg, #dc2626, #ef4444); box-shadow: 0 6px 20px rgba(220,38,38,0.35); }
+    .popup-ok:hover { transform: translateY(-2px); }
+
+    /* FOOTER */
+    .mini-footer { position: relative; z-index: 5; padding: 22px 60px; border-top: 1px solid rgba(255,255,255,0.06); background: rgba(8,12,24,0.4); display: flex; justify-content: space-between; align-items: center; }
+    .mini-footer p { font-size: 0.78rem; color: rgba(255,255,255,0.28); }
+    .mini-footer a { font-size: 0.78rem; color: var(--teal); text-decoration: none; }
+
+    @media (max-width: 780px) { .login-container { grid-template-columns: 1fr; } .login-left { display: none; } .navbar { padding: 16px 24px; } .mini-footer { padding: 16px 24px; flex-direction: column; gap: 8px; text-align: center; } }
+    @media (max-width: 480px) { .navbar { padding: 14px 16px; } .nav-links { gap: 12px; } .nav-links a { font-size: 0.72rem; } .login-right { padding: 32px 20px; } .login-wrapper { padding: 30px 16px; } }
+
+    /* ── Dark Mode: log.html specific ── */
+    [data-theme="dark"] .login-right {
+      background: #1e293b !important;
+      color: #f1f5f9 !important;
+    }
+    [data-theme="dark"] .login-right h3 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .login-right .sub { color: rgba(255,255,255,0.6) !important; }
+    [data-theme="dark"] .login-right label { color: rgba(255,255,255,0.72) !important; }
+    [data-theme="dark"] .divider::before, [data-theme="dark"] .divider::after { background: rgba(255, 255, 255, 0.15) !important; }
+    [data-theme="dark"] .login-right input {
+      background: #334155 !important;
+      color: #f1f5f9 !important;
+      border-color: rgba(255,255,255,0.12) !important;
+    }
+    [data-theme="dark"] .form-eyebrow { color: #5d8fff !important; }
+    [data-theme="dark"] .divider { color: rgba(255,255,255,0.3) !important; }
+    [data-theme="dark"] .divider::before,
+    [data-theme="dark"] .divider::after { background: rgba(255,255,255,0.1) !important; }
+    [data-theme="dark"] .signup-link { color: rgba(255,255,255,0.6) !important; }
+    [data-theme="dark"] .forgot { color: #5d8fff !important; }
+    [data-theme="dark"] .popup-box { background: #1e293b !important; color: #f1f5f9 !important; }
+    [data-theme="dark"] .popup-box p { color: rgba(255,255,255,0.65) !important; }
+    /* Signup popup (inline-styled) */
+    [data-theme="dark"] #signup-popup > div {
+      background: #1e293b !important;
+      color: #f1f5f9 !important;
+    }
+    [data-theme="dark"] #signup-popup p { color: rgba(255,255,255,0.65) !important; }
+    /* OR Divider */
+.divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.divider span {
+    padding: 0 12px;
+}
+
+/* Social Buttons */
+.social-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 13px;
+    margin-bottom: 14px;
+    border-radius: 12px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s ease;
+    font-size: 15px;
+}
+
+/* Google */
+.google-btn {
+    background: white;
+    color: #111;
+    border: 1px solid #ddd;
+}
+
+.google-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.google-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(255,255,255,0.15);
+}
+
+/* GitHub */
+.github-btn {
+    background: #24292e;
+    color: white;
+    border: none;
+}
+
+.github-btn i {
+    font-size: 20px;
+}
+
+.github-btn:hover {
+    background: #171a1d;
+    transform: translateY(-2px);
+}
+  </style>
+</head>
+<body>
+  <div class="bg-layer"></div>
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav class="navbar">
+    <a href="pro.html" class="nav-logo">DATA SPARK <span>TECHNOLOGIES</span></a>
+    <ul class="nav-links">
+      <li><a href="pro.html">Home</a></li>
+      <li><a href="abt.html">About</a></li>
+      <li><a href="cor.html">Courses</a></li>
+      <li><a href="con1.html">Contact</a></li>
+    </ul>
+    <button id="navThemeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Toggle dark/light mode" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:99px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;flex-shrink:0;">
+      🌙
+    </button>
+  </nav>
+
+  <div class="login-wrapper">
+    <div class="login-container">
+
+      <!-- LEFT PANEL -->
+      <div class="login-left">
+        <div class="left-logo">
+          DATA SPARK TECHNOLOGIES
+          <span>IT Training Institute · Chennai</span>
+          <span>IT Training Institute · Chennai</span>
+        </div>
+        <div class="left-content">
+          <h2>Welcome Back to Your Learning Journey</h2>
+          <p>Log in to access your courses, track your progress, and stay connected with your trainers.</p>
+          <div class="left-features">
+            <div class="left-feature"><span class="feat-dot"></span> Access all enrolled courses</div>
+            <div class="left-feature"><span class="feat-dot"></span> Track your progress & certificates</div>
+            <div class="left-feature"><span class="feat-dot"></span> Connect with expert trainers</div>
+            <div class="left-feature"><span class="feat-dot"></span> Download your study materials</div>
+          </div>
+        </div>
+        <div class="left-footer">© 2026 DATA SPARK TECHNOLOGIES</div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="login-right">
+        <div class="form-eyebrow"> Portal</div>
+        <h3>LOG IN</h3>
+        <p class="sub">Enter your credentials to access your dashboard</p>
+
+        <form id="loginForm" onsubmit="loginUser(event)" autocomplete="off">
+            <label>Username</label>
+            <div class="input-wrap">
+              <span>👤</span>
+              <input type="text" id="username" placeholder="Enter your username" required autocomplete="off" />
+            </div>
+          
+          <div class="form-group">
+            <label>Email</label>
+            <div class="input-wrap" id="wrap-email">
+              <span>📧</span>
+              <input type="email" id="email" placeholder="Enter your email" autocomplete="off" oninput="validateField('email')" />
+            </div>
+            <div class="field-error" id="err-email">Please enter a valid email address.</div>
+          </div>
+          <div class="form-group">
+            <label>Password</label>
+            <div class="input-wrap" id="wrap-password">
+              <span>🔒</span>
+              <input type="password" id="password" placeholder="Enter your password" autocomplete="new-password" oninput="validateField('password')" />
+              <button type="button" class="eye-btn" onclick="togglePass()">👁️</button>
+            </div>
+            <div class="field-error" id="err-password">Password must be at least 6 characters.</div>
+          </div>
+          <a href="#" class="forgot" onclick="showForgotMsg(event)">Forgot password?</a>
+
+          <!-- CAPTCHA START -->
+          <div class="captcha-card" style="margin-bottom: 20px;">
+              <p class="captcha-title">Please solve the CAPTCHA:</p>
+              <div class="captcha-row">
+                  <div id="captchaBox" class="captcha-display"></div>
+                  <button type="button" class="captcha-refresh" onclick="generateCaptcha()">
+                      Refresh
+                  </button>
+              </div>
+              <input type="text" id="captchaInput"
+                     class="captcha-input"
+                     placeholder="Enter captcha here" required>
+          </div>
+          <!-- CAPTCHA END -->
+
+          <button type="submit" class="login-btn">Login →</button>
+          <div class="divider">
+            <span>OR</span>
+          </div>
+          <button type="button" class="sign-btn" onclick="showSignupPopup()">Sign Up →</button>
+        </form>
+
+        <div class="divider">
+    <span>OR</span>
+</div>
+
+<a href="/auth/google" class="social-btn google-btn">
+    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="Google">
+    Continue with Google
+</a>
+
+<a href="/auth/github" class="social-btn github-btn">
+    <i class="fab fa-github"></i>
+    Continue with GitHub
+</a>
+
+        <p class="signup-link">New to DATA SPARK? <a href="sign.html">Create an account</a></p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mini-footer">
+    <p>© 2026 DATA SPARK TECHNOLOGIES — All rights reserved.</p>
+    <a href="con1.html">Need help? Contact us →</a>
+  </footer>
+  <!-- LOGIN POPUP -->
+  <div id="login-popup">
+    <div class="popup-box" id="popup-box">
+      <div class="popup-icon" id="popup-icon"></div>
+      <h3 id="popup-title"></h3>
+      <p id="popup-msg"></p>
+      <button class="popup-ok" onclick="closePopup()">OK</button>
+    </div>
+  </div>
+
+  <!-- SIGN UP POPUP -->
+  <div id="signup-popup" style="display:none;position:fixed;inset:0;background:rgba(8,12,24,0.75);backdrop-filter:blur(8px);z-index:999;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:24px;padding:52px 44px;text-align:center;max-width:400px;width:90%;box-shadow:0 30px 80px rgba(0,0,0,0.3);animation:popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both;">
+      <div style="font-size:3rem;margin-bottom:14px;">🎓</div>
+      <h3 style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:#1a56ff;margin-bottom:10px;">Ready to Join?</h3>
+      <p style="font-size:0.92rem;color:#8892a4;line-height:1.7;margin-bottom:26px;">Create your account to start your learning journey with DATA SPARK TECHNOLOGIES.</p>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+        <button onclick="window.location.href='sign.html'" style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:700;color:#fff;background:linear-gradient(135deg,#1a56ff,#5d8fff);padding:12px 34px;border-radius:99px;border:none;cursor:pointer;box-shadow:0 6px 20px rgba(26,86,255,0.35);">Sign Up Now</button>
+        <button onclick="document.getElementById('signup-popup').style.display='none'" style="font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;color:#1a56ff;background:transparent;padding:12px 28px;border-radius:99px;border:1.5px solid rgba(26,86,255,0.3);cursor:pointer;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <script id="logscript">
+    const BASE_URL = "https://dataspark-tech-3.onrender.com";
+    document.getElementById('username').value = '';
+    document.getElementById('password').value = '';
+
+    // Auto-redirect if already logged in
+    window.addEventListener('DOMContentLoaded', () => {
+      const user = localStorage.getItem('ds_user');
+      const role = (localStorage.getItem('ds_role') || '').toLowerCase();
+      if (user) {
+        if (role === 'admin' || role.includes('admin')) window.location.href = 'admin.html';
+        else window.location.href = 'dashboard.html';
+      }
+    });
+
+    function togglePass() {
+      const input = document.getElementById('password');
+      const btn = document.querySelector('.eye-btn');
+      if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+      else { input.type = 'password'; btn.textContent = '👁️'; }
+    }
+
+    function showForgotMsg(e) {
+      e.preventDefault();
+      showToast('CREATE NEW PASSWORD USING SIGNUP ONLY', 'info');
+    }
+
+    function loginUser(e) {
+      e.preventDefault();
+      const user = document.getElementById('username').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const pass = document.getElementById('password').value.trim();
+
+      // CAPTCHA validation
+      const userInputCaptcha = document.getElementById("captchaInput").value;
+      if (userInputCaptcha !== captchaText) {
+          showToast("❌ CAPTCHA incorrect. Try again!", "error");
+          generateCaptcha(); // Regenerate CAPTCHA on failure
+          document.getElementById("captchaInput").value = "";
+          return;
+      }
+      // Client-side validation
+      const emailOk = validateField('email');
+      const passOk  = validateField('password');
+      if (!user) { showToast('Please enter your username.', 'error'); return; }
+      if (!emailOk) { showToast('Please enter a valid email.', 'error'); return; }
+      if (!passOk)  { showToast('Password must be at least 6 characters.', 'error'); return; }
+
+      const box = document.getElementById('popup-box');
+
+      fetch(`${BASE_URL}/api/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ username: user, password: pass, email })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          localStorage.setItem('ds_user', data.user);
+          localStorage.setItem('ds_fullname', data.full_name || data.user);
+          localStorage.setItem('ds_email', data.email || ''); // Store email if available
+          localStorage.setItem('ds_role', (data.role || '').toLowerCase());
+          box.className = 'popup-box success';
+          document.getElementById('popup-icon').innerText = '🎉';
+          document.getElementById('popup-title').innerText = 'Login Successful!';
+          document.getElementById('popup-msg').innerText = 'Welcome, ' + data.user.charAt(0).toUpperCase() + data.user.slice(1) + '! Redirecting to home...';
+          document.getElementById('login-popup').classList.add('show');
+          // Decide redirect based on role
+          console.log('Login role from server:', data.role);
+          setTimeout(() => {
+            const role = (data.role || '').toString().toLowerCase().trim();
+            // Be tolerant with role strings (e.g., "Admin", "super admin", etc.)
+            if (role === 'admin' || role.includes('admin')) window.location.href = 'admin.html';
+            else window.location.href = 'dashboard.html';
+          }, 2000);
+        } else {
+          box.className = 'popup-box error';
+          document.getElementById('popup-icon').innerText = '❌';
+          document.getElementById('popup-title').innerText = 'Login Failed';
+          document.getElementById('popup-msg').innerText = data.message;
+          document.getElementById('login-popup').classList.add('show');
+        }
+      })
+      .catch(() => {
+        box.className = 'popup-box error';
+        document.getElementById('popup-icon').innerText = '❌';
+        document.getElementById('popup-title').innerText = 'Server Error';
+        document.getElementById('popup-msg').innerText = 'Could not connect to server. Please try again.';
+        document.getElementById('login-popup').classList.add('show');
+      });
+    }
+
+    function closePopup() {
+      document.getElementById('login-popup').classList.remove('show');
+    }
+
+    function showSignupPopup() {
+      document.getElementById('signup-popup').style.display = 'flex';
+    }
+
+    // ── Field Validation ──
+    function validateField(field) {
+      if (field === 'email') {
+        const val = document.getElementById('email').value.trim();
+        const wrap = document.getElementById('wrap-email');
+        const err  = document.getElementById('err-email');
+        const ok   = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+        wrap.classList.toggle('has-error',   !ok && val.length > 0);
+        wrap.classList.toggle('has-success',  ok);
+        err.style.display = (!ok && val.length > 0) ? 'block' : 'none';
+        return ok;
+      }
+      if (field === 'password') {
+        const val = document.getElementById('password').value;
+        const wrap = document.getElementById('wrap-password');
+        const err  = document.getElementById('err-password');
+        const ok   = val.length >= 6;
+        wrap.classList.toggle('has-error',  !ok && val.length > 0);
+        wrap.classList.toggle('has-success', ok);
+        err.style.display = (!ok && val.length > 0) ? 'block' : 'none';
+        return ok;
+      }
+    }
+
+    // ── Toast Notifications ──
+    function showToast(msg, type = 'info', duration = 3500) {
+      const container = document.getElementById('toast-container');
+      const t = document.createElement('div');
+      t.className = 'toast ' + type;
+      const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+      t.innerHTML = '<span>' + (icons[type] || '') + '</span><span>' + msg + '</span>';
+      container.appendChild(t);
+      setTimeout(() => {
+        t.classList.add('exit');
+        setTimeout(() => t.remove(), 320);
+      }, duration);
+    }
+
+    // ── Google Login (UI only — shows toast) ──
+    function handleGoogleLogin() {
+      showToast('Google Sign-In is not configured yet. Please use username/password login.', 'info', 4000);
+    }
+  </script>
+  <script>
+let captchaText = "";
+
+function generateCaptcha() {
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+    captchaText = "";
+
+    for (let i = 0; i < 6; i++) {
+        captchaText += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    document.getElementById("captchaBox").innerText = captchaText;
+}
+
+window.onload = generateCaptcha;
+</script>
+  <div id="toast-container"></div>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="chat-widget.js"></script>
+</body>
+</html>
+
+

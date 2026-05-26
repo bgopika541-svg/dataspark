@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Courses - DATA SPARK TECHNOLOGIES</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy: #080c18; --deep: #0c1228; --blue: #1a56ff; --blue-mid: #3a72ff;
+      --blue-light: #5d8fff; --teal: #00d4c2; --white: #ffffff;
+      --off-white: #f4f6fb; --muted: #8892a4; --radius: 20px;
+      --transition: 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--navy); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    /* NAVBAR */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; background: rgba(8,12,24,0.82); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .nav-logo { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--teal); letter-spacing: 0.04em; text-decoration: none; }
+    .nav-logo span { color: var(--white); }
+    .nav-links { list-style: none; display: flex; gap: 44px; align-items: center; }
+    .nav-links a { text-decoration: none; color: rgba(255,255,255,0.65); font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: color var(--transition); position: relative; }
+    .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: var(--teal); border-radius: 99px; transition: width var(--transition); }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links .nav-cta { color: var(--white); background: linear-gradient(135deg, var(--blue), var(--blue-light)); padding: 9px 24px; border-radius: 99px; font-size: 0.8rem; box-shadow: 0 4px 18px rgba(26,86,255,0.35); transition: box-shadow var(--transition), transform var(--transition); }
+    .nav-links .nav-cta::after { display: none; }
+    .nav-links .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,86,255,0.5); color: var(--white); }
+
+    /* HAMBURGER */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; z-index: 200; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 99px; transition: all 0.3s ease; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-links { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(8,12,24,0.97); backdrop-filter: blur(20px); flex-direction: column; align-items: center; justify-content: center; gap: 32px; z-index: 150; }
+      .nav-links.open { display: flex; }
+      .nav-links a { font-size: 1.1rem; }
+      .nav-links .nav-cta { padding: 12px 36px; font-size: 1rem; }
+    }
+
+    /* HERO */
+    .page-hero { position: relative; min-height: 55vh; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 140px 24px 90px;
+      background: radial-gradient(ellipse 80% 60% at 50% 10%, rgba(26,86,255,0.35) 0%, transparent 68%), radial-gradient(ellipse 45% 40% at 85% 85%, rgba(0,212,194,0.15) 0%, transparent 65%), linear-gradient(165deg, var(--navy) 0%, var(--deep) 100%); }
+    .page-hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(26,86,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(26,86,255,0.05) 1px, transparent 1px); background-size: 55px 55px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%); pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(72px); pointer-events: none; animation: orbFloat 10s ease-in-out infinite; }
+    .orb-1 { width: 320px; height: 320px; background: rgba(26,86,255,0.2); top: 5%; left: 0; animation-delay: 0s; }
+    .orb-2 { width: 220px; height: 220px; background: rgba(0,212,194,0.14); bottom: 5%; right: 5%; animation-delay: 4s; }
+    @keyframes orbFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-24px); } }
+    .hero-content { position: relative; z-index: 2; max-width: 680px; animation: fadeUp 0.9s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--teal); background: rgba(0,212,194,0.10); border: 1px solid rgba(0,212,194,0.28); padding: 7px 18px; border-radius: 99px; margin-bottom: 28px; }
+    .badge-dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; animation: blinkDot 1.8s ease-in-out infinite; }
+    @keyframes blinkDot { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem, 6vw, 4.4rem); font-weight: 800; color: var(--white); line-height: 1.06; margin-bottom: 20px; letter-spacing: -0.03em; animation: fadeUp 0.9s 0.15s ease both; }
+    .hero-content h1 em { font-style: normal; background: linear-gradient(90deg, var(--blue-light), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content p { font-size: 1.05rem; font-weight: 300; color: rgba(255,255,255,0.52); max-width: 500px; margin: 0 auto; line-height: 1.8; animation: fadeUp 0.9s 0.3s ease both; }
+
+    /* FILTER TABS */
+    .filter-bar { padding: 50px 24px 0; max-width: 1100px; margin: 0 auto; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .filter-btn { font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 9px 22px; border-radius: 99px; border: 1.5px solid rgba(26,86,255,0.2); background: transparent; color: var(--muted); cursor: pointer; transition: all var(--transition); }
+    .filter-btn:hover, .filter-btn.active { background: var(--blue); color: var(--white); border-color: var(--blue); box-shadow: 0 4px 18px rgba(26,86,255,0.3); }
+
+    /* COURSES GRID */
+    .courses-section { padding: 60px 24px 110px; max-width: 1100px; margin: 0 auto; }
+    .courses-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 26px; }
+    .course-card { background: var(--white); border-radius: var(--radius); padding: 36px 30px; box-shadow: 0 4px 24px rgba(26,86,255,0.07); border: 1px solid rgba(26,86,255,0.07); transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition); position: relative; overflow: hidden; }
+    .course-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--blue), var(--teal)); transform: scaleX(0); transform-origin: left; transition: transform var(--transition); }
+    .course-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(26,86,255,0.13); border-color: rgba(26,86,255,0.15); }
+    .course-card:hover::before { transform: scaleX(1); }
+    .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 22px; }
+    .course-icon { width: 56px; height: 56px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; }
+    .icon-blue { background: rgba(26,86,255,0.10); }
+    .icon-teal { background: rgba(0,212,194,0.10); }
+    .icon-green { background: rgba(34,197,94,0.10); }
+    .icon-orange { background: rgba(251,146,60,0.10); }
+    .course-badge { font-size: 0.68rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; padding: 4px 12px; border-radius: 99px; }
+    .badge-beginner { color: #16a34a; background: rgba(22,163,74,0.1); }
+    .badge-intermediate { color: #d97706; background: rgba(217,119,6,0.1); }
+    .badge-advanced { color: var(--blue); background: rgba(26,86,255,0.1); }
+    .course-card h3 { font-family: 'Syne', sans-serif; font-size: 1.18rem; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .course-meta { display: flex; gap: 14px; margin-bottom: 16px; }
+    .meta-item { font-size: 0.8rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+    .course-desc { font-size: 0.9rem; color: #5a6373; line-height: 1.75; margin-bottom: 20px; }
+    .course-topics { list-style: none; margin-bottom: 26px; }
+    .course-topics li { font-size: 0.86rem; color: #555; padding: 6px 0; border-bottom: 1px solid rgba(0,0,0,0.05); display: flex; align-items: center; gap: 8px; }
+    .course-topics li::before { content: ''; width: 6px; height: 6px; background: var(--blue); border-radius: 50%; flex-shrink: 0; }
+    .enroll-btn { display: inline-block; font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.06em; color: var(--blue); border: 1.5px solid var(--blue); padding: 10px 26px; border-radius: 99px; cursor: pointer; background: transparent; transition: background var(--transition), color var(--transition), transform var(--transition), box-shadow var(--transition); }
+    .enroll-btn:hover { background: var(--blue); color: var(--white); box-shadow: 0 6px 20px rgba(26,86,255,0.3); transform: translateY(-1px); }
+
+    /* CERT SECTION */
+    .cert-section { padding: 100px 24px; background: var(--white); }
+    .cert-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr 1fr; gap: 80px; align-items: center; }
+    .cert-content h2 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800; color: var(--navy); margin-bottom: 22px; }
+    .cert-content h2 em { font-style: normal; color: var(--blue); }
+    .cert-content p { font-size: 1rem; color: #5a6373; line-height: 1.8; margin-bottom: 32px; }
+    .cert-features { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .cert-feat { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; font-weight: 600; color: var(--navy); }
+    .cert-feat span { font-size: 1.4rem; }
+    .cert-visual img { width: 100%; border-radius: 24px; box-shadow: 0 30px 70px rgba(26,86,255,0.15); }
+    @media (max-width: 900px) { .cert-inner { grid-template-columns: 1fr; gap: 50px; text-align: center; } .cert-features { justify-content: center; } }
+
+    /* SCROLL ANIMATIONS */
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal.from-left { transform: translateX(-40px); }
+    .reveal.from-right { transform: translateX(40px); }
+    .reveal.visible { opacity: 1; transform: translate(0); }
+
+    /* ENROLL POPUP */
+    #enroll-popup { display:none; position:fixed; inset:0; background:rgba(8,12,24,0.78); backdrop-filter:blur(8px); z-index:999; align-items:center; justify-content:center; }
+    #enroll-popup.show { display:flex; }
+    .popup-box { background: var(--white); border-radius: 24px; padding: 50px 44px; text-align: center; max-width: 440px; width: 90%; box-shadow: 0 30px 80px rgba(26,86,255,0.2); animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+    .popup-icon { font-size: 3rem; margin-bottom: 16px; }
+    .popup-box h3 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; color: var(--navy); margin-bottom: 10px; }
+    .popup-course-name { display: inline-block; background: rgba(26,86,255,0.07); border: 1.5px solid rgba(26,86,255,0.18); border-radius: 10px; padding: 8px 20px; font-family: 'Syne', sans-serif; font-size: 0.95rem; font-weight: 700; color: var(--blue); margin-bottom: 14px; }
+    .popup-box p { font-size: 0.93rem; color: var(--muted); line-height: 1.72; margin-bottom: 28px; }
+    .popup-actions { display: flex; gap: 12px; }
+    .popup-cancel { flex: 1; font-family: 'Syne', sans-serif; font-size: 0.85rem; font-weight: 600; color: var(--muted); background: transparent; border: 1.5px solid rgba(26,86,255,0.18); padding: 13px; border-radius: 12px; cursor: pointer; transition: all var(--transition); }
+    .popup-cancel:hover { border-color: var(--blue); color: var(--navy); }
+    .popup-proceed { flex: 2; font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; letter-spacing: 0.05em; color: var(--white); background: linear-gradient(135deg, var(--blue), var(--blue-light)); padding: 13px; border-radius: 12px; border: none; cursor: pointer; box-shadow: 0 6px 20px rgba(26,86,255,0.35); transition: transform var(--transition), box-shadow var(--transition); }
+    .popup-proceed:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(26,86,255,0.5); }
+
+    /* WHY SECTION */
+    .why-section { background: linear-gradient(165deg, var(--navy) 0%, var(--deep) 100%); padding: 110px 24px; position: relative; overflow: hidden; }
+    .why-section::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(26,86,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(26,86,255,0.06) 1px, transparent 1px); background-size: 55px 55px; pointer-events: none; }
+    .why-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+    .why-section .section-tag { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--teal); background: rgba(0,212,194,0.10); border: 1px solid rgba(0,212,194,0.22); padding: 6px 16px; border-radius: 99px; margin-bottom: 16px; }
+    .why-section h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.9rem, 3.5vw, 2.8rem); font-weight: 800; color: var(--white); margin-bottom: 52px; letter-spacing: -0.02em; }
+    .why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .why-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 36px 28px; transition: background var(--transition), transform var(--transition), border-color var(--transition); }
+    .why-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(26,86,255,0.28); transform: translateY(-6px); }
+    .why-icon { font-size: 2.2rem; margin-bottom: 18px; display: block; }
+    .why-card h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--white); margin-bottom: 10px; }
+    .why-card p { font-size: 0.9rem; color: rgba(255,255,255,0.45); line-height: 1.78; }
+
+    /* CTA */
+    .cta-section { padding: 110px 24px; max-width: 1100px; margin: 0 auto; text-align: center; }
+    .cta-box { background: linear-gradient(135deg, var(--blue) 0%, var(--blue-mid) 50%, #0033cc 100%); border-radius: 28px; padding: 80px 48px; position: relative; overflow: hidden; box-shadow: 0 20px 80px rgba(26,86,255,0.35); }
+    .cta-box::before { content: ''; position: absolute; width: 480px; height: 480px; background: rgba(255,255,255,0.05); border-radius: 50%; top: -160px; right: -100px; }
+    .cta-box::after { content: ''; position: absolute; width: 280px; height: 280px; background: rgba(0,212,194,0.1); border-radius: 50%; bottom: -90px; left: -50px; }
+    .cta-box h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; color: var(--white); letter-spacing: -0.02em; margin-bottom: 14px; position: relative; }
+    .cta-box p { font-size: 1.05rem; color: rgba(255,255,255,0.7); margin-bottom: 38px; position: relative; }
+    .btn-white { display: inline-block; text-decoration: none; font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.05em; color: var(--blue); background: var(--white); padding: 16px 44px; border-radius: 99px; box-shadow: 0 8px 30px rgba(0,0,0,0.2); transition: transform var(--transition), box-shadow var(--transition); position: relative; }
+    .btn-white:hover { transform: translateY(-3px); box-shadow: 0 16px 44px rgba(0,0,0,0.28); }
+
+    /* FOOTER */
+    .footer { background: var(--navy); border-top: 1px solid rgba(255,255,255,0.06); padding: 70px 60px 0; }
+    .footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 52px; }
+    .footer-brand .logo-txt { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--teal); display: block; margin-bottom: 14px; }
+    .footer-brand p { font-size: 0.88rem; color: rgba(255,255,255,0.38); line-height: 1.75; max-width: 250px; margin-bottom: 24px; }
+    .social-icons { display: flex; gap: 12px; }
+    .social-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: background var(--transition), border-color var(--transition), transform var(--transition); }
+    .social-icon:hover { background: rgba(26,86,255,0.25); border-color: var(--blue); transform: translateY(-3px); }
+    .social-icon svg { width: 17px; height: 17px; fill: rgba(255,255,255,0.7); transition: fill var(--transition); }
+    .social-icon:hover svg { fill: #fff; }
+    .footer-col h4 { font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .footer-col a { display: flex; align-items: center; gap: 7px; font-size: 0.88rem; color: rgba(255,255,255,0.55); text-decoration: none; margin-bottom: 11px; transition: color var(--transition), gap var(--transition); }
+    .footer-col a::before { content: '›'; color: var(--teal); font-size: 1rem; opacity: 0; transition: opacity var(--transition); }
+    .footer-col a:hover { color: var(--white); gap: 10px; }
+    .footer-col a:hover::before { opacity: 1; }
+    .footer-bottom { max-width: 1100px; margin: 0 auto; padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 0.8rem; color: rgba(255,255,255,0.25); }
+    .footer-bottom a { font-size: 0.8rem; color: var(--teal); text-decoration: none; font-weight: 500; transition: color var(--transition); }
+    .footer-bottom a:hover { color: #fff; }
+
+    @media (max-width: 900px) { .navbar { padding: 16px 24px; } .nav-links { gap: 24px; } .why-grid { grid-template-columns: 1fr; } .footer-grid { grid-template-columns: 1fr 1fr; } .courses-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 640px) { .navbar { padding: 14px 16px; } .nav-links { gap: 12px; } .nav-links a { font-size: 0.68rem; } .courses-grid { grid-template-columns: 1fr; } .filter-bar { padding: 30px 16px 0; gap: 8px; } .filter-btn { padding: 7px 14px; font-size: 0.72rem; } .footer-grid { grid-template-columns: 1fr; } .footer { padding: 48px 16px 32px; } .cta-box { padding: 40px 20px; } .popup-box { padding: 32px 20px; } .popup-actions { flex-direction: column; } .courses-section { padding: 40px 16px 70px; } .why-section { padding: 70px 16px; } }
+
+    /* ── Dark Mode: cor.html specific ── */
+    [data-theme="dark"] body { background: #0b0f1a; color: #f1f5f9; }
+    [data-theme="dark"] .course-card {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.08) !important;
+      box-shadow: none !important;
+    }
+    [data-theme="dark"] .course-card h3 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .course-desc { color: rgba(255,255,255,0.65) !important; }
+    [data-theme="dark"] .course-topics li { color: rgba(255,255,255,0.6) !important; border-color: rgba(255,255,255,0.06) !important; }
+    [data-theme="dark"] .meta-item { color: rgba(255,255,255,0.5) !important; }
+    [data-theme="dark"] .popup-box { background: #1e293b !important; }
+    [data-theme="dark"] .popup-box h3 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .popup-box p { color: rgba(255,255,255,0.65) !important; }
+    [data-theme="dark"] .popup-course-name { background: rgba(26,86,255,0.15) !important; border-color: rgba(26,86,255,0.3) !important; }
+    [data-theme="dark"] .popup-cancel { color: rgba(255,255,255,0.6) !important; border-color: rgba(255,255,255,0.15) !important; }
+    [data-theme="dark"] .enroll-btn { border-color: rgba(93,143,255,0.5) !important; color: #5d8fff !important; }
+    [data-theme="dark"] #user-dropdown { background: #1e293b !important; border: 1px solid rgba(255,255,255,0.1) !important; }
+
+    [data-theme="dark"] .cert-section { background: #0b0f1a !important; }
+    [data-theme="dark"] .cert-content h2 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .cert-feat { color: #f1f5f9 !important; }
+    [data-theme="dark"] .cert-content p { color: rgba(255,255,255,0.65) !important; }
+
+    [data-theme="dark"] .tools-section { background: #080c18 !important; }
+    [data-theme="dark"] .tool-card { background: #1e293b !important; border-color: rgba(255,255,255,0.08) !important; }
+    [data-theme="dark"] .tool-card h4 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .partners-section { background: #0b0f1a !important; }
+    [data-theme="dark"] .partner-logo { color: #f1f5f9 !important; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div style="display:flex;align-items:center;gap:20px;">
+      <a href="pro.html" class="nav-logo">DATA SPARK <span>TECHNOLOGIES</span></a>
+      <div id="user-greeting-wrap" style="display:none;position:relative;">
+        <span id="user-greeting" onclick="toggleDropdown()" style="cursor:pointer;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;color:var(--teal);background:rgba(0,212,194,0.1);border:1px solid rgba(0,212,194,0.25);padding:6px 16px;border-radius:99px;"></span>
+        <div id="user-dropdown" style="display:none;position:absolute;top:calc(100% + 10px);left:0;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);min-width:170px;overflow:hidden;z-index:999;">
+          <a href="dashboard.html" id="my-dashboard-link" style="display:block;padding:12px 18px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;color:#1a56ff;text-decoration:none;border-bottom:1px solid #f1f5f9;">📊 My Dashboard</a>
+          <a href="#" onclick="logout()" style="display:block;padding:12px 18px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;color:#ef4444;text-decoration:none;">🚪 Logout</a>
+        </div>
+      </div>
+    </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="pro.html">Home</a></li>
+      <li><a href="abt.html">About</a></li>
+      <li><a href="cor.html">Courses</a></li>
+      <li><a href="con1.html">Contact</a></li>
+      <li id="nav-login-li"><a href="log.html" class="nav-cta">Login</a></li>
+      <li id="nav-logout-li" style="display:none;"><a href="#" class="nav-cta" onclick="logout()" style="background:linear-gradient(135deg,#dc2626,#ef4444);">Logout</a></li>
+    </ul>
+    <button id="navThemeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Toggle dark/light mode" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:99px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;margin-left:12px;flex-shrink:0;">
+      🌙
+    </button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+
+  <section class="page-hero">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="badge-dot"></span> Career-Ready Programs</div>
+      <h1>Courses Built for<br><em>Real-World Jobs</em></h1>
+      <p>Choose from 16 industry-aligned programs across Programming, Data & AI, Cloud, Testing, and Design.</p>
+    </div>
+  </section>
+
+  <div class="filter-bar">
+    <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+    <button class="filter-btn" onclick="filterCards('programming', this)">Programming</button>
+    <button class="filter-btn" onclick="filterCards('data', this)">Data & AI</button>
+    <button class="filter-btn" onclick="filterCards('cloud', this)">Cloud & DevOps</button>
+    <button class="filter-btn" onclick="filterCards('testing', this)">Testing</button>
+    <button class="filter-btn" onclick="filterCards('design', this)">Design</button>
+  </div>
+
+  <section class="courses-section">
+    <div class="courses-grid">
+
+      <!-- PROGRAMMING -->
+      <div class="course-card" data-level="programming">
+        <div class="card-top"><div class="course-icon icon-teal">🐍</div><span class="course-badge badge-beginner">Beginner</span></div>
+        <h3>Python Programming</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 2 Months</span><span class="meta-item">🏆 Certified</span></div>
+        <p class="course-desc">Learn Python from scratch — core concepts, OOP, file handling, and mini-projects that demonstrate your skills to employers.</p>
+        <ul class="course-topics"><li>Python Basics to Advanced</li><li>OOP & File Handling</li><li>Mini Projects</li><li>Certification Included</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Python Programming')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="programming">
+        <div class="card-top"><div class="course-icon icon-blue">☕</div><span class="course-badge badge-intermediate">Intermediate</span></div>
+        <h3>Java Full Stack Development</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 4 Months</span><span class="meta-item">📁 Live Projects</span></div>
+        <p class="course-desc">Build full-stack web applications using Java, Spring Boot, and modern front-end technologies with real project experience.</p>
+        <ul class="course-topics"><li>Core Java & OOP</li><li>Spring Boot & REST APIs</li><li>HTML, CSS, JavaScript</li><li>Full Stack Projects</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Java Full Stack Development')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="programming">
+        <div class="card-top"><div class="course-icon icon-blue">🌐</div><span class="course-badge badge-beginner">Beginner</span></div>
+        <h3>Web Development</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 3 Months</span><span class="meta-item">📁 Live Projects</span></div>
+        <p class="course-desc">Master modern web development — from HTML & CSS layouts to interactive JavaScript and real deployable projects.</p>
+        <ul class="course-topics"><li>HTML5 & CSS3 Foundations</li><li>JavaScript & DOM</li><li>Responsive Design</li><li>3 Live Projects</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Web Development (HTML, CSS, JS)')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="programming">
+        <div class="card-top"><div class="course-icon icon-teal">⚛️</div><span class="course-badge badge-intermediate">Intermediate</span></div>
+        <h3>React JS</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 2 Months</span><span class="meta-item">🔧 Hands-on</span></div>
+        <p class="course-desc">Build dynamic, component-driven UIs with React — hooks, state management, routing, and real-world app projects.</p>
+        <ul class="course-topics"><li>React Components & Hooks</li><li>State & Props</li><li>React Router</li><li>Project Build</li></ul>
+        <button class="enroll-btn" onclick="openPopup('React JS')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="programming">
+        <div class="card-top"><div class="course-icon icon-green">🟩</div><span class="course-badge badge-intermediate">Intermediate</span></div>
+        <h3>Node.js & Express</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 2 Months</span><span class="meta-item">🔧 Backend</span></div>
+        <p class="course-desc">Build scalable server-side applications and REST APIs using Node.js and Express with real backend project experience.</p>
+        <ul class="course-topics"><li>Node.js Fundamentals</li><li>Express Framework</li><li>REST API Design</li><li>MongoDB Integration</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Node.js & Express')">Enroll Now</button>
+      </div>
+
+      <!-- DATA & AI -->
+      <div class="course-card" data-level="data">
+        <div class="card-top"><div class="course-icon icon-orange">🤖</div><span class="course-badge badge-advanced">Advanced</span></div>
+        <h3>Data Science & Machine Learning</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 4 Months</span><span class="meta-item">📈 Projects</span></div>
+        <p class="course-desc">Master data science and ML — from data wrangling and visualization to building and deploying machine learning models.</p>
+        <ul class="course-topics"><li>Python for Data Science</li><li>Pandas & NumPy</li><li>ML Algorithms</li><li>Model Deployment</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Data Science & Machine Learning')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="data">
+        <div class="card-top"><div class="course-icon icon-orange">🧠</div><span class="course-badge badge-advanced">Advanced</span></div>
+        <h3>Artificial Intelligence</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 3 Months</span><span class="meta-item">🔬 Research</span></div>
+        <p class="course-desc">Explore AI concepts — neural networks, deep learning, NLP, and computer vision with hands-on implementation projects.</p>
+        <ul class="course-topics"><li>Neural Networks</li><li>Deep Learning (TensorFlow)</li><li>NLP Basics</li><li>AI Project</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Artificial Intelligence')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="data">
+        <div class="card-top"><div class="course-icon icon-orange">📊</div><span class="course-badge badge-intermediate">Intermediate</span></div>
+        <h3>Data Analytics with Power BI</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 3 Months</span><span class="meta-item">📈 Dashboards</span></div>
+        <p class="course-desc">Turn raw data into business insights — Excel, SQL, Python, and Power BI dashboards with real-world datasets.</p>
+        <ul class="course-topics"><li>Excel & Advanced SQL</li><li>Python for Data</li><li>Power BI Dashboards</li><li>Real Dataset Projects</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Data Analytics with Power BI')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="data">
+        <div class="card-top"><div class="course-icon icon-blue">🗄️</div><span class="course-badge badge-beginner">Beginner</span></div>
+        <h3>SQL & Database Management</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 1.5 Months</span><span class="meta-item">🔧 Hands-on</span></div>
+        <p class="course-desc">Master SQL from basics to advanced — queries, joins, stored procedures, and database design for real applications.</p>
+        <ul class="course-topics"><li>SQL Fundamentals</li><li>Joins & Subqueries</li><li>Stored Procedures</li><li>DB Design</li></ul>
+        <button class="enroll-btn" onclick="openPopup('SQL & Database Management')">Enroll Now</button>
+      </div>
+
+      <!-- CLOUD & DEVOPS -->
+      <div class="course-card" data-level="cloud">
+        <div class="card-top"><div class="course-icon icon-teal">☁️</div><span class="course-badge badge-intermediate">Intermediate</span></div>
+        <h3>AWS Cloud Practitioner</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 2 Months</span><span class="meta-item">🏆 Certified</span></div>
+        <p class="course-desc">Get AWS certified — learn core cloud services, architecture, security, and pricing to pass the AWS Cloud Practitioner exam.</p>
+        <ul class="course-topics"><li>AWS Core Services</li><li>Cloud Architecture</li><li>IAM & Security</li><li>Exam Preparation</li></ul>
+        <button class="enroll-btn" onclick="openPopup('AWS Cloud Practitioner')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="cloud">
+        <div class="card-top"><div class="course-icon icon-blue">🔷</div><span class="course-badge badge-intermediate">Intermediate</span></div>
+        <h3>Azure Fundamentals</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 2 Months</span><span class="meta-item">🏆 Certified</span></div>
+        <p class="course-desc">Learn Microsoft Azure cloud fundamentals — services, deployment, and prepare for the AZ-900 certification exam.</p>
+        <ul class="course-topics"><li>Azure Core Services</li><li>Virtual Machines</li><li>Azure Storage</li><li>AZ-900 Prep</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Azure Fundamentals')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="cloud">
+        <div class="card-top"><div class="course-icon icon-green">🐳</div><span class="course-badge badge-advanced">Advanced</span></div>
+        <h3>DevOps with Docker & Kubernetes</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 3 Months</span><span class="meta-item">🔧 Hands-on</span></div>
+        <p class="course-desc">Master DevOps practices — CI/CD pipelines, containerization with Docker, and orchestration with Kubernetes.</p>
+        <ul class="course-topics"><li>Docker & Containers</li><li>Kubernetes Orchestration</li><li>CI/CD Pipelines</li><li>Real DevOps Projects</li></ul>
+        <button class="enroll-btn" onclick="openPopup('DevOps with Docker & Kubernetes')">Enroll Now</button>
+      </div>
+
+      <!-- TESTING -->
+      <div class="course-card" data-level="testing">
+        <div class="card-top"><div class="course-icon icon-green">🧪</div><span class="course-badge badge-beginner">Beginner</span></div>
+        <h3>Manual Testing</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 1.5 Months</span><span class="meta-item">📋 QA</span></div>
+        <p class="course-desc">Learn software testing fundamentals — test planning, test case design, bug tracking, and SDLC/STLC processes.</p>
+        <ul class="course-topics"><li>Testing Fundamentals</li><li>Test Case Design</li><li>JIRA & Bug Tracking</li><li>SDLC & STLC</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Manual Testing')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="testing">
+        <div class="card-top"><div class="course-icon icon-green">🤖</div><span class="course-badge badge-intermediate">Intermediate</span></div>
+        <h3>Selenium Automation Testing</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 2 Months</span><span class="meta-item">🤖 Automation</span></div>
+        <p class="course-desc">Automate web testing with Selenium — write test scripts, build frameworks, and integrate with CI/CD pipelines.</p>
+        <ul class="course-topics"><li>Selenium WebDriver</li><li>TestNG Framework</li><li>Page Object Model</li><li>CI/CD Integration</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Selenium Automation Testing')">Enroll Now</button>
+      </div>
+
+      <!-- DESIGN -->
+      <div class="course-card" data-level="design">
+        <div class="card-top"><div class="course-icon icon-orange">🎨</div><span class="course-badge badge-intermediate">Intermediate</span></div>
+        <h3>UI/UX Design</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 2 Months</span><span class="meta-item">🖌️ Portfolio</span></div>
+        <p class="course-desc">Design user-centered digital experiences — wireframing, prototyping, and building a professional UI/UX portfolio.</p>
+        <ul class="course-topics"><li>Design Principles</li><li>Figma & Wireframing</li><li>Prototyping</li><li>Portfolio Project</li></ul>
+        <button class="enroll-btn" onclick="openPopup('UI/UX Design')">Enroll Now</button>
+      </div>
+
+      <div class="course-card" data-level="design">
+        <div class="card-top"><div class="course-icon icon-orange">🖼️</div><span class="course-badge badge-beginner">Beginner</span></div>
+        <h3>Graphic Design</h3>
+        <div class="course-meta"><span class="meta-item">⏱ 2 Months</span><span class="meta-item">🖌️ Creative</span></div>
+        <p class="course-desc">Master Photoshop and Illustrator — create stunning visuals, logos, banners, and build a professional design portfolio.</p>
+        <ul class="course-topics"><li>Photoshop Essentials</li><li>Illustrator & Vectors</li><li>Logo & Banner Design</li><li>Portfolio Build</li></ul>
+        <button class="enroll-btn" onclick="openPopup('Graphic Design (Photoshop & Illustrator)')">Enroll Now</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- CERTIFICATION SECTION -->
+  <section class="cert-section reveal">
+    <div class="cert-inner">
+      <div class="cert-content">
+        <span class="section-tag">Industry Recognized</span>
+        <h2>Get <em>Certified</em> for Your Future</h2>
+        <p>Every course at DATA SPARK TECHNOLOGIES comes with an industry-recognized certificate. Our credentials are valued by top IT firms in Chennai and across India, helping you stand out in a competitive job market.</p>
+        <div class="cert-features">
+          <div class="cert-feat"><span>🏆</span> Lifetime Validity</div>
+          <div class="cert-feat"><span>✅</span> Verification Support</div>
+          <div class="cert-feat"><span>🔗</span> Shareable on LinkedIn</div>
+        </div>
+      </div>
+      <div class="cert-visual">
+        <img src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=600&auto=format" alt="Certification">
+      </div>
+    </div>
+  </section>
+
+  <section class="why-section">
+    <div class="why-inner">
+      <span class="section-tag reveal">Why DATA SPARK</span>
+      <h2 class="reveal">What Makes Our Training Different</h2>
+      <div class="why-grid">
+        <div class="why-card reveal from-left"><span class="why-icon">🎯</span><h3>Project-Based Learning</h3><p>Every course includes real deliverables — not just notes. You graduate with a portfolio employers can actually see.</p></div>
+        <div class="why-card reveal"><span class="why-icon">🧑‍🏫</span><h3>Industry Expert Trainers</h3><p>Learn from working professionals, not just academics. Our trainers bring live industry experience into every class.</p></div>
+        <div class="why-card reveal from-right"><span class="why-icon">🤝</span><h3>Placement Assistance</h3><p>Resume review, mock interviews, and referrals to our hiring network — we stay with you until you land the job.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section reveal">
+    <div class="cta-box">
+      <h2>Not Sure Which Course to Pick?</h2>
+      <p>Reach out to us and we'll help you choose the right path based on your goals and background.</p>
+      <a href="con1.html" class="btn-white">Talk to Us</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-txt">DATA SPARK TECHNOLOGIES</span>
+        <p>A leading IT training institute in Chennai dedicated to building future-ready tech professionals.</p>
+        <div class="social-icons">
+          <a href="https://www.instagram.com/gopss_007_" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.975.975 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.975.975-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.975-.975-1.246-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608.975-.975 2.242-1.246 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.986 8.741 24 12 24s3.668-.014 4.948-.072c1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038.058-1.28.072-1.689.072-4.948s-.014-3.668-.072-4.948c-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg></a>
+          <a href="#" class="social-icon" title="Facebook"><svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg></a>
+          <a href="#" class="social-icon" title="X (Twitter)"><svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <a href="pro.html">Home</a><a href="abt.html">About</a><a href="cor.html">Courses</a><a href="con1.html">Contact</a><a href="log.html">Login</a>
+      </div>
+      <div class="footer-col">
+        <h4>Courses</h4>
+        <a href="cor.html">Web Development</a><a href="cor.html">Python Programming</a><a href="cor.html">Software Testing</a><a href="cor.html">Data Analytics</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="#">📍 Chennai, Tamil Nadu</a><a href="tel:+919876543210">📞 +91 98765 43210</a><a href="mailto:dataspark@email.com">📧 dataspark@email.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 DATA SPARK TECHNOLOGIES — All rights reserved.</p>
+      <a href="con1.html">Get in Touch →</a>
+    </div>
+  </footer>
+
+  <!-- CONFIRM POPUP -->
+  <div id="enroll-popup">
+    <div class="popup-box">
+      <div class="popup-icon">📋</div>
+      <h3>Ready to Enroll?</h3>
+      <p style="font-size:0.95rem;color:#1e293b;font-weight:600;margin-bottom:6px;">Hi, <span id="popup-user-name" style="color:#1a56ff;"></span>! 👋</p>
+      <div class="popup-course-name" id="popup-course-name">Course Name</div>
+      <p>You're one step away! Fill out a quick application form and our team will confirm your seat within 24 hours.</p>
+      <div class="popup-actions">
+        <button class="popup-cancel" onclick="closePopup()">Cancel</button>
+        <button class="popup-proceed" onclick="goToApply()">Fill Application →</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('nav-links').classList.toggle('open');
+    }
+    document.querySelectorAll('#nav-links a').forEach(a => a.addEventListener('click', () => {
+      document.getElementById('hamburger').classList.remove('open');
+      document.getElementById('nav-links').classList.remove('open');
+    }));
+
+    let selectedCourse = '';
+    let enrolledCourses = [];
+
+    const dsUser = localStorage.getItem('ds_user');
+    const dsRole = localStorage.getItem('ds_role');
+    if (dsUser) {
+      document.getElementById('user-greeting-wrap').style.display = 'block';
+      document.getElementById('user-greeting').textContent = 'Hi, ' + dsUser.charAt(0).toUpperCase() + dsUser.slice(1) + ' 👋';
+      document.getElementById('nav-login-li').style.display = 'none';
+      document.getElementById('nav-logout-li').style.display = 'none';
+
+      // Dynamically set the dashboard link based on role
+      const myDashboardLink = document.getElementById('my-dashboard-link');
+      if (myDashboardLink) {
+        if (dsRole && (dsRole.toLowerCase() === 'admin' || dsRole.toLowerCase().includes('admin'))) {
+          myDashboardLink.href = 'admin.html';
+        } else {
+          myDashboardLink.href = 'dashboard.html';
+        }
+      }
+
+      // Load enrolled courses
+      fetch('https://your-backend-url/enrollment/' + encodeURIComponent(dsUser))
+        .then(r => r.json())
+        .then(data => {
+          if (data.success && data.enrollments) {
+            enrolledCourses = data.enrollments.map(e => e.course);
+            // Update enroll buttons
+            document.querySelectorAll('.enroll-btn').forEach(btn => {
+              const match = btn.getAttribute('onclick').match(/'([^']+)'/);
+              if (!match) return;
+              const course = match[1];
+              if (enrolledCourses.includes(course)) {
+                const progressKey = 'progress_' + course;
+                const saved = JSON.parse(localStorage.getItem(progressKey) || '{}');
+                const completedCount = Object.values(saved).filter(v => v === 'completed').length;
+                const isDone = completedCount === 6;
+                btn.textContent = isDone ? '🎉 Completed' : '✅ Already Enrolled';
+                btn.style.background = isDone ? 'rgba(102,126,234,0.1)' : 'rgba(16,185,129,0.1)';
+                btn.style.color = isDone ? '#667eea' : '#059669';
+                btn.style.borderColor = isDone ? '#667eea' : '#10b981';
+                btn.style.cursor = 'default';
+                btn.onclick = function() {
+                  localStorage.setItem('gg_selectedCourse', course);
+                  window.location.href = 'apply.html';
+                };
+              }
+            });
+          }
+        }).catch(() => {});
+    }
+
+    function toggleDropdown() {
+      const dd = document.getElementById('user-dropdown');
+      dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    }
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('user-greeting-wrap').contains(e.target)) {
+        document.getElementById('user-dropdown').style.display = 'none';
+      }
+    });
+
+    function logout() {
+      localStorage.removeItem('ds_user');
+      window.location.href = 'log.html';
+    }
+
+    function openPopup(course) {
+      if (!localStorage.getItem('ds_user')) {
+        localStorage.setItem('gg_selectedCourse', course);
+        window.location.href = 'sign.html';
+        return;
+      }
+      selectedCourse = course;
+      const user = localStorage.getItem('ds_fullname') || localStorage.getItem('ds_user') || '';
+      document.getElementById('popup-user-name').textContent = user.split(' ')[0].charAt(0).toUpperCase() + user.split(' ')[0].slice(1);
+      document.getElementById('popup-course-name').innerText = course;
+      document.getElementById('enroll-popup').classList.add('show');
+    }
+
+    function closePopup() {
+      document.getElementById('enroll-popup').classList.remove('show');
+    }
+
+    function goToApply() {
+      localStorage.setItem('gg_selectedCourse', selectedCourse);
+      window.location.href = 'apply.html';
+    }
+
+    function filterCards(level, btn) {
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      document.querySelectorAll('.course-card').forEach(card => {
+        card.style.display = (level === 'all' || card.dataset.level === level) ? 'block' : 'none';
+      });
+    }
+
+    // ── Load admin-added courses dynamically ──
+    const categoryIconMap = {
+      programming: '💻', data: '📊', cloud: '☁️', testing: '🧪', design: '🎨',
+      default: '📚'
+    };
+    const levelBadgeMap = {
+      beginner: 'badge-beginner', intermediate: 'badge-intermediate',
+      advanced: 'badge-advanced'
+    };
+
+    async function loadAdminCourses() {
+      try {
+        const res = await fetch('https://your-backend-url/api/courses');
+        const data = await res.json();
+        if (!data.success || !data.courses.length) return;
+
+        const grid = document.querySelector('.courses-grid');
+        data.courses.forEach(course => {
+          // Skip if a static card with same name already exists
+          const existing = Array.from(grid.querySelectorAll('h3')).find(h => h.textContent.trim() === course.name);
+          if (existing) return;
+
+          const cat = (course.category || 'default').toLowerCase();
+          const lvl = (course.level || 'beginner').toLowerCase();
+          const icon = categoryIconMap[cat] || categoryIconMap.default;
+          const badgeClass = levelBadgeMap[lvl] || 'badge-beginner';
+          const levelLabel = course.level || 'Beginner';
+          const duration = course.duration || 'N/A';
+          const desc = course.description || '';
+
+          const card = document.createElement('div');
+          card.className = 'course-card';
+          card.dataset.level = cat;
+          card.innerHTML =
+            '<div class="card-top">' +
+              '<div class="course-icon icon-blue">' + icon + '</div>' +
+              '<span class="course-badge ' + badgeClass + '">' + levelLabel + '</span>' +
+            '</div>' +
+            '<h3>' + course.name + '</h3>' +
+            '<div class="course-meta">' +
+              '<span class="meta-item">&#9201; ' + duration + '</span>' +
+              '<span class="meta-item">&#127942; Certified</span>' +
+            '</div>' +
+            '<p class="course-desc">' + desc + '</p>' +
+            '<button class="enroll-btn" onclick="openPopup(\'' + course.name.replace(/'/g, "\\'") + '\')">Enroll Now</button>';
+
+          grid.appendChild(card);
+
+          // Check if already enrolled
+          if (enrolledCourses.includes(course.name)) {
+            const btn = card.querySelector('.enroll-btn');
+            btn.textContent = '\u2705 Already Enrolled';
+            btn.style.cssText = 'background:rgba(16,185,129,0.1);color:#059669;border-color:#10b981;cursor:default;';
+            btn.onclick = function() {
+              localStorage.setItem('gg_selectedCourse', course.name);
+              window.location.href = 'apply.html';
+            };
+          }
+        });
+      } catch (e) {
+        console.warn('Could not load admin courses:', e.message);
+      }
+    }
+
+    loadAdminCourses();
+
+    // Scroll reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="chat-widget.js"></script>
+</body>
+</html>
+
+

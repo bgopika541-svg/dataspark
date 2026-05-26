@@ -1,0 +1,2140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard — DATA SPARK TECHNOLOGIES</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:         #060b18;
+      --surface:    #0d1526;
+      --surface2:   #111c30;
+      --border:     rgba(255,255,255,0.06);
+      --accent:     #00d4c2;
+      --accent2:    #3d7fff;
+      --gold:       #f5c842;
+      --red:        #ff4d6d;
+      --green:      #22c55e;
+      --orange:     #fb923c;
+      --text:       #e2e8f0;
+      --muted:      #64748b;
+      --white:      #ffffff;
+      --font-head:  'Syne', sans-serif;
+      --font-body:  'DM Sans', sans-serif;
+    }
+
+    html, body { height: 100%; }
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      overflow: hidden;
+    }
+
+    /* Light Mode Overrides for Admin */
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface2: #f1f5f9;
+      --text: #1e293b;
+      --border: rgba(0,0,0,0.06);
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 2px; }
+
+    /* ══════════════ SIDEBAR ══════════════ */
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .sidebar-logo {
+      padding: 28px 24px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .logo-mark {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      color: var(--bg);
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+    .logo-text { font-family: var(--font-head); font-size: 0.92rem; font-weight: 800; line-height: 1.2; }
+    .logo-text span { color: var(--accent); display: block; }
+    .logo-badge {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0,212,194,0.08);
+      border: 1px solid rgba(0,212,194,0.2);
+      color: var(--accent);
+      font-size: 0.68rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .logo-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: pulse 1.5s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 20px 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .nav-section-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 14px 12px 8px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid transparent;
+      text-decoration: none;
+      position: relative;
+      user-select: none;
+    }
+    .nav-item:hover {
+      background: rgba(255,255,255,0.04);
+      color: var(--text);
+    }
+    .nav-item.active {
+      background: rgba(0,212,194,0.08);
+      border-color: rgba(0,212,194,0.15);
+      color: var(--accent);
+    }
+    .nav-item.active .nav-icon { color: var(--accent); }
+    .nav-icon { width: 18px; text-align: center; font-size: 0.9rem; flex-shrink: 0; }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--red);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      min-width: 20px;
+      text-align: center;
+    }
+    .nav-badge.green { background: var(--green); }
+    .nav-badge.gold  { background: var(--gold); color: #1a1000; }
+
+    .sidebar-footer {
+      padding: 16px 12px;
+      border-top: 1px solid var(--border);
+    }
+    .admin-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: var(--surface2);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .admin-profile:hover { background: rgba(255,255,255,0.05); }
+    .admin-avatar {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, #f5c842, #fb923c);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--font-head);
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: #1a1000;
+      flex-shrink: 0;
+    }
+    .admin-info { flex: 1; min-width: 0; }
+    .admin-name { font-size: 0.85rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .admin-role { font-size: 0.72rem; color: var(--muted); }
+
+    /* ══════════════ MAIN ══════════════ */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      height: 100vh;
+    }
+
+    /* TOPBAR */
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 32px;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+      flex-shrink: 0;
+    }
+    .topbar-left h1 {
+      font-family: var(--font-head);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 2px;
+    }
+    .topbar-left p { font-size: 0.8rem; color: var(--muted); }
+
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+
+    .topbar-search {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 0.83rem;
+      color: var(--muted);
+      width: 220px;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    .topbar-search:focus-within { border-color: rgba(0,212,194,0.3); }
+    .topbar-search input {
+      background: none; border: none; outline: none;
+      color: var(--text); font-size: 0.83rem; font-family: var(--font-body);
+      width: 100%;
+    }
+    .topbar-search input::placeholder { color: var(--muted); }
+
+    .icon-btn {
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+      position: relative;
+      user-select: none;
+    }
+    .icon-btn:hover { border-color: rgba(0,212,194,0.3); color: var(--accent); }
+    .notif-dot {
+      position: absolute;
+      top: 6px; right: 6px;
+      width: 7px; height: 7px;
+      background: var(--red);
+      border-radius: 50%;
+      border: 1.5px solid var(--surface);
+    }
+
+    /* CONTENT AREA */
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 28px 32px;
+    }
+
+    /* SECTIONS */
+    .section { display: none; animation: fadeSlide 0.3s ease both; }
+    .section.active { display: block; }
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════════════ Minimal skeleton of your existing admin UI ══════════════ */
+    .empty {
+      padding: 40px 20px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 20px;
+      display: flex; align-items: center; gap: 12px;
+      font-size: 0.85rem;
+      color: var(--text);
+      z-index: 999;
+      transform: translateY(80px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast i { font-size: 1rem; }
+    .toast.success i { color: var(--green); }
+    .toast.error   i { color: var(--red); }
+    .toast.info    i { color: var(--accent); }
+
+    /* ---- Real-time Admin Chat Dashboard styles (admin.html) ---- */
+    .chat-admin-shell {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 14px;
+      height: calc(100vh - 210px);
+      min-height: 520px;
+      border-radius: 16px;
+      overflow: hidden;
+    }
+
+    .chat-admin-sidebar {
+      background: rgba(13,21,38,0.75);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .chat-admin-sidebar-header {
+      padding: 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      justify-content: space-between;
+    }
+
+    .chat-admin-search {
+      width: 150px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .chat-admin-search input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-family: var(--font-body);
+    }
+
+    .chat-admin-convo-list {
+      padding: 10px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .chat-admin-convo-item {
+      border-radius: 14px;
+      padding: 12px 12px;
+      cursor: pointer;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.04);
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .chat-admin-convo-item:hover {
+      background: rgba(255,255,255,0.06);
+      border-color: rgba(0,212,194,0.25);
+    }
+
+    .chat-admin-convo-item.active {
+      background: rgba(0,212,194,0.08);
+      border-color: rgba(0,212,194,0.22);
+    }
+
+    .chat-admin-convo-avatar {
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(245,200,66,0.2), rgba(0,212,194,0.22));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: var(--white);
+      flex-shrink: 0;
+    }
+
+    .chat-admin-convo-meta {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .chat-admin-convo-name {
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-admin-convo-last {
+      color: var(--muted);
+      font-size: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chat-admin-badge {
+      background: var(--red);
+      color: white;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      flex-shrink: 0;
+    }
+
+    .chat-admin-main {
+      background: rgba(13,21,38,0.55);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .chat-admin-main-header {
+      padding: 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    .chat-admin-main-name {
+      font-family: var(--font-head);
+      font-weight: 900;
+      font-size: 1rem;
+      color: var(--white);
+      margin-bottom: 3px;
+    }
+
+    .chat-admin-main-sub {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    .chat-admin-history {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px 16px;
+      min-height: 260px;
+    }
+
+    .chat-admin-history-empty {
+      color: var(--muted);
+      text-align: center;
+      padding: 40px 10px;
+      font-size: 0.9rem;
+    }
+
+    .chat-admin-messages {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .chat-bubble {
+      max-width: 80%;
+      padding: 8px 12px;
+      border-radius: 14px;
+      line-height: 1.4;
+      font-size: 0.88rem;
+      border: 1px solid rgba(255,255,255,0.06);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .chat-bubble img {
+        max-width: 100%; border-radius: 8px; margin-top: 5px; cursor: zoom-in;
+    }
+
+    .chat-bubble.user {
+      align-self: flex-start;
+      background: rgba(26,86,255,0.18);
+      border-color: rgba(26,86,255,0.25);
+      color: var(--white);
+    }
+
+    .chat-bubble.admin {
+      align-self: flex-end;
+      background: rgba(0,212,194,0.08);
+      border-color: rgba(0,212,194,0.18);
+      color: var(--text);
+    }
+
+    .chat-bubble-meta {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .chat-admin-composer {
+      padding: 14px 14px;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: grid;
+      grid-template-columns: 44px 1fr 100px;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .chat-admin-composer textarea {
+      width: 100%;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: rgba(17,28,48,0.7);
+      color: var(--white);
+      padding: 12px 12px;
+      outline: none;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      resize: none;
+      height: 44px;
+      line-height: 1.4;
+    }
+
+    .chat-admin-composer textarea:focus {
+      border-color: rgba(0,212,194,0.35);
+      box-shadow: 0 0 0 3px rgba(0,212,194,0.1);
+    }
+
+    .chat-admin-send {
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      color: var(--bg);
+      font-weight: 900;
+      font-size: 0.9rem;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    @media (max-width: 900px) {
+      .sidebar { display: none; }
+      .content { padding: 20px; }
+      .chat-admin-shell { grid-template-columns: 1fr; height: auto; min-height: 0; }
+      .chat-admin-sidebar { max-height: 260px; }
+      .chat-admin-main { min-height: 520px; }
+    }
+
+  </style>
+</head>
+<body>
+
+  <script>
+    // Small UI polish: animate hover on stat cards (kept non-invasive)
+    // (No server/UI logic changes)
+  </script>
+
+
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-mark">
+        <div class="logo-icon">DS</div>
+        <div class="logo-text">DATA SPARK <span>TECHNOLOGIES</span></div>
+      </div>
+      <div class="logo-badge">Admin Panel</div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-section-label">Main</div>
+      <a href="pro.html" class="nav-item">
+        <span class="nav-icon"><i class="fas fa-home"></i></span> View Website
+      </a>
+      <a class="nav-item active" onclick="navigate('overview',this)">
+        <span class="nav-icon"><i class="fas fa-th-large"></i></span> Overview
+      </a>
+      <a class="nav-item" onclick="navigate('chatbot-messages',this)">
+        <span class="nav-icon"><i class="fas fa-comments"></i></span> Real-time Chat
+        <span class="nav-badge red" id="chatbot-messages-badge" style="display:none;">0</span>
+      </a>
+      <a class="nav-item" onclick="navigate('messages',this)">
+        <span class="nav-icon"><i class="fas fa-envelope"></i></span> Contact Messages
+      </a>
+      <a class="nav-item" onclick="navigate('course-applications',this)">
+        <span class="nav-icon"><i class="fas fa-file-signature"></i></span> Applications
+        <span class="nav-badge orange" id="applications-badge" style="display:none;">0</span>
+      </a>
+      <a class="nav-item" onclick="navigate('enrollments',this)">
+        <span class="nav-icon"><i class="fas fa-user-check"></i></span> Enrollments
+      </a>
+      <a class="nav-item" onclick="navigate('students',this)">
+        <span class="nav-icon"><i class="fas fa-users"></i></span> All Students
+      </a>
+      <a class="nav-item" onclick="navigate('courses',this)">
+        <span class="nav-icon"><i class="fas fa-book-open"></i></span> Courses
+      </a>
+      <a class="nav-item" onclick="navigate('progress',this)">
+        <span class="nav-icon"><i class="fas fa-chart-line"></i></span> Progress Tracker
+      </a>
+
+      <div class="nav-section-label">System</div>
+      <a class="nav-item" onclick="navigate('settings',this)">
+        <span class="nav-icon"><i class="fas fa-cog"></i></span> Settings
+      </a>
+      <a class="nav-item" onclick="logout()" style="color:#ff4d6d;">
+        <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span> Logout
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="admin-profile">
+        <div class="admin-avatar" id="adminAvatar">A</div>
+        <div class="admin-info">
+          <div class="admin-name" id="adminName">Admin</div>
+          <div class="admin-role" id="adminRole">Super Administrator</div>
+        </div>
+        <i class="fas fa-ellipsis-v" style="color:var(--muted);font-size:0.75rem;"></i>
+      </div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <div class="topbar-left">
+        <h1 id="page-title">Dashboard Overview</h1>
+        <p id="page-sub">Welcome back, Admin. Here's what's happening today.</p>
+      </div>
+      <div class="topbar-right">
+        <div class="topbar-search">
+          <i class="fas fa-search" style="color:var(--muted);font-size:0.8rem;"></i>
+          <input type="text" placeholder="Search..."/>
+        </div>
+        <button id="navThemeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Toggle dark/light mode" style="width:38px;height:38px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--muted);cursor:pointer;font-size:0.95rem;transition:all 0.2s;">
+          🌙
+        </button>
+        <div class="icon-btn" onclick="showToast('No new notifications','info')">
+          <i class="fas fa-bell"></i>
+          <div class="notif-dot"></div>
+        </div>
+        <div class="icon-btn" onclick="showToast('Coming soon','info')">
+          <i class="fas fa-expand"></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="content">
+      <div class="section active" id="sec-overview">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;"> 
+          <div>
+            <div style="font-family:var(--font-head);font-size:1.35rem;color:var(--white);font-weight:900;margin-bottom:6px;">Welcome, <span id="adminWelcomeName">Admin</span></div>
+            <div style="color:var(--muted);font-size:0.92rem;">Admin dashboard overview</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <button class="nav-item" style="background:rgba(0,212,194,0.08);border-color:rgba(0,212,194,0.15);color:var(--accent);" onclick="navigate('course-applications', this);">
+              <i class="fas fa-file-signature" style="margin-right:8px;"></i>Course Applications
+            </button>
+            <button class="nav-item" style="background:rgba(26,86,255,0.08);border-color:rgba(26,86,255,0.15);color:var(--accent2);" onclick="navigate('messages', this);">
+              <i class="fas fa-envelope" style="margin-right:8px;"></i>Contact Messages
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-top:22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;">
+          <div class="stat-card" style="padding:18px 16px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,0.03);transition:transform .2s, border-color .2s;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div>
+                <div style="color:var(--muted);font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Course Applications</div>
+                <div id="statCourseApps" style="font-family:var(--font-head);font-size:2.05rem;color:var(--accent);font-weight:900;margin-top:6px;">...</div>
+              </div>
+              <div style="width:40px;height:40px;border-radius:14px;background:rgba(0,212,194,0.12);border:1px solid rgba(0,212,194,0.22);display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-file-alt" style="color:var(--accent);"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card" style="padding:18px 16px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,0.03);transition:transform .2s, border-color .2s;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div>
+                <div style="color:var(--muted);font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Contact Messages</div>
+                <div id="statMessages" style="font-family:var(--font-head);font-size:2.05rem;color:var(--accent2);font-weight:900;margin-top:6px;">...</div>
+              </div>
+              <div style="width:40px;height:40px;border-radius:14px;background:rgba(61,127,255,0.12);border:1px solid rgba(61,127,255,0.22);display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-inbox" style="color:var(--accent2);"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card" style="padding:18px 16px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,0.03);transition:transform .2s, border-color .2s;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div>
+                <div style="color:var(--muted);font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Live Chat Sessions</div>
+                <div id="statChatSessions" style="font-family:var(--font-head);font-size:2.05rem;color:var(--gold);font-weight:900;margin-top:6px;">...</div>
+              </div>
+              <div style="width:40px;height:40px;border-radius:14px;background:rgba(245,200,66,0.12);border:1px solid rgba(245,200,66,0.22);display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-comments" style="color:var(--gold);"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card" style="padding:18px 16px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,0.03);transition:transform .2s, border-color .2s;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div>
+                <div style="color:var(--muted);font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Unread Chat Messages</div>
+                <div id="statUnreadChat" style="font-family:var(--font-head);font-size:2.05rem;color:var(--red);font-weight:900;margin-top:6px;">...</div>
+              </div>
+              <div style="width:40px;height:40px;border-radius:14px;background:rgba(255,77,109,0.12);border:1px solid rgba(255,77,109,0.22);display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-bolt" style="color:var(--red);"></i>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-card" style="padding:18px 16px;border:1px solid var(--border);border-radius:16px;background:rgba(255,255,255,0.03);transition:transform .2s, border-color .2s;">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;">
+              <div>
+                <div style="color:var(--muted);font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;">Students Logged In</div>
+                <div id="statLoggedIn" style="font-family:var(--font-head);font-size:2.05rem;color:var(--green);font-weight:900;margin-top:6px;">...</div>
+              </div>
+              <div style="width:40px;height:40px;border-radius:14px;background:rgba(34,197,94,0.12);border:1px solid rgba(34,197,94,0.22);display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-user-check" style="color:var(--green);"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:18px;color:var(--muted);font-size:0.85rem;">Tip: Use the left sidebar to switch sections without reloading the page.</div>
+      </div>
+
+      <!-- Contact Messages Cards -->
+      <div class="section" id="sec-messages">
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;">
+
+          <div>
+            <div style="font-family:var(--font-head);font-weight:900;color:var(--white);font-size:1.1rem;">Contact Messages</div>
+            <div style="color:var(--muted);font-size:0.85rem;margin-top:4px;">Name, Email, Subject, Message, Date</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div class="topbar-search" style="width:320px;">
+              <i class="fas fa-search" style="color:var(--muted);font-size:0.8rem;"></i>
+              <input id="contactsSearch" type="text" placeholder="Search messages..." />
+            </div>
+          </div>
+        </div>
+
+        <div id="messagesCards" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));gap:14px;">
+          <div style="grid-column:1/-1;border:1px dashed var(--border);border-radius:14px;padding:26px;color:var(--muted);text-align:center;" id="messagesEmpty">Loading...</div>
+        </div>
+      </div>
+
+      <!-- Course Applications module -->
+      <div class="section" id="sec-course-applications">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;">
+          <div>
+            <div style="font-family:var(--font-head);font-weight:900;color:var(--white);font-size:1.1rem;">Course Applications</div>
+            <div style="color:var(--muted);font-size:0.85rem;margin-top:4px;">Search and update application status with enrollment details</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <div class="topbar-search" style="width:320px;">
+              <i class="fas fa-search" style="color:var(--muted);font-size:0.8rem;"></i>
+              <input id="courseAppsSearch" type="text" placeholder="Search applications..." />
+            </div>
+            <div style="display:flex;gap:10px;align-items:center;">
+              <select id="courseAppsStatusFilter" style="padding:10px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:0.85rem;outline:none;">
+                <option value="">All Status</option>
+                <option value="Pending">Pending</option>
+                <option value="Approved">Approved</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+              <button class="nav-item" style="padding:10px 14px;background:rgba(0,212,194,0.08);border-color:rgba(0,212,194,0.15);color:var(--accent);font-weight:800;" onclick="loadCourseApplications()">
+                <i class="fas fa-sync-alt" style="margin-right:8px;"></i>Refresh
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;border:1px solid var(--border);border-radius:14px;">
+          <table style="width:100%;border-collapse:collapse;min-width:1200px;">
+            <thead>
+              <tr style="background:rgba(255,255,255,0.04);">
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Applicant</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Email</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Course</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Batch</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Enrollment Status</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Last Login</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Update Status</th>
+              </tr>
+            </thead>
+            <tbody id="courseAppsTbody">
+              <tr><td colspan="6" style="padding:22px 16px;color:var(--muted);">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div id="courseAppsEmpty" class="empty" style="display:none;padding:30px 20px;">
+          No course applications found.
+        </div>
+      </div>
+
+      <!-- Real-time Live Chat Section -->
+      <div class="section" id="sec-chatbot-messages">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;">
+          <div>
+            <div style="font-family:var(--font-head);font-weight:900;color:var(--white);font-size:1.1rem;">Live Chat with Students</div>
+            <div style="color:var(--muted);font-size:0.85rem;margin-top:4px;">Real-time messages from students. Replies are delivered instantly.</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <div style="display:flex;align-items:center;gap:6px;background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);padding:6px 14px;border-radius:20px;font-size:0.78rem;color:#22c55e;font-weight:600;">
+              <span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;animation:pulse 1.5s infinite;"></span>
+              Admin Online
+            </div>
+            <button class="nav-item" style="padding:10px 14px;background:rgba(0,212,194,0.08);border-color:rgba(0,212,194,0.15);color:var(--accent);font-weight:800;" onclick="loadConversations()">
+              <i class="fas fa-sync-alt" style="margin-right:8px;"></i> Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="chat-admin-shell">
+          <!-- Left: Conversation List -->
+          <div class="chat-admin-sidebar">
+            <div class="chat-admin-sidebar-header">
+              <div>
+                <div style="font-family:var(--font-head);font-weight:900;color:var(--white);font-size:0.95rem;">Conversations</div>
+                <div style="color:var(--muted);font-size:0.78rem;margin-top:3px;" id="convCount">0 conversations</div>
+              </div>
+              <div class="chat-admin-search">
+                <i class="fas fa-search" style="color:var(--muted);font-size:0.8rem;"></i>
+                <input id="convSearch" type="text" placeholder="Search..." oninput="filterConvList(this.value)" />
+              </div>
+            </div>
+            <div class="chat-admin-convo-list" id="convList">
+              <div style="padding:24px;color:var(--muted);text-align:center;font-size:0.85rem;">
+                <i class="fas fa-comments" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                No conversations yet.<br>Students will appear here when they message.
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Chat Window -->
+          <div class="chat-admin-main">
+            <div class="chat-admin-main-header">
+              <div>
+                <div class="chat-admin-main-name" id="activeChatName">Select a conversation</div>
+                <div class="chat-admin-main-sub" id="activeChatSub">Choose a student from the left</div>
+              </div>
+              <div style="display:flex;gap:8px;align-items:center;">
+                <div id="typingIndicator" style="display:none;font-size:0.78rem;color:var(--accent);font-style:italic;"></div>
+              </div>
+            </div>
+
+            <div class="chat-admin-history" id="chatHistoryBox">
+              <div id="chatHistoryEmpty" style="color:var(--muted);text-align:center;padding:60px 20px;font-size:0.9rem;">
+                <i class="fas fa-comments" style="font-size:2.5rem;display:block;margin-bottom:12px;opacity:0.2;"></i>
+                Select a conversation to view messages
+              </div>
+              <div id="chatHistoryMessages" style="display:flex;flex-direction:column;gap:10px;"></div>
+            </div>
+
+            <div style="padding:12px 14px;border-top:1px solid rgba(255,255,255,0.06);display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+              <span style="font-size:0.75rem;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">Quick replies:</span>
+              <button onclick="insertQuickReply('Hello ??')" style="padding:6px 12px;border-radius:8px;font-size:0.8rem;background:rgba(0,212,194,0.12);border:1px solid rgba(0,212,194,0.22);color:var(--accent);cursor:pointer;font-weight:600;transition:all 0.2s;" title="Send quick reply">Hello ??</button>
+              <button onclick="insertQuickReply('One moment')" style="padding:6px 12px;border-radius:8px;font-size:0.8rem;background:rgba(0,212,194,0.12);border:1px solid rgba(0,212,194,0.22);color:var(--accent);cursor:pointer;font-weight:600;transition:all 0.2s;" title="Send quick reply">One moment</button>
+              <button onclick="insertQuickReply('Application received')" style="padding:6px 12px;border-radius:8px;font-size:0.8rem;background:rgba(0,212,194,0.12);border:1px solid rgba(0,212,194,0.22);color:var(--accent);cursor:pointer;font-weight:600;transition:all 0.2s;" title="Send quick reply">Application received</button>
+              <button onclick="insertQuickReply('Thank you')" style="padding:6px 12px;border-radius:8px;font-size:0.8rem;background:rgba(0,212,194,0.12);border:1px solid rgba(0,212,194,0.22);color:var(--accent);cursor:pointer;font-weight:600;transition:all 0.2s;" title="Send quick reply">Thank you</button>
+            </div>
+
+            <div class="chat-admin-composer">
+              <input type="file" id="adminFileInput" style="display:none;" accept="image/*" onchange="sendAdminFile(event)" />
+              <button class="icon-btn" onclick="document.getElementById('adminFileInput').click()" style="height:44px;width:44px;" title="Send image">
+                <i class="fas fa-paperclip"></i>
+              </button>
+              <textarea id="adminMsgInput" placeholder="Type a reply... (Enter to send)" rows="2"></textarea>
+              <button class="chat-admin-send" onclick="sendAdminMessage()">
+                <i class="fas fa-paper-plane" style="margin-right:6px;"></i> Send
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section" id="sec-enrollments">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;">
+          <div>
+            <div style="font-family:var(--font-head);font-weight:900;color:var(--white);font-size:1.1rem;">Enrollments</div>
+            <div style="color:var(--muted);font-size:0.85rem;margin-top:4px;">All course applications — approve, reject, or track enrolled students</div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <div class="topbar-search" style="width:320px;">
+              <i class="fas fa-search" style="color:var(--muted);font-size:0.8rem;"></i>
+              <input id="enrollmentsSearch" type="text" placeholder="Search pending enrollments..." />
+            </div>
+            <button class="nav-item" style="padding:10px 14px;background:rgba(0,212,194,0.08);border-color:rgba(0,212,194,0.15);color:var(--accent);font-weight:800;" onclick="loadEnrollments()">
+              <i class="fas fa-sync-alt" style="margin-right:8px;"></i>Refresh
+            </button>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;border:1px solid var(--border);border-radius:14px;">
+          <table style="width:100%;border-collapse:collapse;min-width:1000px;">
+            <thead>
+              <tr style="background:rgba(255,255,255,0.04);">
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Name</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Email</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Phone</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Course</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Status</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="enrollmentsTbody">
+              <tr><td colspan="6" style="padding:22px 16px;color:var(--muted);">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="section" id="sec-students">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+          <div>
+            <h2 style="font-family:var(--font-head);color:var(--white);font-size:1.2rem;">All Students</h2>
+            <p style="color:var(--muted);font-size:0.85rem;">Registered students from users table</p>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <button class="nav-item" id="toggleStudentsBtn" style="padding:10px 14px;background:rgba(0,212,194,0.08);border-color:rgba(0,212,194,0.15);color:var(--accent);font-weight:800;" onclick="toggleStudentView(this)">
+              <i class="fas fa-sign-in-alt" style="margin-right:8px;"></i>Show Logged In
+            </button>
+            <div class="topbar-search" style="width:300px;">
+              <i class="fas fa-search"></i>
+              <input type="text" id="studentSearch" placeholder="Search students...">
+            </div>
+          </div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:16px;overflow:hidden;">
+          <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;">
+              <thead>
+                <tr style="background:rgba(255,255,255,0.04);">
+                  <th style="padding:14px;text-align:left;">Name</th>
+                  <th style="padding:14px;text-align:left;">Email</th>
+                  <th style="padding:14px;text-align:left;">Role</th>
+                  <th style="padding:14px;text-align:left;">Joined</th>
+                  <th id="lastLoginHeader" style="padding:14px;text-align:left;display:none;">Last Login</th>
+                </tr>
+              </thead>
+              <tbody id="studentsTable">
+                <tr><td colspan="5" style="padding:30px;text-align:center;color:var(--muted);">Loading students...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Courses Management -->
+      <div class="section" id="sec-courses">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;">
+          <div>
+            <div style="font-family:var(--font-head);font-weight:900;color:var(--white);font-size:1.1rem;">Course Management</div>
+            <div style="color:var(--muted);font-size:0.85rem;margin-top:4px;">Add, search, and manage courses</div>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+            <div class="topbar-search" style="width:320px;">
+              <i class="fas fa-search" style="color:var(--muted);font-size:0.8rem;"></i>
+              <input id="coursesSearch" type="text" placeholder="Search courses..." />
+            </div>
+            <button class="nav-item" style="padding:10px 14px;background:rgba(0,212,194,0.08);border-color:rgba(0,212,194,0.15);color:var(--accent);font-weight:800;" onclick="loadCourses()">
+              <i class="fas fa-sync-alt" style="margin-right:8px;"></i>Refresh
+            </button>
+            <button class="nav-item" style="padding:10px 14px;background:rgba(61,127,255,0.10);border-color:rgba(61,127,255,0.20);color:var(--accent2);font-weight:800;" onclick="seedWebsiteCourses()">
+              <i class="fas fa-seedling" style="margin-right:8px;"></i>Seed Website Courses
+            </button>
+          </div>
+        </div>
+
+        <div style="margin-bottom:16px; border:1px solid var(--border); border-radius:14px; padding:14px; background:rgba(255,255,255,0.02);">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+            <div>
+              <div style="font-family:var(--font-head);font-weight:900;color:var(--white);font-size:1rem;">Add Course</div>
+              <div style="color:var(--muted);font-size:0.85rem;margin-top:3px;">Click (+) by using the Add button below</div>
+            </div>
+            <button class="nav-item" style="padding:10px 14px;background:linear-gradient(135deg, rgba(0,212,194,0.16), rgba(61,127,255,0.10));border-color:rgba(0,212,194,0.20);color:var(--accent);font-weight:900;" onclick="addCourse()">
+              <i class="fas fa-plus" style="margin-right:8px;"></i>Add
+            </button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(5, minmax(150px, 1fr));gap:12px;margin-top:12px;">
+            <div>
+              <div style="font-size:0.75rem;color:var(--muted);font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Name</div>
+              <input id="addCourseName" style="width:100%;padding:11px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);outline:none;" />
+            </div>
+            <div>
+              <div style="font-size:0.75rem;color:var(--muted);font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Category</div>
+              <input id="addCourseCategory" style="width:100%;padding:11px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);outline:none;" />
+            </div>
+            <div>
+              <div style="font-size:0.75rem;color:var(--muted);font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Duration</div>
+              <input id="addCourseDuration" style="width:100%;padding:11px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);outline:none;" placeholder="e.g. 2 months"/>
+            </div>
+            <div>
+              <div style="font-size:0.75rem;color:var(--muted);font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Level</div>
+              <input id="addCourseLevel" style="width:100%;padding:11px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);outline:none;" placeholder="e.g. Beginner"/>
+            </div>
+            <div>
+              <div style="font-size:0.75rem;color:var(--muted);font-weight:800;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px;">Description</div>
+              <input id="addCourseDescription" style="width:100%;padding:11px 12px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);outline:none;" />
+            </div>
+          </div>
+        </div>
+
+        <div style="overflow-x:auto;border:1px solid var(--border);border-radius:14px;">
+          <table style="width:100%;border-collapse:collapse;min-width:980px;">
+            <thead>
+              <tr style="background:rgba(255,255,255,0.04);">
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Name</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Category</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Duration</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Level</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Description</th>
+                <th style="text-align:left;padding:14px 16px;color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;text-transform:uppercase;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="coursesTbody">
+              <tr><td colspan="6" style="padding:22px 16px;color:var(--muted);">Loading courses...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Progress Tracker (Admin) -->
+      <div class="section" id="sec-progress">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin-bottom:18px;">
+          <div>
+            <div style="font-family:var(--font-head);font-weight:900;color:var(--white);font-size:1.1rem;">Progress Tracker</div>
+            <div style="color:var(--muted);font-size:0.85rem;margin-top:4px;">Student course progress in percentage</div>
+          </div>
+          <button class="nav-item" style="padding:10px 14px;background:rgba(0,212,194,0.08);border-color:rgba(0,212,194,0.15);color:var(--accent);font-weight:800;" onclick="loadAdminProgress()">
+            <i class="fas fa-sync-alt" style="margin-right:8px;"></i>Refresh
+          </button>
+        </div>
+
+        <div id="adminProgressGrid" style="display:grid;grid-template-columns:repeat(3, minmax(260px, 1fr));gap:14px;">
+          <div class="empty" style="grid-column:1/-1;">Loading...</div>
+        </div>
+      </div>
+
+      <div class="section" id="sec-settings"><div class="empty">Settings section</div></div>
+    </div>
+  </div>
+  <audio id="notificationSound" preload="auto"></audio>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // --- Admin guard ---
+    (function guardAdmin(){
+      const role = (localStorage.getItem('ds_role') || '').toLowerCase();
+      if (role !== 'admin') {
+        showToast('Access denied. Admins only.','error');
+        setTimeout(()=> location.href = 'log.html', 700);
+      }
+    })();
+
+    // Socket.IO setup
+    const BASE_URL = "https://dataspark-tech.onrender.com";
+    const socket = io(BASE_URL);
+    const adminUsername = localStorage.getItem('ds_user') || 'Admin';
+
+    // Join as admin
+    socket.emit('admin_join', { adminName: adminUsername });
+    socket.on('connect', () => {
+      socket.emit('admin_join', { adminName: adminUsername });
+    });
+
+    async function updateChatbotNotification() {
+      try {
+        const res = await fetch('/admin/unread-chatbot-messages-count');
+        const data = await res.json();
+        const badge = document.getElementById('chatbot-messages-badge');
+        if (data.success && data.count > 0) {
+          if (badge) { badge.textContent = data.count; badge.style.display = 'inline-block'; }
+        } else {
+          if (badge) badge.style.display = 'none';
+        }
+      } catch (e) {}
+    }
+
+    async function loadData() {
+      try {
+        const response = await fetch(`${BASE_URL}/api/users`);
+        const data = await response.json();
+        console.log(data);
+      } catch (error) {
+        console.error('Error loading users:', error);
+      }
+    }
+
+    loadData();
+
+    function getSessionKeyFromMsg(m) {
+      if (m.conversation_key) return m.conversation_key;
+      if (m.user_email) return 'email:' + m.user_email;
+      return 'name:' + (m.user_name || 'Guest');
+    }
+
+    function sendAdminFile(event) {
+      const file = event.target.files[0];
+      if (!file || !activeConvKey) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const fileData = e.target.result;
+        socket.emit('admin_msg', {
+          conversationKey: activeConvKey,
+          msg: '',
+          senderName: adminUsername,
+          type: 'file',
+          fileData: fileData
+        });
+        appendBubble('', 'admin', adminUsername, new Date().toISOString(), 'file', fileData);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ---------------------------------------------------
+    //  ADMIN LIVE CHAT
+    // ---------------------------------------------------
+    let activeConvKey    = null;
+    let allConversations = [];
+
+    socket.on('conversation_list', (list) => {
+      allConversations = list || [];
+      renderConvList(allConversations);
+      const total = allConversations.reduce((s,c) => s + (c.unread_count||0), 0);
+      const badge = document.getElementById('chatbot-messages-badge');
+      if (badge) { badge.textContent = total; badge.style.display = total > 0 ? 'inline-block' : 'none'; }
+      if (!activeConvKey && allConversations.length) {
+        openConversation(allConversations[0].conversation_key, allConversations[0].user_name || allConversations[0].user_email || allConversations[0].conversation_key, allConversations[0].user_email || '');
+      }
+    });
+
+    socket.on('new_student_msg', (data) => {
+      showToast('New message from ' + (data.name || 'Student'), 'info');
+      try { document.getElementById('notificationSound').play(); } catch(e) {}
+      if (activeConvKey && data.conversationKey === activeConvKey) {
+        appendBubble(data.msg || '', 'student', data.name || 'Student', data.time || new Date().toISOString(), data.type || 'text', data.fileData || null);
+      }
+      loadConversations(); // Refresh list to show new message preview
+    });
+
+    socket.on('studentTyping', (data) => {
+      if (!data || data.conversationKey !== activeConvKey) return;
+      const indicator = document.getElementById('typingIndicator');
+      if (!indicator) return;
+      indicator.textContent = (data.name || 'Student') + ' is typing...';
+      indicator.style.display = 'block';
+      clearTimeout(window.__adminTypingTimeout);
+      window.__adminTypingTimeout = setTimeout(() => { indicator.style.display = 'none'; }, 2500);
+    });
+
+    async function loadConversations() {
+      try {
+        const res  = await fetch('/api/admin/chat/conversations');
+        const data = await res.json();
+        allConversations = data.conversations || data || [];
+        renderConvList(allConversations);
+      } catch(e) { showToast('Failed to load conversations', 'error'); }
+    }
+
+    function filterConvList(q) {
+      const f = q ? allConversations.filter(c =>
+        (c.user_name||'').toLowerCase().includes(q.toLowerCase()) ||
+        (c.user_email||'').toLowerCase().includes(q.toLowerCase())
+      ) : allConversations;
+      renderConvList(f);
+    }
+
+    function renderConvList(list) {
+      const el = document.getElementById('convList');
+      const countEl = document.getElementById('convCount');
+      if (!el) return;
+      if (countEl) countEl.textContent = list.length + ' conversation' + (list.length !== 1 ? 's' : '');
+      if (!list.length) {
+        el.innerHTML = '<div style="padding:24px;color:var(--muted);text-align:center;font-size:0.85rem;"><i class="fas fa-comments" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>No conversations yet.</div>';
+        return;
+      }
+      el.innerHTML = list.map(c => {
+        const name   = c.user_name || c.user_email || c.conversation_key || 'Guest';
+        const avatar = (name && name.length) ? name.charAt(0).toUpperCase() : 'G';
+        const last   = (c.last_message || 'No messages yet').slice(0, 50);
+        const unread = c.unread_count || 0;
+        const online = c.online ? '<span style="width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;margin-left:4px;"></span>' : '';
+        const active = activeConvKey === c.conversation_key ? ' active' : '';
+        const key    = (c.conversation_key||'').replace(/'/g,"\'");
+        const sName  = name.replace(/'/g,"\'");
+        const sEmail = (c.user_email||'').replace(/'/g,"\'");
+        return '<div class="chat-admin-convo-item' + active + '" onclick="openConversation(\'' + key + '\',\'' + sName + '\',\'' + sEmail + '\')">' +
+          '<div class="chat-admin-convo-avatar">' + avatar + '</div>' +
+          '<div class="chat-admin-convo-meta">' +
+            '<div class="chat-admin-convo-name" style="display:flex;align-items:center;justify-content:space-between;">' + 
+               '<span>' + name + online + '</span>' +
+               (c.last_updated ? '<span style="font-size:0.65rem;font-weight:400;color:var(--muted);">' + 
+                 new Date(c.last_updated).toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"}) + 
+               '</span>' : '') +
+            '</div>' +
+            '<div class="chat-admin-convo-last">' + last + '</div>' +
+          '</div>' +
+          (unread > 0 ? '<div class="chat-admin-badge">' + unread + '</div>' : '') +
+        '</div>';
+      }).join('');
+    }
+
+    async function openConversation(convKey, name, email) {
+      activeConvKey = convKey;
+      localStorage.setItem('admin_active_conv', convKey);
+      document.getElementById('activeChatName').textContent = name || 'Student';
+      document.getElementById('activeChatSub').textContent  = email || convKey;
+
+      document.querySelectorAll('.chat-admin-convo-item').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.chat-admin-convo-item').forEach(el => {
+        if ((el.getAttribute('onclick')||'').includes(convKey.replace(/'/g,"\'"))) el.classList.add('active');
+      });
+
+      try {
+        await fetch('/api/admin/chat/mark-read', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ conversationKey: convKey })
+        });
+      } catch(e) {}
+
+      const msgEl   = document.getElementById('chatHistoryMessages');
+      const emptyEl = document.getElementById('chatHistoryEmpty');
+      if (msgEl) msgEl.innerHTML = '<div style="color:var(--muted);text-align:center;padding:20px;">Loading...</div>';
+      if (emptyEl) emptyEl.style.display = 'none';
+
+      try {
+        const res  = await fetch('/api/admin/chat/history?conversationKey=' + encodeURIComponent(convKey));
+        const data = await res.json();
+        const msgs = data.messages || [];
+        if (msgEl) msgEl.innerHTML = '';
+        if (!msgs.length) {
+          if (emptyEl) { emptyEl.style.display = 'block'; emptyEl.innerHTML = '<i class="fas fa-comments" style="font-size:2.5rem;display:block;margin-bottom:12px;opacity:0.2;"></i>No messages yet.'; }
+        } else {
+          msgs.forEach(m => appendBubble(m.message||'', m.sender_role, m.sender_name||(m.sender_role==='admin'?'Admin':'Student'), m.created_at, m.message_type || 'text', m.file_data || null));
+        }
+      } catch(e) {
+        if (msgEl) msgEl.innerHTML = '<div style="color:var(--red);text-align:center;padding:20px;">Failed to load messages.</div>';
+      }
+      scrollChat();
+      const inp = document.getElementById('adminMsgInput');
+      if (inp) inp.onkeydown = (e) => { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendAdminMessage(); } };
+    }
+
+    function appendBubble(msg, role, senderName, timestamp, type = 'text', fileData = null) {
+      const msgEl   = document.getElementById('chatHistoryMessages');
+      const emptyEl = document.getElementById('chatHistoryEmpty');
+      if (!msgEl) return;
+      if (emptyEl) emptyEl.style.display = 'none';
+      const isAdmin = role === 'admin';
+      const t = timestamp
+        ? new Date(timestamp).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true})
+        : new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit',hour12:true});
+      let content = escHtml(msg || '');
+      if (type === 'file' && fileData) {
+        content = `<img src="${fileData}" alt="attachment" style="max-width:100%;border-radius:16px;cursor:pointer;" onclick="window.open(this.src)" />`;
+      }
+      const div = document.createElement('div');
+      div.className = 'chat-bubble ' + (isAdmin ? 'admin' : 'user');
+      div.innerHTML = content + '<div class="chat-bubble-meta"><span>' + escHtml(senderName||'') + '</span><span>' + t + '</span></div>';
+      msgEl.appendChild(div);
+      scrollChat();
+    }
+
+    function sendAdminMessage() {
+      const inp = document.getElementById('adminMsgInput');
+      const msg = (inp ? inp.value : '').trim();
+      if (!msg) return;
+      if (!activeConvKey) { showToast('Select a conversation first', 'error'); return; }
+      if (inp) inp.value = '';
+      socket.emit('admin_msg', { conversationKey: activeConvKey, msg: msg, senderName: adminUsername });
+      appendBubble(msg, 'admin', adminUsername);
+    }
+
+    function insertQuickReply(text) {
+      const inp = document.getElementById('adminMsgInput');
+      if (inp) {
+        inp.value = text;
+        inp.focus();
+      }
+    }
+
+    function scrollChat() {
+      const h = document.getElementById('chatHistoryBox');
+      if (h) h.scrollTop = h.scrollHeight;
+    }
+
+    function escHtml(s) { return (s||'').toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    async function initChatDashboard() {
+      socket.emit('admin_join', { adminName: adminUsername });
+      const savedConv = localStorage.getItem('admin_active_conv');
+      await loadConversations();
+      if (savedConv) {
+        const found = allConversations.find(c => c.conversation_key === savedConv);
+        if (found) {
+          openConversation(found.conversation_key, found.user_name || found.user_email || found.conversation_key, found.user_email || '');
+        }
+      }
+      const inp = document.getElementById('adminMsgInput');
+      if (inp) {
+        inp.onkeydown = (e) => { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendAdminMessage(); } };
+        inp.oninput = () => {
+          if (!activeConvKey || !inp.value.trim()) return;
+          socket.emit('admin_typing', { conversationKey: activeConvKey, adminName: adminUsername });
+        };
+      }
+    }
+
+    function sendAdminReply() { sendAdminMessage(); }
+    function markActiveConversationRead() {
+      if (!activeConvKey) return;
+      fetch('/api/admin/chat/mark-read', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ conversationKey: activeConvKey }) });
+    }
+
+    socket.on('newUserQuery', (message) => {
+      try {
+        showToast('New message from ' + (message.user_name || 'User'), 'info');
+        const s = document.getElementById('notificationSound');
+        if (s) s.play();
+        updateChatbotNotification();
+      } catch(e){}
+    });
+
+
+
+
+    function navigate(sectionName, el){
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      const sec = document.getElementById('sec-' + sectionName);
+      if (sec) sec.classList.add('active');
+
+      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+      if (el) el.classList.add('active');
+
+      const titleMap = {
+        overview: 'Dashboard Overview',
+        'chatbot-messages': 'Chatbot Messages',
+        enrollments: 'Enrollment Requests',
+        students: 'All Students',
+        courses: 'Course Management',
+        progress: 'Progress Tracker',
+        settings: 'Settings',
+        'messages': 'Contact Messages',
+        'course-applications': 'Course Applications'
+      };
+      document.getElementById('page-title').textContent = titleMap[sectionName] || 'Admin Dashboard';
+
+      if (sectionName === 'chatbot-messages') {
+        updateChatbotNotification();
+        initChatDashboard();
+      } else if (sectionName === 'messages') {
+        loadMessagesCards();
+      } else if (sectionName === 'course-applications') {
+        loadCourseApplications();
+      } else if (sectionName === 'students') {
+        loadStudents();
+      } else if (sectionName === 'enrollments') {
+        loadEnrollments();
+      } else if (sectionName === 'courses') {
+        loadCourses();
+      } else if (sectionName === 'progress') {
+        loadAdminProgress();
+      } else if (sectionName === 'overview') {
+        loadAdminStats();
+      }
+
+    }
+
+    function logout(){
+      localStorage.removeItem('ds_user');
+      localStorage.removeItem('ds_fullname');
+      localStorage.removeItem('ds_role');
+      location.href = 'log.html';
+    }
+
+    // Website courses (from cor.html) — seed into DB
+    const WEBSITE_COURSES = [
+      { name: 'Python Programming',               category: 'Programming',   duration: '2 Months',   level: 'Beginner',     description: 'Learn Python from scratch — core concepts, OOP, file handling, and mini-projects.' },
+      { name: 'Java Full Stack Development',       category: 'Programming',   duration: '4 Months',   level: 'Intermediate', description: 'Build full-stack web applications using Java, Spring Boot, and modern front-end technologies.' },
+      { name: 'Web Development (HTML, CSS, JS)',   category: 'Programming',   duration: '3 Months',   level: 'Beginner',     description: 'Master modern web development from HTML & CSS layouts to interactive JavaScript.' },
+      { name: 'React JS',                          category: 'Programming',   duration: '2 Months',   level: 'Intermediate', description: 'Build dynamic, component-driven UIs with React — hooks, state management, routing.' },
+      { name: 'Node.js & Express',                 category: 'Programming',   duration: '2 Months',   level: 'Intermediate', description: 'Build scalable server-side applications and REST APIs using Node.js and Express.' },
+      { name: 'Data Science & Machine Learning',   category: 'Data & AI',     duration: '4 Months',   level: 'Advanced',     description: 'Master data science and ML from data wrangling to building and deploying ML models.' },
+      { name: 'Artificial Intelligence',           category: 'Data & AI',     duration: '3 Months',   level: 'Advanced',     description: 'Explore AI concepts — neural networks, deep learning, NLP, and computer vision.' },
+      { name: 'Data Analytics with Power BI',      category: 'Data & AI',     duration: '3 Months',   level: 'Intermediate', description: 'Turn raw data into business insights using Excel, SQL, Python, and Power BI.' },
+      { name: 'SQL & Database Management',         category: 'Data & AI',     duration: '1.5 Months', level: 'Beginner',     description: 'Master SQL from basics to advanced — queries, joins, stored procedures, and database design.' },
+      { name: 'AWS Cloud Practitioner',            category: 'Cloud & DevOps', duration: '2 Months',   level: 'Intermediate', description: 'Get AWS certified — learn core cloud services, architecture, security, and pricing.' },
+      { name: 'Azure Fundamentals',                category: 'Cloud & DevOps', duration: '2 Months',   level: 'Intermediate', description: 'Learn Microsoft Azure cloud fundamentals and prepare for the AZ-900 certification exam.' },
+      { name: 'DevOps with Docker & Kubernetes',   category: 'Cloud & DevOps', duration: '3 Months',   level: 'Advanced',     description: 'Master DevOps practices — CI/CD pipelines, containerization with Docker, and Kubernetes.' },
+      { name: 'Manual Testing',                    category: 'Testing',       duration: '1.5 Months', level: 'Beginner',     description: 'Learn software testing fundamentals — test planning, test case design, and bug tracking.' },
+      { name: 'Selenium Automation Testing',       category: 'Testing',       duration: '2 Months',   level: 'Intermediate', description: 'Automate web testing with Selenium — write test scripts, build frameworks, CI/CD integration.' },
+      { name: 'UI/UX Design',                      category: 'Design',        duration: '2 Months',   level: 'Intermediate', description: 'Design user-centered digital experiences — wireframing, prototyping, and building a portfolio.' },
+      { name: 'Graphic Design (Photoshop & Illustrator)', category: 'Design', duration: '2 Months',   level: 'Beginner',     description: 'Master Photoshop and Illustrator — create stunning visuals, logos, banners, and a portfolio.' }
+    ];
+
+    async function seedWebsiteCourses(){
+      if (!confirm('This will add all 16 website courses to the database (duplicates will be skipped). Continue?')) return;
+      let added = 0; let skipped = 0;
+      for (const c of WEBSITE_COURSES) {
+        try {
+          const res = await fetch('https://your-backend-url/api/admin/courses', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(c)
+          });
+          const data = await res.json();
+          if (data.success) added++;
+          else skipped++; // duplicate or error
+        } catch (e) { skipped++; }
+      }
+      showToast(`Seeded: ${added} added, ${skipped} skipped (duplicates).`, added > 0 ? 'success' : 'info');
+      loadCourses();
+    }
+
+    async function addCourse(){
+      const name = document.getElementById('addCourseName').value.trim();
+      const category = document.getElementById('addCourseCategory').value;
+      const duration = document.getElementById('addCourseDuration').value.trim();
+      const level = document.getElementById('addCourseLevel').value;
+      const description = document.getElementById('addCourseDescription').value.trim();
+
+      if (!name || !category || !duration || !level || !description) {
+        showToast('Please fill all course fields.', 'error');
+        return;
+      }
+
+      try {
+        const res = await fetch('https://your-backend-url/api/admin/courses', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, category, duration, level, description })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Course added successfully!', 'success');
+          document.getElementById('addCourseName').value = '';
+          document.getElementById('addCourseCategory').value = '';
+          document.getElementById('addCourseDuration').value = '';
+          document.getElementById('addCourseLevel').value = '';
+          document.getElementById('addCourseDescription').value = '';
+          loadCourses(); // Reload the list of courses
+        } else {
+          showToast(data.message, 'error');
+        }
+      } catch (e) {
+        showToast('Server error adding course.', 'error');
+      }
+    }
+
+    async function loadCourses(){
+      const tbody = document.getElementById('coursesTbody');
+      if (!tbody) return;
+
+      const searchInput = document.getElementById('coursesSearch');
+      const q = searchInput ? (searchInput.value || '') : '';
+
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:22px 16px;color:var(--muted);">Loading courses...</td></tr>';
+
+      try {
+        const url = new URL('https://your-backend-url/api/admin/courses');
+        if (q) url.searchParams.append('q', q);
+
+        const res = await fetch(url.toString());
+        const data = await res.json();
+
+        if (!data || !data.success) {
+          // show backend message if any
+          const msg = data && data.message ? data.message : 'Failed to fetch courses';
+          tbody.innerHTML = '<tr><td colspan="6" style="padding:22px 16px;color:var(--red);">' + msg + '</td></tr>';
+          return;
+        }
+
+        const courses = data.courses || [];
+        if (courses.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="padding:22px 16px;color:var(--muted);">No courses found.</td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = courses.map(c => `
+          <tr>
+            <td style="padding:14px 16px;color:var(--text);font-weight:600;">${c.name || '-'}</td>
+            <td style="padding:14px 16px;color:var(--muted);">${c.category || '-'}</td>
+            <td style="padding:14px 16px;color:var(--muted);">${c.duration || '-'}</td>
+            <td style="padding:14px 16px;color:var(--muted);">${c.level || '-'}</td>
+            <td style="padding:14px 16px;color:var(--muted);max-width:250px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${c.description || '-'}</td>
+            <td style="padding:14px 16px;">
+              <button onclick="deleteCourse(${c.id})" style="background:var(--red);color:white;border:none;border-radius:8px;padding:6px 12px;font-size:0.75rem;cursor:pointer;">
+                <i class="fas fa-trash"></i> Delete
+              </button>
+            </td>
+          </tr>
+        `).join('');
+      } catch (e) {
+        console.error('Error loading courses:', e);
+        tbody.innerHTML = '<tr><td colspan="6" style="padding:22px 16px;color:var(--red);">Failed to load courses.</td></tr>';
+      }
+    }
+
+    async function deleteCourse(id) {
+      if (!confirm('Are you sure you want to delete this course?')) return;
+      try {
+        const res = await fetch(`https://your-backend-url/api/admin/courses/${id}`, { method: 'DELETE' });
+        const data = await res.json();
+        if (data.success) {
+          showToast('Course deleted successfully!', 'success');
+          loadCourses();
+        } else {
+          showToast(data.message, 'error');
+        }
+      } catch (e) {
+        showToast('Server error deleting course.', 'error');
+      }
+    }
+
+    async function loadAdminStats(){
+      // Loads Overview statistics cards (approx counts based on fetched rows)
+      try {
+        const adminWelcome = document.getElementById('adminWelcomeName');
+        if (adminWelcome) {
+          const full = localStorage.getItem('ds_fullname') || localStorage.getItem('ds_user') || 'Admin';
+          adminWelcome.textContent = full;
+        }
+
+        // Course applications count (pending)
+        const courseAppsEl = document.getElementById('statCourseApps');
+        if (courseAppsEl) courseAppsEl.textContent = '...';
+        let courseAppsCount = 0;
+        try {
+          const res = await fetch('/api/admin/unread-applications-count');
+          const data = await res.json();
+          if (data && data.success) courseAppsCount = data.count || 0;
+        } catch (e) { console.error('Stats fetch error:', e); }
+        if (courseAppsEl) courseAppsEl.textContent = courseAppsCount;
+
+        // Update applications badge
+        const appsBadge = document.getElementById('applications-badge');
+        if (appsBadge) {
+          if (courseAppsCount > 0) {
+            appsBadge.textContent = courseAppsCount;
+            appsBadge.style.display = 'inline-block';
+          } else {
+            appsBadge.style.display = 'none';
+          }
+        }
+
+        // Contact messages count (approx by fetching up to 500)
+        const messagesEl = document.getElementById('statMessages');
+        if (messagesEl) messagesEl.textContent = '...';
+        let messagesCount = 0;
+        try {
+          const res = await fetch('/api/admin/messages?limit=500');
+          const data = await res.json();
+          if (data && data.success) messagesCount = (data.messages || []).length;
+        } catch (e) {}
+        if (messagesEl) messagesEl.textContent = messagesCount;
+
+        // Chat unread sessions + unread messages count
+        const statUnreadChatEl = document.getElementById('statUnreadChat');
+        if (statUnreadChatEl) statUnreadChatEl.textContent = '...';
+        const statChatSessionsEl = document.getElementById('statChatSessions');
+        if (statChatSessionsEl) statChatSessionsEl.textContent = '...';
+
+        let unreadChatCount = 0;
+        try {
+          const res = await fetch('/admin/unread-chatbot-messages-count');
+          const data = await res.json();
+          if (data && data.success) unreadChatCount = data.count || 0;
+        } catch (e) {}
+        if (statUnreadChatEl) statUnreadChatEl.textContent = unreadChatCount;
+
+        let unreadSessionsCount = 0;
+        try {
+          const res = await fetch('/admin/chatbot-messages?read_status=unread');
+          const data = await res.json();
+          if (data && data.success) {
+            const msgs = data.messages || [];
+            const keys = new Set(msgs.map(m => getSessionKeyFromMsg(m)));
+            unreadSessionsCount = keys.size;
+          }
+        } catch (e) {}
+        if (statChatSessionsEl) statChatSessionsEl.textContent = unreadSessionsCount;
+
+        // Students Logged In count
+        const statLoggedInEl = document.getElementById('statLoggedIn');
+        if (statLoggedInEl) statLoggedInEl.textContent = '...';
+        try {
+          const res = await fetch('/api/admin/students-logged-in');
+          const data = await res.json();
+          if (data && data.success) {
+            if (statLoggedInEl) statLoggedInEl.textContent = (data.students || []).length;
+          }
+        } catch (e) { if (statLoggedInEl) statLoggedInEl.textContent = '0'; }
+      } catch (e) {
+        // ignore overview stat failures
+      }
+    }
+
+
+    // -----------------------
+    // Load Enrollments (Pending Applications)
+    // -----------------------
+    function escapeHtml(str){
+      return (str ?? '').toString().replace(/</g,'<').replace(/>/g,'>').replace(/"/g,'"').replace(/'/g,'&#39;');
+    }
+
+    async function loadMessagesCards() {
+      const container = document.getElementById('messagesCards');
+      const empty = document.getElementById('messagesEmpty');
+      const search = document.getElementById('contactsSearch');
+      const q = search ? (search.value || '').trim() : '';
+
+      if (!container) return;
+
+      if (empty) {
+        empty.style.display = 'block';
+        empty.textContent = 'Loading...';
+      }
+
+      try {
+        const url = '/api/admin/messages' + (q ? ('?q=' + encodeURIComponent(q)) : '');
+        const res = await fetch(url);
+        const data = await res.json();
+        if (!data || !data.success) throw new Error(data.message || 'Failed to load messages');
+
+        const messages = data.messages || [];
+        if (messages.length === 0) {
+          if (empty) {
+            empty.style.display = 'block';
+            empty.textContent = 'No messages found.';
+          }
+          if (container) container.innerHTML = '<div id="messagesEmpty" style="grid-column:1/-1;border:1px dashed var(--border);border-radius:14px;padding:26px;color:var(--muted);">No messages found.</div>';
+          return;
+        }
+
+        container.innerHTML = messages.map(m => {
+          const dateStr = m.date ? new Date(m.date).toLocaleString('en-IN') : '';
+          const safeMsg = escapeHtml(m.message || '');
+          const safeSub = escapeHtml(m.subject || '-');
+          const safeName = escapeHtml(m.name || '-');
+          const safeEmail = escapeHtml(m.email || '-');
+          return `
+            <div style="border-radius:14px;border:1px solid var(--border);background:rgba(255,255,255,0.03);padding:12px;transition:transform .2s;border-color .2s;">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+                <div>
+                  <div style="font-family:var(--font-head);font-weight:900;color:var(--white);font-size:1rem;">${safeName}</div>
+                  <div style="color:var(--muted);font-size:0.82rem;margin-top:2px;word-break:break-word;">${safeEmail}</div>
+                </div>
+                <div style="background:rgba(0,212,194,0.10);border:1px solid rgba(0,212,194,0.20);color:var(--accent);font-weight:900;font-size:0.75rem;padding:6px 10px;border-radius:999px;white-space:nowrap;">${safeSub}</div>
+              </div>
+
+              <div style="margin-top:10px;color:var(--text);font-size:0.88rem;line-height:1.5;max-height:80px;overflow:hidden;">
+                ${safeMsg}
+              </div>
+
+              <div style="margin-top:12px;display:flex;align-items:center;justify-content:space-between;gap:10px;">
+                <div style="color:var(--muted);font-size:0.78rem;">${escapeHtml(dateStr)}</div>
+                <div style="color:var(--muted);font-size:0.78rem;"><i class="fas fa-envelope"></i> Contact</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error('Error loading contact messages:', e);
+        if (empty) {
+          empty.style.display = 'block';
+          empty.textContent = 'Failed to load messages.';
+        }
+        container.innerHTML = '';
+      }
+    }
+
+
+
+    async function loadEnrollments() {
+      const tbody = document.getElementById('enrollmentsTbody');
+      if (!tbody) return;
+
+      const searchInput = document.getElementById('enrollmentsSearch');
+      const q = searchInput ? (searchInput.value || '').trim() : '';
+
+      tbody.innerHTML = '<tr><td colspan="6" style="padding:22px 16px;color:var(--muted);">Loading...</td></tr>';
+
+
+
+      try {
+        const url = new URL('/api/admin/course-applications', window.location.origin);
+        url.searchParams.set('limit', '200');
+        url.searchParams.set('page', '1');
+        if (q) url.searchParams.set('q', q);
+
+        const res = await fetch(url.toString());
+
+        const data = await res.json();
+        if (!data || !data.success) throw new Error(data.message || 'Failed');
+
+        const apps = data.applications || [];
+        if (apps.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="padding:30px 16px;text-align:center;color:var(--muted);">No enrollment applications found.</td></tr>';
+          return;
+        }
+
+        const statusOptions = ['Pending', 'Approved', 'Rejected'];
+        tbody.innerHTML = apps.map(a => {
+          const name = (a.full_name || '-').toString().replace(/</g,'<').replace(/>/g,'>');
+          const email = (a.email || '-').toString().replace(/</g,'<').replace(/>/g,'>');
+          const phone = (a.phone || '-').toString().replace(/</g,'<').replace(/>/g,'>');
+          const course = (a.course || '-').toString().replace(/</g,'<').replace(/>/g,'>');
+          const status = (a.current_status || 'Pending').toString();
+          const statusColor = status === 'Approved' ? 'rgba(34,197,94,0.15)' : status === 'Rejected' ? 'rgba(255,77,109,0.15)' : 'rgba(245,200,66,0.15)';
+          const statusTextColor = status === 'Approved' ? 'var(--green)' : status === 'Rejected' ? 'var(--red)' : 'var(--gold)';
+
+          return `
+            <tr>
+              <td style="padding:14px 16px;color:var(--text);font-weight:600;max-width:180px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${name}</td>
+              <td style="padding:14px 16px;color:var(--muted);">${email}</td>
+              <td style="padding:14px 16px;color:var(--muted);">${phone}</td>
+              <td style="padding:14px 16px;color:var(--muted);">${course}</td>
+              <td style="padding:14px 16px;">
+                <div style="background:${statusColor};color:${statusTextColor};padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:600;">${status}</div>
+              </td>
+              <td style="padding:14px 16px;">
+                <select data-app-id="${a.id}" style="padding:8px 10px;border-radius:8px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:0.85rem;outline:none;" onchange="updateCourseApplicationStatus(this)">
+                  ${statusOptions.map(s => `<option value="${s}" ${s === status ? 'selected' : ''}>${s}</option>`).join('')}
+                </select>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error('Error loading enrollments:', e);
+        tbody.innerHTML = '<tr><td colspan="6" style="padding:22px 16px;color:var(--red);">Failed to load enrollments.</td></tr>';
+      }
+    }
+
+
+
+
+    
+
+
+    // -----------------------
+    // Course Applications
+    // -----------------------
+    
+    let showOnlyLoggedInStudents = false; // State to track which view is active
+
+    function toggleStudentView(btn) {
+      showOnlyLoggedInStudents = !showOnlyLoggedInStudents;
+      if (showOnlyLoggedInStudents) {
+        btn.textContent = '👥 Show All Students';
+        btn.style.background = 'rgba(34,197,94,0.12)';
+        btn.style.borderColor = 'rgba(34,197,94,0.22)';
+        btn.style.color = 'var(--green)';
+      } else {
+        btn.textContent = '✓ Show Logged In';
+        btn.style.background = 'rgba(0,212,194,0.08)';
+        btn.style.borderColor = 'rgba(0,212,194,0.15)';
+        btn.style.color = 'var(--accent)';
+      }
+      loadStudents();
+    }
+
+    async function loadStudents() {
+      const tbody = document.getElementById('studentsTable');
+      const searchInput = document.getElementById('studentSearch');
+      const lastLoginHeader = document.getElementById('lastLoginHeader');
+      const q = searchInput ? searchInput.value.toLowerCase() : '';
+
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="5" style="padding:30px;text-align:center;color:var(--muted);">Loading students...</td></tr>';
+
+      try {
+        const endpoint = showOnlyLoggedInStudents ? 
+          '/api/admin/students-logged-in' :
+          '/api/admin/students';
+        
+        // Append search query to URL
+        const url = new URL(endpoint, window.location.origin);
+        if (q) url.searchParams.set('q', q);
+
+        const res = await fetch(url.toString());
+        if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+        const data = await res.json();
+        if (!data || !data.success) throw new Error(data.message || 'Failed');
+
+        let students = data.students || [];
+        if (students.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="5" style="padding:30px;text-align:center;color:var(--muted);">No students found.</td></tr>';
+          if (lastLoginHeader) lastLoginHeader.style.display = showOnlyLoggedInStudents ? 'table-cell' : 'none';
+          return;
+        }
+
+        // Show Last Login header only when showing logged-in students
+        if (lastLoginHeader) {
+          lastLoginHeader.style.display = showOnlyLoggedInStudents ? 'table-cell' : 'none';
+        }
+
+        tbody.innerHTML = students.map(s => {
+          const joined = s.created_at ? new Date(s.created_at).toLocaleDateString('en-IN') : '-';
+          const lastLogin = s.last_login ? new Date(s.last_login).toLocaleString('en-IN') : '-';
+          const lastLoginCell = showOnlyLoggedInStudents ? `<td style="padding:14px;color:var(--muted);">${lastLogin}</td>` : '';
+          
+          return `
+            <tr>
+              <td style="padding:14px;color:var(--text);font-weight:600;">${sanitizeText(s.username)}</td>
+              <td style="padding:14px;color:var(--muted);">${sanitizeText(s.email || 'Not provided')}</td>
+              <td style="padding:14px;"><span style="background:rgba(0,212,194,0.1);color:var(--accent);padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:600;">${sanitizeText(s.role)}</span></td>
+              <td style="padding:14px;color:var(--muted);">${joined}</td>
+              ${lastLoginCell}
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error('Error loading students:', e);
+        tbody.innerHTML = `<tr><td colspan="5" style="padding:30px;text-align:center;color:var(--red);">Failed to load students: ${e.message}</td></tr>`;
+      }
+    }
+
+    // -----------------------
+    // Utility function to sanitize text for display
+    function sanitizeText(s){ return (s ?? '').toString().replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // -----------------------
+    // Admin Progress Tracker
+    // -----------------------
+    async function loadAdminProgress() {
+      const grid = document.getElementById('adminProgressGrid');
+      if (!grid) return;
+
+      const prev = grid.innerHTML;
+      grid.innerHTML = '<div class="empty" style="grid-column:1/-1;">Loading...</div>';
+
+      try {
+        const res = await fetch('/api/admin/progress');
+        const data = await res.json();
+        if (!data || !data.success) throw new Error(data.message || 'Failed to load progress');
+
+        const rows = data.progress || [];
+        if (rows.length === 0) {
+          grid.innerHTML = '<div class="empty" style="grid-column:1/-1;">No progress data found.</div>';
+          return;
+        }
+
+        const cardHtml = rows.map((r) => {
+          const student = (r.student_name || '-').toString().replace(/</g,'<').replace(/>/g,'>');
+          const course = (r.course_name || '-').toString().replace(/</g,'<').replace(/>/g,'>');
+          const percentage = Number.isFinite(Number(r.percentage)) ? Math.max(0, Math.min(100, Number(r.percentage))) : 0;
+          const completedWeeks = Number.isFinite(Number(r.completed_weeks)) ? Number(r.completed_weeks) : 0;
+
+          let barColor = 'rgba(245,200,66,0.35)';
+          let barBorder = 'rgba(245,200,66,0.22)';
+          if (percentage >= 100) { barColor = 'rgba(34,197,94,0.25)'; barBorder = 'rgba(34,197,94,0.25)'; }
+          else if (percentage >= 50) { barColor = 'rgba(61,127,255,0.20)'; barBorder = 'rgba(61,127,255,0.22)'; }
+
+          return `
+            <div style="border-radius:16px;border:1px solid var(--border);background:rgba(255,255,255,0.03);padding:16px;">
+              <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
+                <div style="min-width:0;">
+                  <div style="font-family:var(--font-head);font-weight:900;color:var(--white);font-size:0.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${student}</div>
+                  <div style="color:var(--muted);font-size:0.82rem;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${course}</div>
+                </div>
+                <div style="flex-shrink:0; text-align:right;">
+                  <div style="font-family:var(--font-head);font-weight:900;color:var(--accent);font-size:1.25rem;line-height:1;">${percentage}%</div>
+                  <div style="color:var(--muted);font-size:0.78rem;margin-top:4px;">${completedWeeks} / 6 weeks</div>
+                </div>
+              </div>
+
+              <div style="margin-top:12px;border-radius:12px;background:${barColor};border:1px solid ${barBorder};height:12px;overflow:hidden;">
+                <div style="height:100%;width:${percentage}%;background:linear-gradient(135deg, var(--accent), var(--accent2));border-radius:12px;transition:width .4s ease;"></div>
+              </div>
+
+              <div style="display:flex;justify-content:space-between;margin-top:10px;color:var(--muted);font-size:0.76rem;">
+                <span>In Course</span>
+                <span>${percentage >= 100 ? 'Completed' : 'Progressing'}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        grid.innerHTML = cardHtml;
+      } catch (e) {
+        console.error(e);
+        grid.innerHTML = prev;
+        showToast('Failed to load progress.', 'error');
+      }
+    }
+
+    async function loadCourseApplications() {
+      const tbody = document.getElementById('courseAppsTbody');
+      const empty = document.getElementById('courseAppsEmpty');
+      const searchEl = document.getElementById('courseAppsSearch');
+      const statusEl = document.getElementById('courseAppsStatusFilter');
+
+
+      const q = searchEl ? (searchEl.value || '') : '';
+      const status = statusEl ? (statusEl.value || '') : '';
+
+      if (!tbody) return;
+      tbody.innerHTML = '<tr><td colspan="7" style="padding:22px 16px;color:var(--muted);">Loading...</td></tr>';
+      if (empty) empty.style.display = 'none';
+
+      try {
+        const url = new URL('/api/admin/course-applications-with-enrollment', window.location.origin);
+        if (q) url.searchParams.set('q', q);
+        if (status) url.searchParams.set('status', status);
+        url.searchParams.set('limit', '50');
+
+        const res = await fetch(url.toString());
+        const data = await res.json();
+        if (!data || !data.success) throw new Error(data.message || 'Failed');
+
+        const apps = data.applications || [];
+        if (apps.length === 0) {
+          if (empty) empty.style.display = 'block';
+          tbody.innerHTML = '';
+          return;
+        }
+
+        const statusOptions = ['Pending', 'Approved', 'Rejected'];
+        tbody.innerHTML = apps.map(a => {
+          const applicant = (a.full_name || '-').toString();
+          const email = (a.email || '-').toString();
+          const course = (a.course || '-').toString();
+          const batch = (a.batch || '-').toString();
+          const curStatus = (a.current_status || 'Pending').toString();
+          const lastLogin = a.last_login ? new Date(a.last_login).toLocaleString('en-IN') : 'Never';
+          const isLoggedIn = a.last_login ? 'Logged In' : 'Not Logged In';
+          const statusColor = a.last_login ? 'rgba(34,197,94,0.1)' : 'rgba(255,77,109,0.1)';
+          const statusTextColor = a.last_login ? 'var(--green)' : 'var(--red)';
+
+          const safeApplicant = applicant.replace(/</g,'<').replace(/>/g,'>');
+          const safeEmail = email.replace(/</g,'<').replace(/>/g,'>');
+          const safeCourse = course.replace(/</g,'<').replace(/>/g,'>');
+          const safeBatch = batch.replace(/</g,'<').replace(/>/g,'>');
+
+          return `
+            <tr>
+              <td style="padding:14px 16px;color:var(--text);font-weight:600;max-width:180px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${safeApplicant}</td>
+              <td style="padding:14px 16px;color:var(--muted);max-width:200px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${safeEmail}</td>
+              <td style="padding:14px 16px;color:var(--muted);max-width:180px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">${safeCourse}</td>
+              <td style="padding:14px 16px;color:var(--muted);">${safeBatch}</td>
+              <td style="padding:14px 16px;color:var(--muted);font-weight:900;">${curStatus}</td>
+              <td style="padding:14px 16px;max-width:160px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;">
+                <div style="background:${statusColor};color:${statusTextColor};padding:4px 10px;border-radius:6px;font-size:0.75rem;font-weight:600;">${isLoggedIn}</div>
+                <div style="color:var(--muted);font-size:0.7rem;margin-top:3px;">${lastLogin}</div>
+              </td>
+              <td style="padding:14px 16px;">
+                <select data-app-id="${a.id}" style="padding:9px 10px;border-radius:10px;background:var(--surface2);border:1px solid var(--border);color:var(--text);font-size:0.85rem;outline:none;" onchange="updateCourseApplicationStatus(this)">
+                  ${statusOptions.map(s => `<option value="${s}" ${s === curStatus ? 'selected' : ''}>${s}</option>`).join('')}
+                </select>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (e) {
+        console.error(e);
+        showToast('Failed to load course applications.', 'error');
+        if (empty) {
+          empty.style.display = 'block';
+          empty.textContent = 'Failed to load course applications.';
+        }
+        if (tbody) tbody.innerHTML = '';
+      }
+    }
+
+    async function updateCourseApplicationStatus(selectEl) {
+      try {
+        const id = selectEl?.getAttribute('data-app-id');
+        const status = selectEl?.value;
+        if (!id || !status) return;
+
+        const res = await fetch(`/api/admin/course-applications/${id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+
+        const data = await res.json();
+        if (!data || !data.success) throw new Error(data.message || 'Failed');
+
+        showToast('Status updated!', 'success');
+        await loadCourseApplications();
+      } catch (e) {
+        console.error(e);
+        showToast('Failed to update status.', 'error');
+      }
+    }
+
+    // -----------------------
+
+      // Wire up messages search + initial load
+      document.addEventListener('DOMContentLoaded', () => {
+        // Load all data on page startup
+        loadAdminStats();
+        updateChatbotNotification();
+        initChatDashboard();
+        
+        // Load all sections data in background
+        setTimeout(() => {
+          loadMessagesCards();
+          loadCourses();
+          loadStudents();
+          loadCourseApplications();
+          loadEnrollments();
+          loadAdminProgress();
+        }, 500);
+
+        // Stat cards: refresh counts when switching back to Overview
+        // (No page reload; keeps UI responsive)
+        const observer = new MutationObserver(() => {
+          const isOverviewActive = document.getElementById('sec-overview')?.classList.contains('active');
+          if (isOverviewActive) {
+            loadAdminStats();
+          }
+        });
+        observer.observe(document.querySelector('.content'), { attributes: true, subtree: true, attributeFilter: ['class'] });
+
+        const s = document.getElementById('contactsSearch');
+        if (s) {
+          let t = null;
+          s.addEventListener('input', () => {
+            clearTimeout(t);
+            t = setTimeout(loadMessagesCards, 250);
+          });
+        }
+
+        const coursesSearch = document.getElementById('coursesSearch');
+        if (coursesSearch) {
+          let t = null;
+          coursesSearch.addEventListener('input', () => {
+            clearTimeout(t);
+            t = setTimeout(loadCourses, 250);
+          });
+        }
+
+        const studentSearch = document.getElementById('studentSearch');
+        if (studentSearch) {
+          let t = null;
+          studentSearch.addEventListener('input', () => {
+            clearTimeout(t);
+            t = setTimeout(loadStudents, 250);
+          });
+        }
+
+        const courseAppsSearch = document.getElementById('courseAppsSearch');
+        if (courseAppsSearch) {
+          let t = null;
+          courseAppsSearch.addEventListener('input', () => {
+            clearTimeout(t);
+            t = setTimeout(loadCourseApplications, 250);
+          });
+        }
+
+        const courseAppsStatusFilter = document.getElementById('courseAppsStatusFilter');
+        if (courseAppsStatusFilter) {
+          let t = null;
+          courseAppsStatusFilter.addEventListener('change', () => {
+            clearTimeout(t);
+            t = setTimeout(loadCourseApplications, 150);
+          });
+        }
+      });
+
+    function showToast(message, type = 'info') {
+      const t = document.getElementById('toast');
+      if (!t) return;
+      const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+      t.innerHTML = '<i class="fas ' + icon + '"></i><span>' + message + '</span>';
+      t.className = 'toast show ' + type;
+      clearTimeout(window.__toastTimer);
+      window.__toastTimer = setTimeout(() => { t.className = 'toast'; }, 2500);
+    }
+
+    // Fill admin profile
+    (function initProfile(){
+      const name = localStorage.getItem('ds_fullname') || localStorage.getItem('ds_user') || 'Admin';
+      document.getElementById('adminName').textContent = name;
+      const initial = name.trim().charAt(0).toUpperCase();
+      document.getElementById('adminAvatar').textContent = initial || 'A';
+    })();
+  </script>
+</body>
+</html>
+

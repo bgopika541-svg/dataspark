@@ -1,0 +1,623 @@
+/* =========================================
+   Site Theme (Light/Dark)
+   ========================================= */
+
+/* Default = light */
+:root {
+  --app-bg: #f4f6fb;
+  --app-text: #1a202c;
+  --app-card-bg: #ffffff;
+  --app-nav-bg: #ffffff;
+  --app-nav-text: #1a202c;
+  --app-input-bg: #ffffff;
+  --app-input-border: rgba(0,0,0,0.15);
+  --app-sidebar-bg: #ffffff;
+  --app-sidebar-text: #1a202c;
+  --app-table-text: #1a202c;
+  --app-container-bg: #f4f6fb;
+  --app-border-color: rgba(0, 0, 0, 0.10);
+  --app-shadow: 0 10px 40px rgba(0,0,0,0.06);
+}
+
+/* Dark mode variables */
+[data-theme="dark"] {
+  --app-bg: #0b0f1a;
+  --app-text: #f1f5f9;
+  --app-card-bg: #1e293b;
+  --app-nav-bg: #050810;
+  --app-nav-text: #ffffff;
+  --app-input-bg: #334155;
+  --app-input-border: rgba(255,255,255,0.10);
+  --app-sidebar-bg: #1e293b;
+  --app-sidebar-text: #f1f5f9;
+  --app-table-text: #f1f5f9;
+  --app-container-bg: #0b0f1a;
+  --app-border-color: rgba(255,255,255,0.10);
+  --app-shadow: 0 10px 40px rgba(0,0,0,0.35);
+}
+
+/* Apply variables broadly */
+body {
+  background: var(--app-bg) !important;
+  color: var(--app-text) !important;
+}
+
+nav, aside, .card, .stat-card, section, .sidebar, .navbar, .form-card, .container, table, header, footer, .team-card, .about-section, .mission-vision, .mission-card, .vision-card {
+  background-color: transparent;
+  color: inherit;
+}
+
+/* Common backgrounds/containers that should switch */
+.sidebar, .navbar, .form-card, .container, section, header, footer, .content, .main-content, .dashboard-container, .content-wrapper {
+  background-color: var(--app-container-bg) !important;
+  color: var(--app-text) !important;
+}
+
+/* Cards */
+.card, .stat-card, .form-card, .team-card, .mission-card, .vision-card {
+  background: var(--app-card-bg) !important;
+  box-shadow: var(--app-shadow) !important;
+  border-color: var(--app-border-color) !important;
+}
+
+/* Inputs/selects */
+input, select, textarea {
+  background-color: var(--app-input-bg) !important;
+  border-color: var(--app-input-border) !important;
+  color: var(--app-text) !important;
+}
+
+/* Table */
+table {
+  background-color: var(--app-card-bg) !important;
+  color: var(--app-table-text) !important;
+}
+
+/* Global Theme Transitions */
+body, nav, aside, .card, .stat-card, section, .sidebar, .navbar, .form-card, .container, table, div, header, footer, .team-card, .about-section, .mission-vision, .mission-card, .vision-card {
+  transition: background-color 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.5s ease, box-shadow 0.5s ease !important;
+}
+
+/* Floating Toggle Button (for Admin/Dashboard) */
+#theme-toggle-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  width: 55px;
+  height: 55px;
+  border-radius: 50%;
+  background: rgba(26, 86, 255, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  cursor: pointer;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  /* Ensure smooth transition for all relevant properties including background and transform */
+  transition: background 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), 
+              transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275),
+              box-shadow 0.3s ease;
+}
+
+#theme-toggle-btn:hover {
+  transform: scale(1.1) rotate(12deg);
+  background: rgba(26, 86, 255, 0.95);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.4);
+  -webkit-transform: scale(1.1) rotate(15deg); /* For broader browser support */
+}
+
+[data-theme="dark"] #theme-toggle-btn {
+  background: rgba(30, 41, 59, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* =====================================================
+   EXTENDED DARK MODE — Cards & Panels
+   ===================================================== */
+
+[data-theme="dark"] .testi-card,
+[data-theme="dark"] .course-card,
+[data-theme="dark"] .info-card,
+[data-theme="dark"] .contact-form-box,
+[data-theme="dark"] .login-right,
+[data-theme="dark"] .signup-right,
+[data-theme="dark"] .apply-right,
+[data-theme="dark"] .no-course-card,
+[data-theme="dark"] .popup-box,
+[data-theme="dark"] .popup-inner,
+[data-theme="dark"] .team-card,
+[data-theme="dark"] .value-card,
+[data-theme="dark"] .location-badge {
+  background: var(--app-card-bg) !important;
+  color: var(--app-text) !important;
+  border-color: var(--app-border-color) !important;
+  box-shadow: var(--app-shadow) !important;
+}
+
+/* =====================================================
+   EXTENDED DARK MODE — Text (headings using --navy / hardcoded dark)
+   ===================================================== */
+
+[data-theme="dark"] .section-header h2,
+[data-theme="dark"] .contact-info h2,
+[data-theme="dark"] .step-item h4,
+[data-theme="dark"] .course-card h3,
+[data-theme="dark"] .info-text strong,
+[data-theme="dark"] .form-title,
+[data-theme="dark"] .testi-name,
+[data-theme="dark"] .popup-box h3,
+[data-theme="dark"] .popup-inner h2,
+[data-theme="dark"] .story-text h2,
+[data-theme="dark"] .timeline-header h2,
+[data-theme="dark"] .tl-item h4,
+[data-theme="dark"] .team-header h2,
+[data-theme="dark"] .team-card h3,
+[data-theme="dark"] .values-header h2,
+[data-theme="dark"] .value-card h4,
+[data-theme="dark"] .stat-num,
+[data-theme="dark"] .highlight-item {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .testi-text,
+[data-theme="dark"] .course-desc,
+[data-theme="dark"] .contact-info > p,
+[data-theme="dark"] .step-item p,
+[data-theme="dark"] .info-text span,
+[data-theme="dark"] .popup-box p,
+[data-theme="dark"] .popup-inner p,
+[data-theme="dark"] .course-topics li,
+[data-theme="dark"] .form-sub,
+[data-theme="dark"] .sub,
+[data-theme="dark"] .story-text p,
+[data-theme="dark"] .tl-item p,
+[data-theme="dark"] .value-card p,
+[data-theme="dark"] .team-card p,
+[data-theme="dark"] .team-header p,
+[data-theme="dark"] .timeline-header p,
+[data-theme="dark"] .values-header p {
+  color: rgba(255, 255, 255, 0.65) !important;
+}
+
+[data-theme="dark"] .course-topics li {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* =====================================================
+   EXTENDED DARK MODE — Labels & Form elements
+   ===================================================== */
+
+[data-theme="dark"] label {
+  color: rgba(255, 255, 255, 0.72) !important;
+}
+
+[data-theme="dark"] .filter-btn {
+  color: rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  background: transparent !important;
+}
+
+[data-theme="dark"] .filter-btn.active,
+[data-theme="dark"] .filter-btn:hover {
+  color: #fff !important;
+}
+
+[data-theme="dark"] .radio-card {
+  background: var(--app-input-bg) !important;
+  color: rgba(255, 255, 255, 0.8) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+[data-theme="dark"] .radio-card.selected {
+  background: rgba(26, 86, 255, 0.2) !important;
+  color: #93b4ff !important;
+  border-color: rgba(26, 86, 255, 0.4) !important;
+}
+
+[data-theme="dark"] .divider {
+  color: rgba(255, 255, 255, 0.3) !important;
+}
+
+[data-theme="dark"] .divider::before,
+[data-theme="dark"] .divider::after {
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .back-btn,
+[data-theme="dark"] .popup-cancel {
+  color: rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+[data-theme="dark"] .signup-link,
+[data-theme="dark"] .login-link {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+/* =====================================================
+   EXTENDED DARK MODE — About page specific
+   ===================================================== */
+
+[data-theme="dark"] .stats-strip {
+  background: var(--app-card-bg) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="dark"] .stat-item {
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="dark"] .stat-item:hover {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="dark"] .values-section {
+  background: var(--app-bg) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+/* =====================================================
+   EXTENDED DARK MODE — Dropdown menus (inline style override)
+   ===================================================== */
+
+[data-theme="dark"] #user-dropdown,
+[data-theme="dark"] #nav-dropdown {
+  background: #1e293b !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* =====================================================
+   EXTENDED DARK MODE — Chatbot
+   ===================================================== */
+
+[data-theme="dark"] .chatbot-window {
+  background: #0f172a !important;
+}
+
+[data-theme="dark"] .chatbot-body {
+  background: #0c1228 !important;
+}
+
+[data-theme="dark"] .chatbot-footer {
+  background: #0f172a !important;
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .chatbot-input {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .chat-msg.bot {
+  background: #1e293b !important;
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+/* =====================================================
+   EXTENDED DARK MODE — Dashboard cards & text
+   ===================================================== */
+
+[data-theme="dark"] .stat-card,
+[data-theme="dark"] .week-card,
+[data-theme="dark"] .progress-section,
+[data-theme="dark"] .no-course-card {
+  background: #1e293b !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+[data-theme="dark"] .dash-greeting h1,
+[data-theme="dark"] .section-title-dash,
+[data-theme="dark"] .stat-card h3,
+[data-theme="dark"] .week-info h4,
+[data-theme="dark"] .no-course-card h3,
+[data-theme="dark"] .modal-box h3,
+[data-theme="dark"] .score-box h3,
+[data-theme="dark"] .chat-contacts-header,
+[data-theme="dark"] .chat-messages-header .info h4 {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .dash-greeting p,
+[data-theme="dark"] .stat-card p,
+[data-theme="dark"] .week-info p,
+[data-theme="dark"] .no-course-card p,
+[data-theme="dark"] .modal-box p,
+[data-theme="dark"] .score-box p {
+  color: rgba(255, 255, 255, 0.6) !important;
+}
+
+[data-theme="dark"] .week-num.locked {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #64748b !important;
+}
+
+[data-theme="dark"] .week-num.unlocked {
+  background: rgba(102, 126, 234, 0.2) !important;
+  color: #a5b4fc !important;
+}
+
+[data-theme="dark"] .week-num.completed {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #34d399 !important;
+}
+
+[data-theme="dark"] .week-badge.locked {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: #64748b !important;
+}
+
+[data-theme="dark"] .week-badge.unlocked {
+  background: rgba(102, 126, 234, 0.2) !important;
+  color: #a5b4fc !important;
+}
+
+[data-theme="dark"] .week-badge.completed {
+  background: rgba(16, 185, 129, 0.15) !important;
+  color: #34d399 !important;
+}
+
+[data-theme="dark"] .progress-bar-wrap {
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .modal-box {
+  background: #1e293b !important;
+}
+
+[data-theme="dark"] .modal-task-item {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #f1f5f9 !important;
+}
+
+/* =====================================================
+   EXTENDED DARK MODE — Dashboard Chat
+   ===================================================== */
+
+[data-theme="dark"] .chat-messages-panel,
+[data-theme="dark"] .chat-contacts-panel {
+  background: #1e293b !important;
+}
+
+[data-theme="dark"] .chat-history {
+  background: #0f172a !important;
+}
+
+[data-theme="dark"] .chat-composer {
+  border-top-color: rgba(255, 255, 255, 0.06) !important;
+}
+
+[data-theme="dark"] .chat-composer textarea {
+  background: #334155 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .chat-bubble-admin {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #e2e8f0 !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .score-box {
+  background: #1e293b !important;
+}
+
+/* =====================================================
+   EXTENDED DARK MODE — Dashboard PDF/Lesson Modal
+   ===================================================== */
+
+[data-theme="dark"] .lesson-modal-box {
+  background: #1e293b !important;
+}
+
+[data-theme="dark"] .pdf-slide-dots {
+  background: #1e293b !important;
+}
+
+[data-theme="dark"] .pdf-page {
+  background: #263147 !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .pdf-body {
+  color: rgba(255, 255, 255, 0.85) !important;
+}
+
+[data-theme="dark"] .pdf-intro {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+[data-theme="dark"] .pdf-point-text {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+[data-theme="dark"] .pdf-checklist li {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+[data-theme="dark"] .pdf-factbox {
+  background: rgba(2, 132, 199, 0.12) !important;
+  border-color: rgba(186, 230, 253, 0.12) !important;
+}
+
+[data-theme="dark"] .pdf-factbox-text {
+  color: rgba(255, 255, 255, 0.82) !important;
+}
+
+[data-theme="dark"] .pdf-footer-bar {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border-top-color: rgba(255, 255, 255, 0.08) !important;
+  color: rgba(255, 255, 255, 0.35) !important;
+}
+
+[data-theme="dark"] .pdf-note {
+  background: rgba(245, 158, 11, 0.1) !important;
+  border-color: rgba(253, 230, 138, 0.15) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+[data-theme="dark"] .lesson-footer {
+  background: #1e293b !important;
+}
+
+[data-theme="dark"] .btn-close-lesson {
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: rgba(255, 255, 255, 0.7) !important;
+}
+
+/* =====================================================
+   EXTENDED DARK MODE — Dashboard Assessment Modal
+   ===================================================== */
+
+[data-theme="dark"] .assess-modal-box {
+  background: #1e293b !important;
+}
+
+[data-theme="dark"] .question-block {
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme="dark"] .question-block p {
+  color: #f1f5f9 !important;
+}
+
+[data-theme="dark"] .option-label {
+  color: rgba(255, 255, 255, 0.75) !important;
+}
+
+[data-theme="dark"] .option-label:hover {
+  background: rgba(102, 126, 234, 0.15) !important;
+}
+
+/* =====================================================
+   ADMIN DASHBOARD — Light Mode Fixes
+   ===================================================== */
+
+[data-theme="light"] .topbar-left h1 {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .chat-admin-composer textarea {
+  background: #f1f5f9 !important;
+  color: #1e293b !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .chat-admin-sidebar {
+  background: rgba(241, 245, 249, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+[data-theme="light"] .chat-admin-main {
+  background: rgba(248, 250, 252, 0.95) !important;
+  border-color: rgba(0, 0, 0, 0.07) !important;
+}
+
+[data-theme="light"] .chat-admin-convo-item {
+  background: rgba(0, 0, 0, 0.02) !important;
+  border-color: rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .chat-admin-convo-name,
+[data-theme="light"] .chat-admin-main-name {
+  color: #1e293b !important;
+}
+
+[data-theme="light"] .chat-bubble.user {
+  color: #1e293b !important;
+  background: rgba(26, 86, 255, 0.1) !important;
+  border-color: rgba(26, 86, 255, 0.18) !important;
+}
+
+[data-theme="light"] .chat-bubble.admin {
+  color: #1e293b !important;
+}
+
+/* =====================================================
+   GLOBAL LIGHT MODE OVERRIDES — Fixes for text visibility
+   ===================================================== */
+
+[data-theme="light"] .navbar,
+[data-theme="light"] .footer,
+[data-theme="light"] .mini-footer {
+  background-color: #ffffff !important;
+  border-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme="light"] .nav-links a,
+[data-theme="light"] .footer-col a,
+[data-theme="light"] .footer-bottom p,
+[data-theme="light"] .footer-brand p,
+[data-theme="light"] .mini-footer p,
+[data-theme="light"] .hero-sub,
+[data-theme="light"] .section-header p,
+[data-theme="light"] .dash-greeting p,
+[data-theme="light"] .sub,
+[data-theme="light"] .testi-text,
+[data-theme="light"] .course-desc,
+[data-theme="light"] .info-text span,
+[data-theme="light"] .story-text p,
+[data-theme="light"] .tl-item p,
+[data-theme="light"] .team-header p {
+  color: #4a5568 !important; /* High contrast gray for secondary text */
+}
+
+[data-theme="light"] .nav-links a:hover,
+[data-theme="light"] .footer-col a:hover,
+[data-theme="light"] .mini-footer a:hover {
+  color: #1a202c !important; /* Near black for hover states */
+}
+
+/* =====================================================
+   GLOBAL RESPONSIVE HELPERS
+   ===================================================== */
+
+html { box-sizing: border-box; }
+*, *::before, *::after { box-sizing: inherit; }
+
+img, iframe, video, embed, object, picture, svg { max-width: 100%; height: auto; }
+button, input, select, textarea { min-width: 0; }
+
+@media (max-width: 1200px) {
+  body { font-size: 0.95rem; }
+  .navbar, .footer, .mini-footer, .page-hero, .dashboard-container, .content-wrapper, .main-content, .contact-section {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}
+
+@media (max-width: 900px) {
+  .navbar, .footer, .mini-footer, .page-hero, .dashboard-container, .content-wrapper, .main-content, .contact-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .nav-links { flex-wrap: wrap; justify-content: center; gap: 14px; }
+  .footer-grid, .courses-grid, .team-grid, .stats-strip { grid-template-columns: 1fr !important; }
+  .sidebar, .login-right, .signup-right, .apply-right, .contact-form-box, .popup-box {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  body { font-size: 0.92rem; }
+  .navbar { padding-left: 14px !important; padding-right: 14px !important; }
+  .nav-links { gap: 12px; }
+  .nav-links a { font-size: 0.82rem !important; }
+  .footer-grid, .courses-grid, .team-grid, .stats-strip { grid-template-columns: 1fr !important; }
+  .footer, .mini-footer, .content-wrapper, .dashboard-container, .page-hero, .contact-section {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+  .hero-content, .contact-info, .form-group, .info-card, .info-text, .footer-col, .popup-box {
+    width: 100% !important;
+  }
+  .submit-btn, .back-btn, .popup-ok { width: 100%; }
+}

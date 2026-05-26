@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up - DATA SPARK TECHNOLOGIES</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="theme.css">
+<script src="theme.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --navy: #080c18; --deep: #0c1228; --blue: #1a56ff; --blue-mid: #3a72ff;
+    --blue-light: #5d8fff; --teal: #00d4c2; --white: #ffffff;
+    --off-white: #f4f6fb; --muted: #8892a4; --radius: 20px;
+    --transition: 0.35s cubic-bezier(0.4,0,0.2,1);
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Inter', sans-serif; background: var(--navy); color: var(--white); min-height: 100vh; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+  /* BACKGROUND */
+  .bg-layer {
+    position: fixed; inset: 0; z-index: 0;
+    background:
+      radial-gradient(ellipse 70% 55% at 80% 20%, rgba(26,86,255,0.28) 0%, transparent 65%),
+      radial-gradient(ellipse 50% 45% at 20% 80%, rgba(0,212,194,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 40% 35% at 30% 15%, rgba(93,143,255,0.12) 0%, transparent 55%),
+      linear-gradient(165deg, var(--navy) 0%, var(--deep) 100%);
+  }
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0;
+    background-image: linear-gradient(rgba(26,86,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(26,86,255,0.05) 1px, transparent 1px);
+    background-size: 55px 55px;
+    mask-image: radial-gradient(ellipse 90% 90% at 50% 50%, black 40%, transparent 100%);
+  }
+  .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: orbFloat 12s ease-in-out infinite; }
+  .orb-1 { width: 400px; height: 400px; background: rgba(26,86,255,0.18); top: -100px; right: -100px; animation-delay: 0s; }
+  .orb-2 { width: 300px; height: 300px; background: rgba(0,212,194,0.12); bottom: -80px; left: -80px; animation-delay: 5s; }
+  @keyframes orbFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+
+  /* NAVBAR */
+  .navbar { position: relative; z-index: 10; display: flex; justify-content: space-between; align-items: center; padding: 22px 60px; border-bottom: 1px solid rgba(255,255,255,0.06); background: rgba(8,12,24,0.4); backdrop-filter: blur(12px); }
+  .nav-logo { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--teal); letter-spacing: 0.04em; text-decoration: none; }
+  .nav-logo span { color: var(--white); }
+  .nav-links { list-style: none; display: flex; gap: 40px; align-items: center; }
+  .nav-links a { text-decoration: none; color: rgba(255,255,255,0.55); font-family: 'Syne', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: color var(--transition); }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links .nav-cta { color: var(--white); background: linear-gradient(135deg, var(--blue), var(--blue-light)); padding: 9px 24px; border-radius: 99px; font-size: 0.8rem; box-shadow: 0 4px 18px rgba(26,86,255,0.35); }
+  .nav-links .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,86,255,0.5); }
+
+  /* MAIN LAYOUT */
+  .signup-wrapper { flex: 1; display: flex; align-items: center; justify-content: center; padding: 60px 24px; position: relative; z-index: 5; }
+  .signup-container { display: grid; grid-template-columns: 1fr 1fr; gap: 0; max-width: 960px; width: 100%; border-radius: 28px; overflow: hidden; box-shadow: 0 40px 100px rgba(0,0,0,0.5); animation: fadeUp 0.9s ease both; }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* LEFT PANEL */
+  .signup-left {
+    background: linear-gradient(145deg, #0033cc 0%, var(--teal) 100%);
+    padding: 60px 48px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    position: relative; overflow: hidden;
+  }
+  .signup-left::before { content: ''; position: absolute; width: 340px; height: 340px; background: rgba(255,255,255,0.06); border-radius: 50%; top: -120px; right: -120px; }
+  .signup-left::after { content: ''; position: absolute; width: 220px; height: 220px; background: rgba(0,0,0,0.08); border-radius: 50%; bottom: -80px; left: -60px; }
+  .left-logo { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 800; color: rgba(255,255,255,0.95); letter-spacing: 0.04em; position: relative; }
+  .left-logo span { display: block; font-size: 0.65rem; font-weight: 400; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.55); margin-top: 3px; }
+  .left-content { position: relative; }
+  .left-content h2 { font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; color: var(--white); line-height: 1.15; margin-bottom: 16px; letter-spacing: -0.02em; }
+  .left-content p { font-size: 0.92rem; color: rgba(255,255,255,0.65); line-height: 1.78; margin-bottom: 36px; }
+  .left-features { display: flex; flex-direction: column; gap: 14px; }
+  .left-feature { display: flex; align-items: center; gap: 12px; font-size: 0.88rem; color: rgba(255,255,255,0.8); }
+  .feat-dot { width: 8px; height: 8px; background: var(--white); border-radius: 50%; flex-shrink: 0; opacity: 0.8; }
+  .left-footer { font-size: 0.75rem; color: rgba(255,255,255,0.35); letter-spacing: 0.06em; position: relative; }
+
+  /* RIGHT PANEL */
+  .signup-right { background: var(--white); padding: 50px 48px; display: flex; flex-direction: column; justify-content: center; }
+  .form-eyebrow { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--blue); margin-bottom: 10px; }
+  .signup-right h3 { font-family: 'Syne', sans-serif; font-size: 1.8rem; font-weight: 800; color: var(--navy); margin-bottom: 6px; letter-spacing: -0.02em; }
+  .signup-right .sub { font-size: 0.9rem; color: var(--muted); margin-bottom: 30px; }
+  .form-group { margin-bottom: 18px; }
+  label { display: block; font-size: 0.76rem; font-weight: 600; letter-spacing: 0.07em; text-transform: uppercase; color: #444; margin-bottom: 8px; }
+  .input-wrap { position: relative; }
+  .input-wrap .icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 1rem; pointer-events: none; }
+  input, select { width: 100%; padding: 13px 16px 13px 42px; font-family: 'Inter', sans-serif; font-size: 0.92rem; color: var(--navy); background: var(--off-white); border: 1.5px solid rgba(26,86,255,0.12); border-radius: 12px; outline: none; transition: border-color var(--transition), box-shadow var(--transition); appearance: none; }
+  input:focus, select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(26,86,255,0.1); background: var(--white); }
+  select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238892a4' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; cursor: pointer; }
+  .eye-btn { position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1rem; color: var(--muted); padding: 4px; line-height: 1; transition: color var(--transition); }
+  .eye-btn:hover { color: var(--blue); }
+
+  .signup-btn { width: 100%; padding: 15px; margin-top: 6px; font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.06em; color: var(--white); background: linear-gradient(135deg, var(--blue), var(--blue-light)); border: none; border-radius: 12px; cursor: pointer; box-shadow: 0 6px 24px rgba(26,86,255,0.35); transition: transform var(--transition), box-shadow var(--transition); }
+  .signup-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 36px rgba(26,86,255,0.5); }
+
+  .login-link { text-align: center; margin-top: 18px; font-size: 0.86rem; color: var(--muted); }
+  .login-link a { color: var(--blue); text-decoration: none; font-weight: 600; }
+  .login-link a:hover { text-decoration: underline; }
+
+  /* POPUP */
+  .popup-overlay { display: none; position: fixed; inset: 0; background: rgba(8,12,24,0.75); backdrop-filter: blur(8px); z-index: 999; align-items: center; justify-content: center; }
+  .popup-overlay.show { display: flex; }
+  .popup-inner { background: #fff; border-radius: 24px; padding: 52px 44px; text-align: center; max-width: 380px; width: 90%; box-shadow: 0 30px 80px rgba(0,0,0,0.3); animation: popIn 0.4s cubic-bezier(0.34,1.56,0.64,1) both; }
+  @keyframes popIn { from { opacity: 0; transform: scale(0.85); } to { opacity: 1; transform: scale(1); } }
+  .popup-emoji { font-size: 3rem; margin-bottom: 14px; }
+  .popup-inner h2 { font-family: 'Syne', sans-serif; font-size: 1.4rem; font-weight: 800; margin-bottom: 10px; }
+  .popup-inner p { color: #6b7280; font-size: 0.92rem; line-height: 1.7; margin-bottom: 22px; }
+  .popup-btn { border: none; padding: 12px 34px; border-radius: 99px; font-family: 'Syne', sans-serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; color: #fff; transition: transform var(--transition); }
+  .popup-btn:hover { transform: translateY(-2px); }
+  .popup-btn.red { background: linear-gradient(135deg, #dc2626, #ef4444); box-shadow: 0 6px 20px rgba(220,38,38,0.35); }
+
+  /* FOOTER */
+  .mini-footer { position: relative; z-index: 5; padding: 22px 60px; border-top: 1px solid rgba(255,255,255,0.06); background: rgba(8,12,24,0.4); display: flex; justify-content: space-between; align-items: center; }
+  .mini-footer p { font-size: 0.78rem; color: rgba(255,255,255,0.28); }
+  .mini-footer a { font-size: 0.78rem; color: var(--teal); text-decoration: none; }
+
+  @media (max-width: 780px) { .signup-container { grid-template-columns: 1fr; } .signup-left { display: none; } .navbar { padding: 16px 24px; } .mini-footer { padding: 16px 24px; flex-direction: column; gap: 8px; text-align: center; } }
+  @media (max-width: 480px) { .navbar { padding: 14px 16px; } .nav-links { gap: 12px; } .nav-links a { font-size: 0.72rem; } .signup-right { padding: 32px 20px; } .signup-wrapper { padding: 30px 16px; } }
+
+  /* ── Dark Mode: sign.html specific ── */
+  [data-theme="dark"] .signup-right {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  [data-theme="dark"] .signup-right h3 { color: #f1f5f9 !important; }
+  [data-theme="dark"] .signup-right .sub { color: rgba(255,255,255,0.6) !important; }
+  [data-theme="dark"] .signup-right label { color: rgba(255,255,255,0.72) !important; }
+  [data-theme="dark"] .signup-right input,
+  [data-theme="dark"] .signup-right select {
+    background: #334155 !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(255,255,255,0.12) !important;
+  }
+  [data-theme="dark"] .form-eyebrow { color: #5d8fff !important; }
+  [data-theme="dark"] .login-link { color: rgba(255,255,255,0.6) !important; }
+  [data-theme="dark"] .popup-inner {
+    background: #1e293b !important;
+    color: #f1f5f9 !important;
+  }
+  [data-theme="dark"] .popup-inner p { color: rgba(255,255,255,0.65) !important; }
+  [data-theme="dark"] #otp-section input {
+    background: #334155 !important;
+    color: #f1f5f9 !important;
+    border-color: rgba(255,255,255,0.12) !important;
+  }
+  .divider {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    color: #999;
+    font-size: 14px;
+}
+
+.divider::before,
+.divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: #ddd;
+}
+
+.divider span {
+    margin: 0 10px;
+}
+
+.social-btn {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+    border: 1px solid #ddd;
+    background: white;
+    color: #333;
+}
+
+.social-btn img {
+    width: 20px;
+    height: 20px;
+}
+
+.social-btn:hover {
+    background: #f5f5f5;
+}
+
+.github-btn {
+    background: #24292e;
+    color: white;
+    border: none;
+}
+
+.github-btn:hover {
+    background: #1b1f23;
+}
+</style>
+</head>
+<body>
+
+  <div class="bg-layer"></div>
+  <div class="bg-grid"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <nav class="navbar">
+    <a href="pro.html" class="nav-logo">DATA SPARK <span>TECHNOLOGIES</span></a>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="pro.html">Home</a></li>
+      <li><a href="abt.html">About</a></li>
+      <li><a href="cor.html">Courses</a></li>
+      <li><a href="con1.html">Contact</a></li>
+      <li><a href="log.html" class="nav-cta">Login</a></li>
+    </ul>
+    <button id="navThemeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Toggle dark/light mode" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:99px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;flex-shrink:0;">
+      🌙
+    </button>
+  </nav>
+
+  <div class="signup-wrapper">
+    <div class="signup-container">
+
+      <!-- LEFT PANEL -->
+      <div class="signup-left">
+        <div class="left-logo">
+          DATA SPARK TECHNOLOGIES
+          <span>IT Training Institute · Chennai</span>
+        </div>
+        <div class="left-content">
+          <h2>Start Your Tech Career Journey Today</h2>
+          <p>Create your free account and get access to industry-ready courses, expert trainers, and placement support.</p>
+          <div class="left-features">
+            <div class="left-feature"><span class="feat-dot"></span> Access 16+ career courses</div>
+            <div class="left-feature"><span class="feat-dot"></span> Track your learning progress</div>
+            <div class="left-feature"><span class="feat-dot"></span> Get placement support</div>
+            <div class="left-feature"><span class="feat-dot"></span> Earn industry certificates</div>
+          </div>
+        </div>
+        <div class="left-footer">© 2026 DATA SPARK TECHNOLOGIES</div>
+      </div>
+
+      <!-- RIGHT PANEL -->
+      <div class="signup-right">
+        <div class="form-eyebrow">New Account</div>
+        <h3>Create Account</h3>
+        <p class="sub">Join DATA SPARK and start your IT career journey</p>
+
+        <div class="form-group">
+          <label>Username</label>
+          <div class="input-wrap">
+            <span class="icon">👤</span>
+            <input type="text" id="signup-user" placeholder="Enter your username" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Phone Number</label>
+          <div class="input-wrap">
+            <span class="icon">📱</span>
+            <input type="tel" id="signup-phone" placeholder="+91 98765 43210" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Email Address</label>
+          <div class="input-wrap">
+            <span class="icon">✉️</span>
+            <input type="email" id="signup-email" placeholder="you@example.com" />
+          </div>
+          <button type="button" onclick="sendOTP()" style="margin-top:8px;padding:8px 18px;background:linear-gradient(135deg,#1a56ff,#5d8fff);color:white;border:none;border-radius:8px;font-size:0.82rem;cursor:pointer;font-weight:600;">Send OTP 📧</button>
+        </div>
+
+        <div class="form-group">
+          <label>Role</label>
+          <div class="input-wrap">
+            <span class="icon">🎓</span>
+            <select id="signup-role">
+              <option value="" disabled selected>Select your role</option>
+              <option value="Admin">Admin</option>
+              <option value="Student">Student</option>
+              <option value="Fresher">Fresher (Job Seeking)</option>
+              <option value="Working Professional">Working Professional</option>
+              <option value="Career Switcher">Career Switcher</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <span class="icon">🔒</span>
+            <input type="password" id="signup-pass" placeholder="Create a password" autocomplete="new-password" />
+            <button type="button" class="eye-btn" onclick="togglePass('signup-pass', this)">👁️</button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Confirm Password</label>
+          <div class="input-wrap">
+            <span class="icon">🔒</span>
+            <input type="password" id="signup-confirm" placeholder="Re-enter your password" autocomplete="new-password" />
+            <button type="button" class="eye-btn" onclick="togglePass('signup-confirm', this)">👁️</button>
+          </div>
+        </div>
+
+        <button class="signup-btn" onclick="handleSignup()">Create Account →</button>
+
+        <!-- OTP Verification Section (Hidden by default) -->
+        <div id="otp-section" style="display:none;margin-top:20px;">
+          <div class="form-group">
+            <label>Enter OTP</label>
+            <div class="input-wrap">
+              <span class="icon">🔢</span>
+              <input type="text" id="otp-input" placeholder="Enter 6-digit OTP" maxlength="6" />
+            </div>
+          </div>
+          <button class="signup-btn" onclick="verifyOTP()">Verify OTP →</button>
+          <div style="text-align:center;margin-top:10px;">
+            <button onclick="resendOTP()" style="background:none;border:none;color:#1a56ff;font-size:0.85rem;cursor:pointer;text-decoration:underline;">Resend OTP</button>
+          </div>
+        </div>
+        <div class="divider">
+  <span>OR</span>
+</div>
+
+<a href="/auth/google" class="social-btn google-btn">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg" alt="">
+  Continue with Google
+</a>
+
+<a href="/auth/github" class="social-btn github-btn">
+  <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="">
+  Continue with GitHub
+</a>
+
+        <div class="login-link">Already have an account? <a href="log.html">Login here</a></div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer class="mini-footer">
+    <p>© 2026 DATA SPARK TECHNOLOGIES — All rights reserved.</p>
+    <a href="con1.html">Need help? Contact us →</a>
+  </footer>
+
+  <!-- Success Popup -->
+  <div class="popup-overlay" id="popup">
+    <div class="popup-inner">
+      <div class="popup-emoji">🎉</div>
+      <h2 style="color:#16a34a;">Account Created!</h2>
+      <p>Welcome to DATA SPARK! Redirecting you to login...</p>
+    </div>
+  </div>
+
+  <!-- Error Popup -->
+  <div class="popup-overlay" id="error-popup">
+    <div class="popup-inner">
+      <div class="popup-emoji">⚠️</div>
+      <h2 style="color:#dc2626;">Oops!</h2>
+      <p id="error-msg">Please fill in all fields.</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;">
+        <button class="popup-btn red" onclick="document.getElementById('error-popup').classList.remove('show')">Try Again</button>
+        <button class="popup-btn" id="reset-btn" style="display:none;background:linear-gradient(135deg,#7c3aed,#a855f7);box-shadow:0 6px 20px rgba(124,58,237,0.35);" onclick="resetAndReregister()">Reset & Re-register</button>
+      </div>
+    </div>
+  </div>
+
+  <script id="signscript">
+    const BASE_URL = "https://dataspark-tech-3.onrender.com";
+    let otpSent = false;
+    let phoneVerified = false;
+    let verifiedEmail = '';
+
+    function sendOTP() {
+      const email = document.getElementById('signup-email') ? document.getElementById('signup-email').value.trim() : '';
+      if (!email) return showError('Please enter your email address.');
+      fetch(`${BASE_URL}/api/send-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          otpSent = true;
+          verifiedEmail = email;
+          sessionStorage.setItem('otp_email', email);
+          document.getElementById('otp-section').style.display = 'block';
+          showError('OTP sent to ' + email + '. Check your inbox!', false);
+          setTimeout(() => document.getElementById('error-popup').classList.remove('show'), 2500);
+        } else {
+          showError(data.message);
+        }
+      })
+      .catch(err => showError('Server error: ' + err.message));
+    }
+
+    function verifyOTP() {
+      const enteredOTP = document.getElementById('otp-input').value.trim();
+      const email = verifiedEmail || sessionStorage.getItem('otp_email') || document.getElementById('signup-email').value.trim();
+      if (!enteredOTP) return showError('Please enter the OTP.');
+      if (!email) return showError('Email not found. Please send OTP again.');
+      fetch(`${BASE_URL}/api/verify-otp`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp: enteredOTP })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          phoneVerified = true;
+          verifiedEmail = email;
+          document.getElementById('otp-section').style.display = 'none';
+          document.getElementById('signup-email').style.borderColor = '#10b981';
+          showError('Email verified! ✅ Creating account...', false);
+          setTimeout(() => {
+            document.getElementById('error-popup').classList.remove('show');
+            proceedWithSignup();
+          }, 1500);
+        } else {
+          showError(data.message);
+        }
+      })
+      .catch(err => showError('Server error: ' + err.message));
+    }
+
+    function resendOTP() {
+      otpSent = false;
+      sendOTP();
+    }
+
+    function proceedWithSignup() {
+      const user = document.getElementById('signup-user').value.trim();
+      const phone = document.getElementById('signup-phone').value.trim();
+      const role = document.getElementById('signup-role').value;
+      const pass = document.getElementById('signup-pass').value.trim();
+
+      fetch(`${BASE_URL}/api/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: user, password: pass, role: role, phone: phone, phoneVerified: true })
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('popup').classList.add('show');
+
+          // Persist user for admin.html guard & admin profile
+          // Prefer server-returned values if available, otherwise fallback to entered form values.
+          try {
+            const signupRoleRaw = (data.role || document.getElementById('signup-role')?.value || '').toString();
+            const normalizedRole = signupRoleRaw.toLowerCase();
+
+            // Store role as exactly "admin" when admin-like, otherwise keep the selected role
+            const finalRole = (normalizedRole === 'admin' || normalizedRole.includes('admin')) ? 'admin' : normalizedRole;
+
+            localStorage.setItem('ds_user', data.user || document.getElementById('signup-user')?.value.trim() || '');
+            localStorage.setItem('ds_fullname', data.full_name || data.user || document.getElementById('signup-user')?.value.trim() || '');
+            localStorage.setItem('ds_role', finalRole);
+          } catch (e) {
+            // If localStorage fails for any reason, redirect logic below will still work.
+          }
+
+          setTimeout(() => {
+            const role = (document.getElementById('signup-role')?.value || '').toLowerCase();
+            const selectedCourse = localStorage.getItem('gg_selectedCourse');
+
+            // If user started enrollment from course page, go to apply form
+            if (selectedCourse) {
+              window.location.href = 'apply.html';
+              return;
+            }
+
+            // Otherwise keep existing behavior
+            if (role === 'admin' || role.includes('admin')) window.location.href = 'admin.html';
+            else window.location.href = 'log.html';
+          }, 2000);
+        } else {
+          const isExists = data.message.toLowerCase().includes('exist') || data.message.toLowerCase().includes('duplicate');
+          showError(data.message, isExists);
+        }
+      })
+      .catch(() => showError('Server error. Please try again.'));
+    }
+
+
+    function togglePass(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+      else { input.type = 'password'; btn.textContent = '👁️'; }
+    }
+
+    function showError(msg, showReset) {
+      document.getElementById('error-msg').textContent = msg;
+      document.getElementById('reset-btn').style.display = showReset ? 'inline-block' : 'none';
+      document.getElementById('error-popup').classList.add('show');
+    }
+
+    function resetAndReregister() {
+      const user = document.getElementById('signup-user').value.trim();
+      fetch(`${BASE_URL}/api/reset-user/${encodeURIComponent(user)}`, { method: 'DELETE' })
+        .then(r => r.json())
+        .then(data => {
+          document.getElementById('error-popup').classList.remove('show');
+          if (data.success) handleSignup();
+          else showError(data.message);
+        })
+        .catch(() => showError('Server error. Please try again.'));
+    }
+
+    function handleSignup() {
+      const user    = document.getElementById('signup-user').value.trim();
+      const phone   = document.getElementById('signup-phone').value.trim();
+      const email   = document.getElementById('signup-email').value.trim();
+      const role    = document.getElementById('signup-role').value;
+      const pass    = document.getElementById('signup-pass').value.trim();
+      const confirm = document.getElementById('signup-confirm').value.trim();
+
+      if (!user)            return showError('Username cannot be empty.');
+      if (!email)           return showError('Email cannot be empty.');
+      if (!phoneVerified)   return showError('Please verify your email with OTP first.');
+      if (!role)            return showError('Please select your role.');
+      if (!pass)            return showError('Password cannot be empty.');
+      if (pass.length < 6)  return showError('Password must be at least 6 characters.');
+      if (pass !== confirm)  return showError('Passwords do not match.');
+
+      proceedWithSignup();
+    }
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="chat-widget.js"></script>
+
+</body>
+</html>
+
+

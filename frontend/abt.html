@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About Us - DATA SPARK TECHNOLOGIES</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Syne:wght@400;600;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="theme.css">
+  <script src="theme.js"></script>
+
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box; margin: 0; padding: 0;
+    }
+    :root {
+      --navy:       #080c18;
+      --deep:       #0c1228;
+      --blue:       #1a56ff;
+      --blue-mid:   #3a72ff;
+      --blue-light: #5d8fff;
+      --teal:       #00d4c2;
+      --white:      #ffffff;
+      --off-white:  #f4f6fb;
+      --muted:      #8892a4;
+      --radius:     20px;
+      --transition: 0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--off-white); color: var(--navy); line-height: 1.6; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+
+    /* NAVBAR */
+    .navbar { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 18px 60px; background: rgba(8,12,24,0.82); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .nav-logo { font-family: 'Syne', sans-serif; font-size: 1.3rem; font-weight: 800; color: var(--teal); letter-spacing: 0.04em; text-decoration: none; }
+    .nav-logo span { color: var(--white); }
+    .nav-links { list-style: none; display: flex; gap: 44px; align-items: center; }
+    .nav-links a { text-decoration: none; color: rgba(255,255,255,0.65); font-family: 'Syne', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; transition: color var(--transition); position: relative; }
+    .nav-links a::after { content: ''; position: absolute; left: 0; bottom: -4px; width: 0; height: 2px; background: var(--teal); border-radius: 99px; transition: width var(--transition); }
+    .nav-links a:hover { color: var(--white); }
+    .nav-links a:hover::after { width: 100%; }
+    .nav-links .nav-cta { color: var(--white); background: linear-gradient(135deg, var(--blue), var(--blue-light)); padding: 9px 24px; border-radius: 99px; font-size: 0.8rem; box-shadow: 0 4px 18px rgba(26,86,255,0.35); transition: box-shadow var(--transition), transform var(--transition); }
+    .nav-links .nav-cta::after { display: none; }
+    .nav-links .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(26,86,255,0.5); color: var(--white); }
+
+    /* HAMBURGER */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; z-index: 200; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--white); border-radius: 99px; transition: all 0.3s ease; }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .nav-links { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(8,12,24,0.97); backdrop-filter: blur(20px); flex-direction: column; align-items: center; justify-content: center; gap: 32px; z-index: 150; }
+      .nav-links.open { display: flex; }
+      .nav-links a { font-size: 1.1rem; }
+      .nav-links .nav-cta { padding: 12px 36px; font-size: 1rem; }
+    }
+
+    /* HERO */
+    .page-hero { position: relative; min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; overflow: hidden; padding: 140px 24px 90px; background: radial-gradient(ellipse 80% 60% at 50% 10%, rgba(26,86,255,0.35) 0%, transparent 68%), radial-gradient(ellipse 45% 40% at 85% 85%, rgba(0,212,194,0.15) 0%, transparent 65%), linear-gradient(165deg, var(--navy) 0%, var(--deep) 100%); }
+    .page-hero-bg { position: absolute; inset: 0; background: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400&auto=format&fit=crop') center/cover no-repeat; opacity: 0.22; z-index: 0; filter: brightness(0.8) saturate(0.8) hue-rotate(180deg); }
+    .page-hero::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(26,86,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(26,86,255,0.05) 1px, transparent 1px); background-size: 55px 55px; mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%); pointer-events: none; }
+    .orb { position: absolute; border-radius: 50%; filter: blur(72px); pointer-events: none; animation: orbFloat 10s ease-in-out infinite; }
+    .orb-1 { width: 340px; height: 340px; background: rgba(26,86,255,0.2); top: 5%; left: 0; animation-delay: 0s; }
+    .orb-2 { width: 240px; height: 240px; background: rgba(0,212,194,0.14); bottom: 5%; right: 5%; animation-delay: 4s; }
+    @keyframes orbFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-24px); } }
+    .hero-content { position: relative; z-index: 2; max-width: 720px; animation: fadeUp 0.9s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(36px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 0.72rem; font-weight: 500; letter-spacing: 0.16em; text-transform: uppercase; color: var(--teal); background: rgba(0,212,194,0.10); border: 1px solid rgba(0,212,194,0.28); padding: 7px 18px; border-radius: 99px; margin-bottom: 28px; }
+    .badge-dot { width: 6px; height: 6px; background: var(--teal); border-radius: 50%; animation: blinkDot 1.8s ease-in-out infinite; }
+    @keyframes blinkDot { 0%,100% { opacity: 1; } 50% { opacity: 0.2; } }
+    .hero-content h1 { font-family: 'Syne', sans-serif; font-size: clamp(2rem, 4.5vw, 3.2rem); font-weight: 800; color: var(--white); line-height: 1.06; margin-bottom: 22px; letter-spacing: -0.03em; animation: fadeUp 0.9s 0.15s ease both; }
+    .hero-content h1 em { font-style: normal; background: linear-gradient(90deg, var(--blue-light), var(--teal)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .hero-content p { font-size: 1.08rem; font-weight: 300; color: rgba(255,255,255,0.52); max-width: 540px; margin: 0 auto; line-height: 1.82; animation: fadeUp 0.9s 0.3s ease both; }
+
+    /* STATS STRIP */
+    .stats-strip { background: var(--white); border-bottom: 1px solid rgba(26,86,255,0.07); padding: 0 24px; }
+    .stats-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(4, 1fr); }
+    .stat-item { padding: 36px 24px; text-align: center; border-right: 1px solid rgba(26,86,255,0.07); transition: background var(--transition); }
+    .stat-item:last-child { border-right: none; }
+    .stat-item:hover { background: rgba(26,86,255,0.02); }
+    .stat-num { font-family: 'Syne', sans-serif; font-size: 2.4rem; font-weight: 800; color: var(--navy); line-height: 1; margin-bottom: 6px; }
+    .stat-num span { color: var(--blue); }
+    .stat-label { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+
+    /* SECTION TAG */
+    .section-tag { display: inline-block; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); background: rgba(26,86,255,0.08); border: 1px solid rgba(26,86,255,0.18); padding: 6px 16px; border-radius: 99px; margin-bottom: 16px; }
+    .section-tag.light { color: var(--teal); background: rgba(0,212,194,0.10); border-color: rgba(0,212,194,0.22); }
+
+    /* STORY */
+    .story-section { padding: 110px 24px; max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.1fr 1fr; gap: 80px; align-items: center; }
+    .story-text h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.9rem, 3.5vw, 2.7rem); font-weight: 800; color: var(--navy); line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 20px; }
+    .story-text h2 em { font-style: normal; color: var(--blue); }
+    .story-text p { font-size: 0.98rem; color: #5a6373; line-height: 1.88; margin-bottom: 16px; }
+    .story-highlights { margin-top: 32px; display: flex; flex-direction: column; gap: 13px; }
+    .highlight-item { display: flex; align-items: center; gap: 14px; font-size: 0.95rem; font-weight: 500; color: var(--navy); }
+    .highlight-icon { width: 42px; height: 42px; border-radius: 11px; background: rgba(26,86,255,0.08); display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .story-visual { position: relative; }
+    .visual-card { background: linear-gradient(145deg, var(--navy), var(--deep)); border-radius: 24px; padding: 44px 38px; border: 1px solid rgba(26,86,255,0.2); box-shadow: 0 24px 80px rgba(26,86,255,0.18); position: relative; overflow: hidden; }
+    .visual-card::before { content: ''; position: absolute; top: -60px; right: -60px; width: 200px; height: 200px; background: radial-gradient(circle, rgba(0,212,194,0.15) 0%, transparent 70%); border-radius: 50%; }
+    .vstats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+    .vstat { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 14px; padding: 24px 18px; text-align: center; transition: background var(--transition); }
+    .vstat:hover { background: rgba(255,255,255,0.09); }
+    .vstat-num { font-family: 'Syne', sans-serif; font-size: 2.1rem; font-weight: 800; color: var(--white); line-height: 1; margin-bottom: 5px; }
+    .vstat-num span { color: var(--teal); }
+    .vstat-label { font-size: 0.72rem; font-weight: 400; letter-spacing: 0.09em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
+    .location-badge { position: absolute; bottom: -18px; left: -18px; background: var(--white); border-radius: 14px; padding: 14px 18px; box-shadow: 0 12px 40px rgba(26,86,255,0.16); display: flex; align-items: center; gap: 10px; font-size: 0.84rem; font-weight: 600; color: var(--navy); }
+    .loc-emoji { font-size: 1.3rem; }
+    .loc-sub { font-size: 0.7rem; color: var(--muted); font-weight: 400; display: block; margin-top: 2px; }
+
+    /* MISSION */
+    .mission-section { background: linear-gradient(165deg, var(--navy) 0%, var(--deep) 100%); padding: 110px 24px; position: relative; overflow: hidden; }
+    .mission-section::before { content: ''; position: absolute; inset: 0; background-image: linear-gradient(rgba(26,86,255,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(26,86,255,0.06) 1px, transparent 1px); background-size: 55px 55px; pointer-events: none; }
+    .mission-inner { max-width: 1100px; margin: 0 auto; position: relative; }
+    .mission-inner h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.9rem, 3.5vw, 2.7rem); font-weight: 800; color: var(--white); margin-bottom: 52px; letter-spacing: -0.02em; }
+    .mission-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .mission-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 40px 30px; transition: background var(--transition), transform var(--transition), border-color var(--transition); position: relative; overflow: hidden; }
+    .mission-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--blue), var(--teal)); transform: scaleX(0); transform-origin: left; transition: transform var(--transition); }
+    .mission-card:hover { background: rgba(255,255,255,0.07); border-color: rgba(26,86,255,0.28); transform: translateY(-6px); }
+    .mission-card:hover::after { transform: scaleX(1); }
+    .mission-icon { font-size: 2.4rem; margin-bottom: 20px; display: block; }
+    .mission-card h3 { font-family: 'Syne', sans-serif; font-size: 1.15rem; font-weight: 700; color: var(--white); margin-bottom: 12px; }
+    .mission-card p { font-size: 0.91rem; color: rgba(255,255,255,0.47); line-height: 1.8; }
+
+    /* TIMELINE */
+    .timeline-section { padding: 110px 24px; max-width: 860px; margin: 0 auto; }
+    .timeline-header { text-align: center; margin-bottom: 65px; }
+    .timeline-header h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.9rem, 3.5vw, 2.7rem); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; margin-bottom: 10px; }
+    .timeline-header p { font-size: 1rem; color: var(--muted); font-weight: 300; }
+    .timeline { position: relative; padding-left: 40px; }
+    .timeline::before { content: ''; position: absolute; left: 11px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, var(--blue), var(--teal)); border-radius: 99px; }
+    .tl-item { position: relative; margin-bottom: 48px; }
+    .tl-item:last-child { margin-bottom: 0; }
+    .tl-dot { position: absolute; left: -33px; top: 5px; width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg, var(--blue), var(--teal)); box-shadow: 0 0 0 4px var(--off-white), 0 0 0 6px rgba(26,86,255,0.2); display: flex; align-items: center; justify-content: center; }
+    .tl-dot-inner { width: 8px; height: 8px; background: var(--white); border-radius: 50%; }
+    .tl-year { font-family: 'Syne', sans-serif; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--blue); margin-bottom: 6px; }
+    .tl-item h4 { font-family: 'Syne', sans-serif; font-size: 1.05rem; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .tl-item p { font-size: 0.9rem; color: #5a6373; line-height: 1.78; }
+
+    /* TEAM */
+    .team-section { padding: 110px 24px; max-width: 1100px; margin: 0 auto; }
+    .team-header { text-align: center; margin-bottom: 65px; }
+    .team-header h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.9rem, 3.5vw, 2.7rem); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; margin-bottom: 10px; }
+    .team-header p { font-size: 1rem; color: var(--muted); font-weight: 300; }
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+    .team-card { background: var(--white); border-radius: var(--radius); padding: 40px 28px; text-align: center; box-shadow: 0 4px 24px rgba(26,86,255,0.07); border: 1px solid rgba(26,86,255,0.07); transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition); position: relative; overflow: hidden; }
+    .team-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--blue), var(--teal)); transform: scaleX(0); transform-origin: left; transition: transform var(--transition); }
+    .team-card:hover { transform: translateY(-8px); box-shadow: 0 20px 60px rgba(26,86,255,0.13); border-color: rgba(26,86,255,0.15); }
+    .team-card:hover::before { transform: scaleX(1); }
+    .avatar-ring { width: 92px; height: 92px; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2.4rem; position: relative; }
+    .avatar-ring::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; border: 2px solid transparent; background: linear-gradient(135deg, var(--blue), var(--teal)) border-box; -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0); -webkit-mask-composite: destination-out; mask-composite: exclude; }
+    .av-blue   { background: rgba(26,86,255,0.08); }
+    .av-teal   { background: rgba(0,212,194,0.08); }
+    .av-orange { background: rgba(251,146,60,0.08); }
+    .team-card h3 { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; color: var(--navy); margin-bottom: 5px; }
+    .trainer-role { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--teal); margin-bottom: 14px; }
+    .team-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.75; }
+    .skill-chips { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+    .chip { font-size: 0.7rem; font-weight: 600; color: var(--blue); background: rgba(26,86,255,0.08); border: 1px solid rgba(26,86,255,0.16); padding: 4px 12px; border-radius: 99px; }
+
+    /* VALUES */
+    .values-section { background: var(--white); padding: 110px 24px; border-top: 1px solid rgba(26,86,255,0.07); border-bottom: 1px solid rgba(26,86,255,0.07); }
+    .values-inner { max-width: 1100px; margin: 0 auto; }
+    .values-header { text-align: center; margin-bottom: 65px; }
+    .values-header h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.9rem, 3.5vw, 2.7rem); font-weight: 800; color: var(--navy); letter-spacing: -0.02em; margin-bottom: 10px; }
+    .values-header p { font-size: 1rem; color: var(--muted); font-weight: 300; }
+    .values-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .value-card { border-radius: var(--radius); padding: 36px 28px; background: var(--off-white); border: 1px solid rgba(26,86,255,0.07); transition: transform var(--transition), box-shadow var(--transition); }
+    .value-card:hover { transform: translateY(-6px); box-shadow: 0 16px 50px rgba(26,86,255,0.1); }
+    .value-num { font-family: 'Syne', sans-serif; font-size: 3rem; font-weight: 800; color: rgba(26,86,255,0.08); line-height: 1; margin-bottom: 14px; }
+    .value-card h4 { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 10px; }
+    .value-card p { font-size: 0.88rem; color: #5a6373; line-height: 1.78; }
+
+    /* CTA */
+    .cta-section { padding: 110px 24px; max-width: 1100px; margin: 0 auto; text-align: center; }
+    .cta-box { background: linear-gradient(135deg, var(--blue) 0%, var(--blue-mid) 50%, #0033cc 100%); border-radius: 28px; padding: 80px 48px; position: relative; overflow: hidden; box-shadow: 0 20px 80px rgba(26,86,255,0.35); }
+    .cta-box::before { content: ''; position: absolute; width: 480px; height: 480px; background: rgba(255,255,255,0.05); border-radius: 50%; top: -160px; right: -100px; }
+    .cta-box::after  { content: ''; position: absolute; width: 280px; height: 280px; background: rgba(0,212,194,0.1); border-radius: 50%; bottom: -90px; left: -50px; }
+    .cta-box h2 { font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 800; color: var(--white); letter-spacing: -0.02em; margin-bottom: 14px; position: relative; }
+    .cta-box p  { font-size: 1.05rem; color: rgba(255,255,255,0.7); margin-bottom: 38px; position: relative; }
+    .btn-white { display: inline-block; text-decoration: none; font-family: 'Syne', sans-serif; font-size: 0.9rem; font-weight: 700; letter-spacing: 0.05em; color: var(--blue); background: var(--white); padding: 16px 44px; border-radius: 99px; box-shadow: 0 8px 30px rgba(0,0,0,0.2); transition: transform var(--transition), box-shadow var(--transition); position: relative; }
+    .btn-white:hover { transform: translateY(-3px); box-shadow: 0 16px 44px rgba(0,0,0,0.28); }
+
+    /* FOOTER */
+    .footer { background: var(--navy); border-top: 1px solid rgba(255,255,255,0.06); padding: 70px 60px 0; }
+    .footer-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px; padding-bottom: 52px; }
+    .footer-brand .logo-txt { font-family: 'Syne', sans-serif; font-size: 1.2rem; font-weight: 800; color: var(--teal); display: block; margin-bottom: 14px; }
+    .footer-brand p { font-size: 0.88rem; color: rgba(255,255,255,0.38); line-height: 1.75; max-width: 250px; margin-bottom: 24px; }
+    .social-icons { display: flex; gap: 12px; }
+    .social-icon { width: 38px; height: 38px; border-radius: 10px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: background var(--transition), border-color var(--transition), transform var(--transition); }
+    .social-icon:hover { background: rgba(26,86,255,0.25); border-color: var(--blue); transform: translateY(-3px); }
+    .social-icon svg { width: 17px; height: 17px; fill: rgba(255,255,255,0.7); transition: fill var(--transition); }
+    .social-icon:hover svg { fill: #fff; }
+    .footer-col h4 { font-family: 'Syne', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .footer-col a { display: flex; align-items: center; gap: 7px; font-size: 0.88rem; color: rgba(255,255,255,0.55); text-decoration: none; margin-bottom: 11px; transition: color var(--transition), gap var(--transition); }
+    .footer-col a::before { content: '›'; color: var(--teal); font-size: 1rem; opacity: 0; transition: opacity var(--transition); }
+    .footer-col a:hover { color: var(--white); gap: 10px; }
+    .footer-col a:hover::before { opacity: 1; }
+    .footer-bottom { max-width: 1100px; margin: 0 auto; padding: 24px 0; border-top: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+    .footer-bottom p { font-size: 0.8rem; color: rgba(255,255,255,0.25); }
+    .footer-bottom a { font-size: 0.8rem; color: var(--teal); text-decoration: none; font-weight: 500; transition: color var(--transition); }
+    .footer-bottom a:hover { color: #fff; }
+
+    @media (max-width: 900px) {
+      .navbar { padding: 16px 24px; } .nav-links { gap: 24px; }
+      .story-section { grid-template-columns: 1fr; gap: 48px; }
+      .mission-grid { grid-template-columns: 1fr; }
+      .team-grid { grid-template-columns: 1fr 1fr; }
+      .values-grid { grid-template-columns: 1fr 1fr; }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .location-badge { position: static; margin-top: 24px; }
+    }
+    @media (max-width: 640px) {
+      .navbar { padding: 14px 16px; } .nav-links { gap: 12px; } .nav-links a { font-size: 0.68rem; }
+      .team-grid { grid-template-columns: 1fr; }
+      .values-grid { grid-template-columns: 1fr; }
+      .stats-inner { grid-template-columns: 1fr 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .footer { padding: 48px 16px 32px; }
+      .cta-box { padding: 40px 20px; }
+      .story-section { padding: 60px 16px; }
+      .mission-section { padding: 60px 16px; }
+      .timeline-section { padding: 60px 16px; }
+      .team-section { padding: 60px 16px; }
+      .values-section { padding: 60px 16px; }
+      .cta-section { padding: 60px 16px; }
+    }
+
+    /* ── Dark Mode: abt.html specific ── */
+    [data-theme="dark"] body { background: #0b0f1a; color: #f1f5f9; }
+
+    [data-theme="dark"] .stats-strip {
+      background: #1e293b !important;
+      border-color: rgba(255,255,255,0.06) !important;
+    }
+    [data-theme="dark"] .stat-item { border-color: rgba(255,255,255,0.06) !important; }
+    [data-theme="dark"] .stat-num { color: #f1f5f9 !important; }
+
+    [data-theme="dark"] .story-text h2 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .story-text p { color: rgba(255,255,255,0.65) !important; }
+    [data-theme="dark"] .highlight-item { color: #f1f5f9 !important; }
+
+    [data-theme="dark"] .tl-dot { box-shadow: 0 0 0 4px #0b0f1a, 0 0 0 6px rgba(26,86,255,0.2) !important; }
+
+    [data-theme="dark"] .timeline-header h2 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .timeline-header p { color: rgba(255,255,255,0.55) !important; }
+    [data-theme="dark"] .tl-item h4 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .tl-item p { color: rgba(255,255,255,0.65) !important; }
+
+    [data-theme="dark"] .team-header h2 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .team-header p { color: rgba(255,255,255,0.55) !important; }
+    [data-theme="dark"] .team-card { background: #1e293b !important; border-color: rgba(255,255,255,0.08) !important; }
+    [data-theme="dark"] .team-card h3 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .team-card p { color: rgba(255,255,255,0.65) !important; }
+
+    [data-theme="dark"] .values-section { background: #0b0f1a !important; border-color: rgba(255,255,255,0.06) !important; }
+    [data-theme="dark"] .values-header h2 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .values-header p { color: rgba(255,255,255,0.55) !important; }
+    [data-theme="dark"] .value-card { background: #1e293b !important; border-color: rgba(255,255,255,0.08) !important; }
+    [data-theme="dark"] .value-card h4 { color: #f1f5f9 !important; }
+    [data-theme="dark"] .value-card p { color: rgba(255,255,255,0.65) !important; }
+    [data-theme="dark"] .value-num { color: rgba(26,86,255,0.25) !important; }
+
+    [data-theme="dark"] .location-badge { background: #1e293b !important; color: #f1f5f9 !important; box-shadow: 0 12px 40px rgba(0,0,0,0.4) !important; }
+    [data-theme="dark"] .loc-sub { color: rgba(255,255,255,0.5) !important; }
+
+    [data-theme="dark"] #user-dropdown { background: #1e293b !important; border: 1px solid rgba(255,255,255,0.1) !important; box-shadow: 0 8px 32px rgba(0,0,0,0.5) !important; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div style="display:flex;align-items:center;gap:20px;">
+      <a href="pro.html" class="nav-logo">DATA SPARK <span>TECHNOLOGIES</span></a>
+      <div id="user-greeting-wrap" style="display:none;position:relative;">
+        <span id="user-greeting" onclick="toggleDropdown()" style="cursor:pointer;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;color:var(--teal);background:rgba(0,212,194,0.1);border:1px solid rgba(0,212,194,0.25);padding:6px 16px;border-radius:99px;"></span>
+        <div id="user-dropdown" style="display:none;position:absolute;top:calc(100% + 10px);left:0;background:#fff;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,0.18);min-width:170px;overflow:hidden;z-index:999;">
+          <a href="dashboard.html" id="my-dashboard-link" style="display:block;padding:12px 18px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;color:#1a56ff;text-decoration:none;border-bottom:1px solid #f1f5f9;">📊 My Dashboard</a>
+          <a href="#" onclick="logout()" style="display:block;padding:12px 18px;font-family:'Syne',sans-serif;font-size:0.85rem;font-weight:600;color:#ef4444;text-decoration:none;">🚪 Logout</a>
+        </div>
+      </div>
+    </div>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="pro.html">Home</a></li>
+      <li><a href="abt.html">About</a></li>
+      <li><a href="cor.html">Courses</a></li>
+      <li><a href="con1.html">Contact</a></li>
+      <li id="nav-login-li"><a href="log.html" class="nav-cta">Login</a></li>
+      <li id="nav-logout-li" style="display:none;"><a href="#" class="nav-cta" onclick="logout()" style="background:linear-gradient(135deg,#dc2626,#ef4444);">Logout</a></li>
+    </ul>
+    <button id="navThemeToggleBtn" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Toggle dark/light mode" style="background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);border-radius:99px;width:40px;height:40px;display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;margin-left:12px;flex-shrink:0;">
+      🌙
+    </button>
+    <button class="hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+  </nav>
+
+  <section class="page-hero">
+    <div class="page-hero-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="hero-content">
+      <div class="hero-badge"><span class="badge-dot"></span> Our Story</div>
+      <h1>Empowering the Next<br><em>Generation of Tech</em><br>Professionals</h1>
+      <p>DATA SPARK TECHNOLOGIES is Chennai's trusted IT training institute — transforming ambitious learners into industry-ready professionals since day one.</p>
+    </div>
+  </section>
+
+  <div class="stats-strip">
+    <div class="stats-inner">
+      <div class="stat-item"><div class="stat-num">500<span>+</span></div><div class="stat-label">Students Trained</div></div>
+      <div class="stat-item"><div class="stat-num">4<span>+</span></div><div class="stat-label">Career Courses</div></div>
+      <div class="stat-item"><div class="stat-num">95<span>%</span></div><div class="stat-label">Placement Rate</div></div>
+      <div class="stat-item"><div class="stat-num">3<span>+</span></div><div class="stat-label">Expert Trainers</div></div>
+    </div>
+  </div>
+
+  <section class="story-section">
+    <div class="story-text">
+      <span class="section-tag">Who We Are</span>
+      <h2>A Training Institute<br>Built for <em>Real Careers</em></h2>
+      <p>DATA SPARK TECHNOLOGIES was founded with one clear mission — to bridge the gap between classroom learning and real industry demands. We saw that students needed more than just theory; they needed hands-on skills they could use from day one on the job.</p>
+      <p>Based in Chennai, we specialize in Web Development, Python, Software Testing, and Data Analytics — four of the most in-demand skills in the IT sector today. Every course is crafted by industry experts and delivered with a focus on practical, project-based learning.</p>
+      <p>With a strong track record of successful placements and hundreds of trained students, we continue to grow as one of Chennai's most trusted tech training institutes.</p>
+      <div class="story-highlights">
+        <div class="highlight-item"><div class="highlight-icon">🎯</div>Project-based curriculum aligned with industry needs</div>
+        <div class="highlight-item"><div class="highlight-icon">🧑‍💼</div>Expert trainers with real-world working experience</div>
+        <div class="highlight-item"><div class="highlight-icon">🏆</div>Industry-recognized certification upon completion</div>
+        <div class="highlight-item"><div class="highlight-icon">🤝</div>Dedicated placement support and job referrals</div>
+      </div>
+    </div>
+    <div class="story-visual">
+      <div style="position:relative;border-radius:24px;overflow:hidden;box-shadow:0 24px 80px rgba(26,86,255,0.18);">
+        <img src="https://images.unsplash.com/photo-1531482615713-2afd69097998?w=700&auto=format&fit=crop" alt="Our Office" style="width:100%;height:380px;object-fit:cover;display:block;border-radius:24px;" />
+        <div style="position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(8,12,24,0.7) 100%);border-radius:24px;"></div>
+        <div style="position:absolute;bottom:20px;left:20px;right:20px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:#fff;line-height:1;">500<span style="color:#00d4c2;">+</span></div>
+            <div style="font-size:0.68rem;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;">Trained</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.12);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:14px;text-align:center;">
+            <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:#fff;line-height:1;">95<span style="color:#00d4c2;">%</span></div>
+            <div style="font-size:0.68rem;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.1em;margin-top:4px;">Placement</div>
+          </div>
+        </div>
+      </div>
+      <div class="location-badge">
+        <span class="loc-emoji">📍</span>
+        <div>Chennai, Tamil Nadu<span class="loc-sub">DATA SPARK TECHNOLOGIES</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mission-section">
+    <div class="mission-inner">
+      <span class="section-tag light">Our Purpose</span>
+      <h2>Mission, Vision &amp; Values</h2>
+      <div class="mission-grid">
+        <div class="mission-card">
+          <span class="mission-icon">🎯</span>
+          <h3>Our Mission</h3>
+          <p>To provide industry-ready skills through innovative, project-driven training that creates confident IT professionals who excel in the modern tech world from day one.</p>
+        </div>
+        <div class="mission-card">
+          <span class="mission-icon">🔭</span>
+          <h3>Our Vision</h3>
+          <p>To be Tamil Nadu's most impactful IT training institute — producing graduates who are not just job-ready, but future-ready and capable of leading innovation.</p>
+        </div>
+        <div class="mission-card">
+          <span class="mission-icon">💎</span>
+          <h3>Our Values</h3>
+          <p>We believe in practical excellence, honest mentorship, inclusive learning, and a relentless commitment to every student's success — from enrollment to placement.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="timeline-section">
+    <div class="timeline-header">
+      <span class="section-tag">Our Journey</span>
+      <h2>How We Got Here</h2>
+      <p>A timeline of growth, milestones, and student success</p>
+    </div>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-year">Year 1 — Foundation</div>
+        <h4>DATA SPARK Was Born</h4>
+        <p>Started with a single Web Development batch in Chennai with a goal to make IT education practical, affordable, and career-focused for every student.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-year">Year 2 — Growth</div>
+        <h4>Expanded to Python &amp; Testing</h4>
+        <p>Added Python Programming and Software Testing programs based on overwhelming demand from students and industry hiring partners.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-year">Year 3 — Analytics</div>
+        <h4>Launched Data Analytics Program</h4>
+        <p>Introduced our flagship Data Analytics course covering Excel, SQL, and Python — now one of our highest-demand programs.</p>
+      </div>
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-year">Today — Scale</div>
+        <h4>500+ Students Trained &amp; Placed</h4>
+        <p>With a 95% placement rate and a growing alumni network across Chennai's IT sector, we continue to shape the next generation of tech talent.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="team-section">
+    <div class="team-header">
+      <span class="section-tag">The People Behind It</span>
+      <h2>Meet Our Expert Trainers</h2>
+      <p>Seasoned professionals who bring real industry experience into every session</p>
+    </div>
+    <div class="team-grid">
+      <div class="team-card">
+        <div class="avatar-ring av-blue">🧑‍💻</div>
+        <h3>Trainer 1</h3>
+        <div class="trainer-role">Web Development Expert</div>
+        <p>6+ years of full-stack experience. Makes HTML, CSS, and JavaScript approachable for every learner at any level with live coding and real projects.</p>
+        <div class="skill-chips"><span class="chip">HTML & CSS</span><span class="chip">JavaScript</span><span class="chip">React</span></div>
+      </div>
+      <div class="team-card">
+        <div class="avatar-ring av-teal" style="overflow:hidden;padding:0;"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&auto=format&fit=crop" alt="Trainer" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" /></div>
+        <h3>Trainer 2</h3>
+        <div class="trainer-role">Python Specialist</div>
+        <p>Expert in Python and data-driven applications. Simplifies complex topics through real-world problem solving, automation, and hands-on mini projects.</p>
+        <div class="skill-chips"><span class="chip">Python</span><span class="chip">Pandas</span><span class="chip">Automation</span></div>
+      </div>
+      <div class="team-card">
+        <div class="avatar-ring av-orange" style="overflow:hidden;padding:0;"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&auto=format&fit=crop" alt="Trainer" style="width:100%;height:100%;object-fit:cover;border-radius:50%;" /></div>
+        <h3>Trainer 3</h3>
+        <div class="trainer-role">Testing Engineer</div>
+        <p>Seasoned QA professional with deep experience in manual and automation testing. Guides students through real industry-standard QA workflows end to end.</p>
+        <div class="skill-chips"><span class="chip">Manual Testing</span><span class="chip">Selenium</span><span class="chip">JIRA</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="values-section">
+    <div class="values-inner">
+      <div class="values-header">
+        <span class="section-tag">What We Stand For</span>
+        <h2>Our Core Values</h2>
+        <p>The principles that guide everything we do at DATA SPARK</p>
+      </div>
+      <div class="values-grid">
+        <div class="value-card"><div class="value-num">01</div><h4>Practical First</h4><p>Every lesson is grounded in real-world application. We teach what actually matters on the job, not just what looks good on a syllabus.</p></div>
+        <div class="value-card"><div class="value-num">02</div><h4>Student Success</h4><p>Our success is measured by our students' success. We track placements, salaries, and career growth as our core metrics.</p></div>
+        <div class="value-card"><div class="value-num">03</div><h4>Honest Mentorship</h4><p>We give you the truth about the industry — what's in demand, what pays, and what skills will take your career the furthest.</p></div>
+        <div class="value-card"><div class="value-num">04</div><h4>Inclusive Learning</h4><p>No background required. Whether you're a fresher or a career-switcher, our programs are designed to meet you where you are.</p></div>
+        <div class="value-card"><div class="value-num">05</div><h4>Continuous Growth</h4><p>The tech world never stops evolving. Neither do we. Our curriculum is updated regularly to reflect what employers need right now.</p></div>
+        <div class="value-card"><div class="value-num">06</div><h4>Community &amp; Support</h4><p>When you join DATA SPARK, you join a community. Our alumni network, mentors, and trainers stay with you long after graduation.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-section">
+    <div class="cta-box">
+      <h2>Ready to Begin Your Journey?</h2>
+      <p>Explore our courses and take the first step toward your IT career with DATA SPARK TECHNOLOGIES.</p>
+      <a href="cor.html" class="btn-white">View All Courses →</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <span class="logo-txt">DATA SPARK TECHNOLOGIES</span>
+        <p>A leading IT training institute in Chennai dedicated to building future-ready tech professionals through practical education.</p>
+        <div class="social-icons">
+          <a href="https://www.instagram.com/gopss_007_" target="_blank" rel="noopener noreferrer" class="social-icon" title="Instagram">
+            <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 1.366.062 2.633.334 3.608 1.308.975.975 1.246 2.242 1.308 3.608.058 1.266.07 1.646.07 4.85s-.012 3.584-.07 4.85c-.062 1.366-.334 2.633-1.308 3.608-.975.975-2.242 1.246-3.608 1.308-1.266.058-1.646.07-4.85.07s-3.584-.012-4.85-.07c-1.366-.062-2.633-.334-3.608-1.308-.975-.975-1.246-2.242-1.308-3.608C2.175 15.584 2.163 15.204 2.163 12s.012-3.584.07-4.85c.062-1.366.334-2.633 1.308-3.608.975-.975 2.242-1.246 3.608-1.308C8.416 2.175 8.796 2.163 12 2.163zm0-2.163C8.741 0 8.332.014 7.052.072 5.197.157 3.355.673 2.014 2.014.673 3.355.157 5.197.072 7.052.014 8.332 0 8.741 0 12c0 3.259.014 3.668.072 4.948.085 1.855.601 3.697 1.942 5.038 1.341 1.341 3.183 1.857 5.038 1.942C8.332 23.986 8.741 24 12 24s3.668-.014 4.948-.072c1.855-.085 3.697-.601 5.038-1.942 1.341-1.341 1.857-3.183 1.942-5.038.058-1.28.072-1.689.072-4.948s-.014-3.668-.072-4.948c-.085-1.855-.601-3.697-1.942-5.038C20.645.673 18.803.157 16.948.072 15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zm0 10.162a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
+          </a>
+          <a href="#" class="social-icon" title="Facebook">
+            <svg viewBox="0 0 24 24"><path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.533-4.697 1.312 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/></svg>
+          </a>
+          <a href="#" class="social-icon" title="X (Twitter)">
+            <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.911-5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Pages</h4>
+        <a href="pro.html">Home</a><a href="abt.html">About</a><a href="cor.html">Courses</a><a href="con1.html">Contact</a><a href="log.html">Login</a>
+      </div>
+      <div class="footer-col">
+        <h4>Courses</h4>
+        <a href="cor.html">Web Development</a><a href="cor.html">Python Programming</a><a href="cor.html">Software Testing</a><a href="cor.html">Data Analytics</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="#">📍 Chennai, Tamil Nadu</a><a href="tel:+919876543210">📞 +91 98765 43210</a><a href="mailto:dataspark@email.com">📧 dataspark@email.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 DATA SPARK TECHNOLOGIES — All rights reserved.</p>
+      <a href="con1.html">Get in Touch →</a>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById('hamburger').classList.toggle('open');
+      document.getElementById('nav-links').classList.toggle('open');
+    }
+    document.querySelectorAll('#nav-links a').forEach(a => a.addEventListener('click', () => {
+      document.getElementById('hamburger').classList.remove('open');
+      document.getElementById('nav-links').classList.remove('open');
+    }));
+    const dsUser = localStorage.getItem('ds_user');
+    const dsRole = localStorage.getItem('ds_role');
+    if (dsUser) {
+      document.getElementById('user-greeting-wrap').style.display = 'block';
+      document.getElementById('user-greeting').textContent = 'Hi, ' + dsUser.charAt(0).toUpperCase() + dsUser.slice(1) + ' 👋';
+      document.getElementById('nav-login-li').style.display = 'none';
+      document.getElementById('nav-logout-li').style.display = 'none';
+
+      // Dynamically set the dashboard link based on role
+      const myDashboardLink = document.getElementById('my-dashboard-link');
+      if (myDashboardLink) {
+        if (dsRole && (dsRole.toLowerCase() === 'admin' || dsRole.toLowerCase().includes('admin'))) {
+          myDashboardLink.href = 'admin.html';
+        } else {
+          myDashboardLink.href = 'dashboard.html';
+        }
+      }
+    }
+    function toggleDropdown() {
+      const dd = document.getElementById('user-dropdown');
+      dd.style.display = dd.style.display === 'block' ? 'none' : 'block';
+    }
+    document.addEventListener('click', function(e) {
+      if (!document.getElementById('user-greeting-wrap').contains(e.target)) {
+        document.getElementById('user-dropdown').style.display = 'none';
+      }
+    });
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="chat-widget.js"></script>
+</body>
+</html>
+
